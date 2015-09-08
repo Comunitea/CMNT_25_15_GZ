@@ -40,7 +40,6 @@ $ mkdir eggs
 - Ahora procedemos a ehecutar el buildout en nuestro entorno virtual
 ```
 $ sandbox/bin/python bootstrap.py -c [archivo_buildout]
-```
 $ bin/buildout -c [archivo_buildout]
 ```
 
@@ -55,7 +54,7 @@ $ bin/buildout -c [archivo_buildout]
 $ cd bin
 $ ./upgrade_openerp
 ```
-- oddo se lanza en el puerto 8069 (se pude configurar en otro)
+- odoo se lanza en el puerto 8069 (se pude configurar en otro)
 
 
 
