@@ -1,13 +1,13 @@
 # Buildout base para proyectos con OpenERP y PostgreSQL
-OpenERP master en el base, PostgreSQL 9.3.4 y Supervisord 3.0
+OpenERP master en el base, PostgreSQL 9.4.4 y Supervisord 3.0
 - Buildout crea cron para iniciar Supervisord después de reiniciar (esto no lo he probado)
 - Supervisor ejecuta PostgreSQL, más info http://supervisord.org/
 - También ejecuta la instancia de PostgreSQL
 - Si existe un archivo dump.sql, el sistema generará la base de datos con ese dump
 - Si existe  un archivo frozen.cfg es el que se debeía usar ya que contiene las revisiones aprobadas
-- PostgreSQL se compila y corre bajo el usuario user (no es necesario loguearse como root), se habilita al autentificación "trust" para conexiones locales. Más info en more http://www.postgresql.org/docs/9.3/static/auth-methods.html
+- PostgreSQL se compila y corre bajo el usuario user (no es necesario loguearse como root), se habilita al autentificación "trust" para conexiones locales. Más info en more http://www.postgresql.org/docs/9.4/static/auth-methods.html
 - Existen plantillas para los archivo de configuración de Postgres que se pueden modificar para cada proyecto.
- 
+
 
 # Uso (adaptado)
 En caso de no haberse hecho antes en la máquina en la que se vaya a realizar, instalar las dependencias que mar Anybox
@@ -28,14 +28,6 @@ $ sudo apt-get install openerp-server-system-build-deps
 ```
 $ sudo apt-get install libreadline-dev
 ```
-- Descargar el  repositorio de buildouts :
-```
-$ git clone https://github.com/Pexego/Buildouts.git
-```
-- [EN REVISIÓN] Hacer checkout de la rama deseada según proyecto
-```
-$ git checkout <rama>
-```
 - Crear un virtualenv dentro de la carpeta del respositorio. Esto podría ser opcional, obligatorio para desarrollo o servidor de pruebas, tal vez podríamos no hacerlo para un despliegue en producción. Si no está instalado, instalar el paquete de virtualenv. Es necesario tener la versión que se instala con easy_install o con pip, desinstalar el paquete python-virtualenv si fuera necesario e instalarlo con easy_install
 ```
 $ sudo easy_install virtualenv
@@ -49,13 +41,6 @@ $ mkdir eggs
 ```
 $ sandbox/bin/python bootstrap.py -c [archivo_buildout]
 ```
-- Y por último, si se desea usar la receta de OpenERP de desarrollo se hará lo siguiente. ÇYA se ha publicado un anueva versión con soporte para Odoo con lo que , en principio no parece necesario:
-- descargar receta de openerp del repo de anybox en launchpad, en el archivo de configuración de buildout poner la ruta al repo de anybox.
-```
-$ bzr branch lp:anybox.recipe.openerp
-```
-- Lanzar buildout (el -c [archivo_buildout] se usa cuando no tiene el nombre por defecto buildout.cfg)
-```
 $ bin/buildout -c [archivo_buildout]
 ```
 
@@ -64,13 +49,13 @@ $ bin/buildout -c [archivo_buildout]
 $ bin/supervisord
 $ bin/buildout -c [archivo_buildout]
 ```
-- Conectarse al supervisor con localhost:9002
+- Conectarse al supervisor con localhost:9001
 - Si fuera necesario hacer update all, se puede parar desde el supervisor y en la consola hacer:
 ```
 $ cd bin
 $ ./upgrade_openerp
 ```
-- oddo se lanza en el puerto 9069 (se pude configurar en otro)
+- oddo se lanza en el puerto 8069 (se pude configurar en otro)
 
 
 
@@ -93,8 +78,8 @@ please change ports:
 ```
 openerp_xmlrpc_port = 8069  (8069 default openerp)
 openerp_xmlrpcs_port = 8071 (8071 default openerp)
-supervisor_port = 9002      (9001 default supervisord)
-postgres_port = 5434        (5432 default postgres)
+supervisor_port = 9001      (9001 default supervisord)
+postgres_port = 5432        (5432 default postgres)
 ```
 
 # TODO
