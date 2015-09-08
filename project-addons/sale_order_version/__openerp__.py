@@ -42,8 +42,7 @@
         "init_xml" : [],
         "demo_xml" : [],
         "data" : [
-                    'sale_view.xml',
-                    'report/sale_report_view.xml',
+                    'sale_view.xml'
                 ],
         "installable": True,
         'active': False
