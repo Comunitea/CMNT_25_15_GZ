@@ -35,8 +35,7 @@
             'purchase'],
         "init_xml" : [],
         "demo_xml" : [],
-        "data" : ['purchase_view.xml',
-                        'report/purchase_report_view.xml'],
+        "data" : ['purchase_view.xml'],
         "installable": True,
         'active': False
 
