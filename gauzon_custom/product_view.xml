@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_search_form_view_add_supp_codes" model="ir.ui.view">
+            <field name="name">product.search.form_add_supp_codes</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="supplier_codes"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

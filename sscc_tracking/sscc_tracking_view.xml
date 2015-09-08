@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- stock.packagyng.type form view-->
+        <record model="ir.ui.view" id="stock_packaging_type_form_view">
+            <field name="name">stock_packaging_type_form_view</field>
+            <field name="model">stock.packaging.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Packaging Types">
+                    <group colspan="4" col="2">
+                        <field name="name"/>
+                        <field name="alias"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- stock.packagyng.type tree view-->
+        <record model="ir.ui.view" id="stock_packaging_type_tree_view">
+            <field name="name">stock_packaging_type_tree_view</field>
+            <field name="model">stock.packaging.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Packaging Types">
+                        <field name="name"/>
+                        <field name="alias"/>
+                </tree>
+            </field>
+        </record>
+         <!-- stock.packagyng.type search view-->
+        <record model="ir.ui.view" id="stock_packaging_type_search_view">
+            <field name="name">stock_packaging_type_search_view</field>
+            <field name="model">stock.packaging.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Inventory">
+                    <field name="name"/>
+                    <field name="alias"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- stock.packagyng.type action-->
+        <record id="action_packaging_type" model="ir.actions.act_window">
+            <field name="name">Packaging types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.packaging.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- stock.packagyng.type menu-->
+        <menuitem action="action_packaging_type" id="menu_action_packaging_type"
+            name = "Packaging Types"
+            sequence="1"
+            parent="stock.menu_traceability"/>
+
+        <!-- stock.tracking inherit form add field packaging_type_id -->
+        <!--<record model="ir.ui.view" id="view_tracking_add_packaging_type_form" >
+            <field name="name">view.tracking.add.packaging.type.form</field>
+            <field name="model">stock.tracking</field>
+            <field name="inherit_id" ref="stock.view_tracking_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="packaging_type_id"/>
+                </field>
+            </field>
+        </record>-->
+
+        <!-- res.company inherit form add field aecoc_code -->
+        <record id="view_company_form_add_aecoc" model="ir.ui.view">
+            <field name="name">view.company.form.add.aecoc</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="aecoc_code"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

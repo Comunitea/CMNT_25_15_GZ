@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Copyright (C) 2004-TODAY
+#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    $Javier Colmenero Fernández$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+{
+    'name': 'Gauzon Dash Board',
+    'version': '0.1',
+    'category': 'Tools',
+    'description': """
+        Añade un asistente para exportar el sumas y saldos desglosado por mes y linea de negocio al cuadro de mandos de gauzón""",
+    'author': 'Pexego Sistemas Informáticos',
+    'website': 'https://www.pexego.es',
+    'depends': ['base', 'account', 'account_by_business_line','report_aeroo','report_aeroo_ooo'],
+    'init_xml': [],
+    'data': [
+                    'wizard/trial_balance_wizard_view.xml',
+                    'dash_board_reports.xml'
+                    ],
+    'demo_xml': [],
+    'installable': True,
+    'certificate': '',
+}
+

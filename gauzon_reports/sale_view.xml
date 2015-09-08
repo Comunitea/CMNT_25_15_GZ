@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_add_seq_lines" model="ir.ui.view">
+            <field name="name">sale.order.form.editable_order_lines</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="order_line" position="attributes">
+                    <attribute name="default_get">{'lines': order_line}</attribute>
+                </field>
+                <xpath expr="//field[@name='order_line']/form/notebook/page[@string='Order Line']/group[1]/group[1]/field[@name='invoiced']" position="after">
+                    <field name="sequence"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="before">
+                    <field name="sequence"/>
+                </xpath>
+                <field name='client_order_ref' position="after">
+                    <button
+                        name="action_numbering"
+                        string="Numbering"
+                        type="object"
+                        icon="terp-stock_format-scientific"
+                        colspan="1"
+                    />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

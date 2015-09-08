@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="ORDRSP" gi_cab_nodo="999" gi_cab_funcion="False">
+  <gi_cab>
+    <gi_cab_unor>2644</gi_cab_unor>
+    <gi_cab_numped>6446201300526</gi_cab_numped>
+    <gi_cab_fecha>2013-04-04</gi_cab_fecha>
+    <gi_cab_fechatop></gi_cab_fechatop>
+    <gi_cab_emisor>8435211220022</gi_cab_emisor>
+    <gi_cab_vendedor>8437013182003</gi_cab_vendedor>
+    <gi_cab_comprador>8435211220022</gi_cab_comprador>
+    <gi_cab_shipto>8435211264460</gi_cab_shipto>
+    <gi_cab_moneda>EUR</gi_cab_moneda>
+    <gi_cab_tneto>339.7</gi_cab_tneto>
+    <gi_cab_obs>
+      <gi_cab_obs_texto/>
+    </gi_cab_obs>
+  </gi_cab>
+  <gi_lines>
+    <gi_lin n="1">
+      <gi_lin_ean13v>4030332043688</gi_lin_ean13v>
+      <gi_lin_refcli>4030332043688</gi_lin_refcli>
+      <gi_lin_refprov>4030332043688</gi_lin_refprov>
+      <gi_lin_descmer>GUARDACABOS CORAZON FUERTE PARA CAB</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">6.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">15.0</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">6.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>3.15</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto>JUAN CARLOS I</gi_lin_obs_texto>
+      </gi_lin_obs>
+    </gi_lin>
+    <gi_lin n="2">
+      <gi_lin_ean13v>1080492686084</gi_lin_ean13v>
+      <gi_lin_refcli>             </gi_lin_refcli>
+      <gi_lin_refprov>S0492GIGASET AL110</gi_lin_refprov>
+      <gi_lin_descmer>TELEFONO INALAMBRICO DECT ANALOGICO</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">10.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">24.97</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">10.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>5.24</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto>ESENGRA</gi_lin_obs_texto>
+      </gi_lin_obs>
+    </gi_lin>
+  </gi_lines>
+</doc>
+

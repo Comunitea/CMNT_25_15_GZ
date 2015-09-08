@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="RECADV" gi_cab_nodo="999" gi_cab_funcion="ORI">
+
+  <gi_cab>
+    <gi_cab_numcontr></gi_cab_numcontr>
+    <gi_cab_numalb>OUT00009</gi_cab_numalb>
+    <gi_cab_fecharec>2013-06-12</gi_cab_fecharec>
+    <gi_cab_emisor>8435211220022</gi_cab_emisor>
+    <gi_cab_vendedor>8437013182003</gi_cab_vendedor>
+    <gi_cab_comprador>8435211220022</gi_cab_comprador>
+  </gi_cab>
+  
+  <gi_empaqs>
+    <gi_empaq n="1" gi_empaq_tipo="" gi_empaq_sscc="184370130000000045">
+      <gi_lines>
+        <gi_lin n="1">
+          <gi_lin_numped>2021201300168</gi_lin_numped>
+          <gi_lin_ean13v>8020332047362</gi_lin_ean13v>
+          <gi_lin_refcli>8020332047362</gi_lin_refcli>
+          <gi_lin_refprov>8020332047362</gi_lin_refprov>
+    	  <gi_lin_numserie></gi_lin_numserie>
+          <gi_lin_descmer>RODILLO JUNIOR 11 CM</gi_lin_descmer>
+          <gi_lin_cantent gi_lin_umedida="EA">3</gi_lin_cantent>
+          <gi_lin_cantrec gi_lin_umedida="EA">3</gi_lin_cantrec>
+          <gi_lin_reccode>GOOD_CONDITION</gi_lin_reccode>
+          <gi_lin_obs>
+            <gi_lin_obs_texto/>
+          </gi_lin_obs>
+        </gi_lin>
+        <gi_lin n="2">
+          <gi_lin_numped>2021201300167</gi_lin_numped>
+          <gi_lin_ean13v>8020332084943</gi_lin_ean13v>
+          <gi_lin_refcli>8020332084943</gi_lin_refcli>
+          <gi_lin_refprov>8020332084943</gi_lin_refprov>
+	  <gi_lin_numserie></gi_lin_numserie>
+          <gi_lin_descmer>RODILLO PROFESIONAL 22 CM LANA PURA</gi_lin_descmer>
+          <gi_lin_cantent gi_lin_umedida="EA">5</gi_lin_cantent>
+          <gi_lin_cantrec gi_lin_umedida="EA">5</gi_lin_cantrec>
+          <gi_lin_reccode>GOOD_CONDITION</gi_lin_reccode>
+          <gi_lin_obs>
+            <gi_lin_obs_texto/>
+          </gi_lin_obs>
+        </gi_lin>
+      </gi_lines>
+    </gi_empaq>
+  </gi_empaqs>
+
+</doc>

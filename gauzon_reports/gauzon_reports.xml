@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <report
+            string="Albarán sin valorar"
+            model="stock.picking"
+            auto="True"
+            name="not.valued.picking"
+            rml="gauzon_reports/reports/picking.jrxml"
+            id="stock.report_picking_list"
+            menu="True"
+            header="False"
+            />
+        <report
+            string="Albarán valorado"
+            model="stock.picking"
+            auto="True"
+            name="valued.picking"
+            rml="gauzon_reports/reports/valued_picking.jrxml"
+            id="gauzon_valued_picking"
+            menu="True"
+            header="False"
+            />
+        <report
+            string="Albarán valorado aduanas"
+            model="stock.picking"
+            auto="True"
+            name="customs.valued.picking"
+            rml="gauzon_reports/reports/customs_valued_picking.jrxml"
+            id="gauzon_customs_valued_picking"
+            menu="True"
+            header="False"
+            />
+        <report
+            string="Oferta"
+            model="sale.order"
+            auto="True"
+            name="sale.order.offer"
+            rml="gauzon_reports/reports/sale_order_offer.jrxml"
+            id="sale.report_sale_order"
+            menu="True"
+            header="False"
+            />
+        <report
+            string="Pedido de compra"
+            model="purchase.order"
+            auto="True"
+            name="purchase.order"
+            rml="gauzon_reports/reports/purchase_order.jrxml"
+            id="purchase.report_purchase_order"
+            menu="True"
+            header="False"
+            />
+        <report
+            string="Pedido de compra - Inglés"
+            model="purchase.order"
+            auto="True"
+            name="purchase.order.en"
+            rml="gauzon_reports/reports/purchase_order_en.jrxml"
+            id="gauzon_purchase_order_en"
+            menu="True"
+            header="False"
+            />
+         <report
+            string="Factura normal"
+            model="account.invoice"
+            auto="True"
+            name="account.invoice"
+            rml="gauzon_reports/reports/invoice.jrxml"
+            id="gauzon_invoice"
+            menu="True"
+            header="False"
+            />
+         <report
+            string="Factura sin N.Alb"
+            model="account.invoice"
+            auto="True"
+            name="account.invoice.sinnalb"
+            rml="gauzon_reports/reports/invoice_sinnalb.jrxml"
+            id="gauzon_invoice_sinnalb"
+            menu="True"
+            header="False"
+            />
+         <report
+            string="Factura SECATAE"
+            model="account.invoice"
+            auto="True"
+            name="account.invoice.secat"
+            rml="gauzon_reports/reports/invoice_secat.jrxml"
+            id="gauzon_invoice_secat"
+            menu="True"
+            header="False"
+            />
+
+    </data>
+</openerp>

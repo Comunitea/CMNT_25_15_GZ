@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+    <openerp>
+        <data>
+
+        <!--<record id="view_move_tree_reception_picking_remove_buttons" model="ir.ui.view">
+            <field name="name">view.move.tree.reception.picking.remove.buttons</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="stock.view_move_tree_reception_picking"/>
+            <field name="arch" type="xml">
+                <button string="Put in current pack" position="replace">
+                </button>
+            </field>
+        </record>-->
+
+        <!--<record id="view_picking_out_form_invisible_buttons_when_pack" model="ir.ui.view">
+            <field name="name">view.picking.out.form.invisible.buttons.when.pack</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_lines']/tree/button[@name='setlast_tracking']" position="replace">
+                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        groups="base.group_extended"
+                        icon="terp-stock_effects-object-colorize"/>
+                </xpath>
+                <xpath expr="//field[@name='move_lines']/tree/button[@string='Put in a new pack']" position="replace">
+                    <button name="%(stock.split_into)d" string="Put in a new pack" type="action"
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        icon="terp-stock_effects-object-colorize"
+                        groups="base.group_extended"
+                        />
+                </xpath>
+            </field>
+        </record>-->
+
+    </data>
+</openerp>
+
+

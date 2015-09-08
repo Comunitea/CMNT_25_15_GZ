@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="trial_balance_wizard_form_view" model="ir.ui.view">
+            <field name="name">trial.balance.wizard.form.view</field>
+            <field name="model">trial.balance.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="company_id"/>
+                    <field name="fiscalyear"/>
+                    <separator string="Accounts to include" colspan="4"/>
+                    <field name="account_list" nolabel="1" colspan="4" domain="[('company_id','=',company_id)]"/>
+                    <separator string="Business lines to include" colspan="4"/>
+                    <field name="business_line_ids" nolabel="1" colspan="4"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="export_trial_balance" string="Export" type="object" icon="gtk-ok" default_focus="1" />
+                </form>
+            </field>
+        </record>
+
+        <record id="action_trial_balance_wizard" model="ir.actions.act_window">
+            <field name="name">action.trial.balance.wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">trial.balance.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="gauzon_dash_board_menu"  name="Dash Board" parent="account.menu_finance"/>
+        <menuitem action="action_trial_balance_wizard" id="view_trial_balance_wizard"  name="Export Trial Balance" parent="gauzon_dash_board_menu"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="invoice_supplier_form_add_seq" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.add_seq</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="type">form</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <field name="invoice_line" position="attributes">
+                    <attribute name="default_get">{'lines': invoice_line}</attribute>
+                </field>
+                <xpath expr="//field[@name='invoice_line']/tree/field[@name='product_id']" position="before">
+                    <field name="sequence"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_form_add_seq" model="ir.ui.view">
+            <field name="name">account.invoice.form.add.seq</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_by_business_line.invoice_form_inherit_add_business_line"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="invoice_line" position="attributes">
+                    <attribute name="default_get">{'lines': invoice_line, 'business_line': business_line_id}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_line_tree_add_seq" model="ir.ui.view">
+            <field name="name">account.invoice.line.tree.add.seq</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="sequence"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_line_form_add_seq" model="ir.ui.view">
+            <field name="name">account.invoice.line.form.add_seq</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="sequence"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

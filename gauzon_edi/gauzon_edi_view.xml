@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Documento EDI-->
+        <record model="ir.ui.view" id="edi_doc_form">
+            <field name="name">edi.doc.form</field>
+            <field name="model">edi.doc</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Documento EDI">
+                <notebook>
+                    <page string="Documento">
+                        <group col="4" colspan="4">
+                            <group col="2" colspan="2">
+                                <group col="2" colspan="2">
+                                    <separator colspan="2" string="Identificador"/>
+                                    <field name="name" readonly="1" select="1"/>
+                                    <field name="file_name" readonly="1" select="1"/>
+                                    <field name="date" readonly="1" select="1"/>
+
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="2" string="Estado"/>
+                                    <field name="status" readonly="1" select="1"/>
+                                    <field name="date_process" readonly="1" select="1"/>
+                                </group>
+                            </group>
+                            <group col="2" colspan="2">
+                                <group col="2" colspan="2">
+                                    <separator colspan="2" string="Documento"/>
+                                    <field name="type" readonly="1" select="1"/>
+                                    <field name="mode" readonly="1" select="1"/>
+                                    <field name='sale_order_id' readonly="1" select="2"/>
+                                    <field name='picking_id' readonly="1" select="2"/>
+                                    <field name='invoice_id' readonly="1" select="2"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <separator colspan="2" string="Envio"/>
+                                    <field name="response_document_id" readonly="1" select="1"/>
+                                    <field name="send_response" readonly="1" select="1"/>
+                                    <field name="send_date" readonly="1" select="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <separator colspan="4" string="Códigos"/>
+                                <field name="gln_e" readonly="1"/>
+                                <field name="gln_v" readonly="1" />
+                                <field name="gln_c" readonly="1" />
+                                <field name="gln_r" readonly="1" />
+                            </group>
+                            <newline/>
+                        </group>
+                    </page>
+                    <page string="Fichero">
+                        <label string="Xml del fichero" colspan="4"/>
+                        <field name='message' colspan="4" readonly="1" select="2" nolabel="1"/>
+                    </page>
+                </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="edi_doc_tree">
+            <field name="name">edi.doc.tree</field>
+            <field name="model">edi.doc</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Documentos EDI">
+                    <field name="date"/>
+                    <field name="status"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="date_process" />
+                    <field name="sale_order_id" />
+                    <field name="picking_id" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_edi_doc">
+            <field name="name">Documentos EDI</field>
+            <field name="res_model">edi.doc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+        </record>
+
+        <!-- Configuracion EDI-->
+        <record model="ir.ui.view" id="edi_configuration_form">
+            <field name="name">edi.configuration.form</field>
+            <field name="model">edi.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configuracion EDI">
+                    <field name="name"/>
+                    <field name="salesman"/>
+                    <field name="local_mode"/>
+                    <field name="ftpbox_path"/>
+                    <newline/>
+                    <group attrs="{'invisible':[('local_mode','=',True)]}" string="Buzon FTP" colspan="4">
+                        <field name="ftp_host" attrs="{'required':[('local_mode','=',False)]}"/>
+                        <field name="ftp_port" attrs="{'required':[('local_mode','=',False)]}"/>
+                        <field name="ftp_user"/>
+                        <field name="ftp_password" attrs="{'required':[('local_mode','=',False)]}" password="True"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="edi_configuration_tree">
+            <field name="name">edi.configuration.tree</field>
+            <field name="model">edi.configuration</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Configuracion EDI">
+                    <field name="name"/>
+                    <field name="ftp_host"/>
+                    <field name="ftp_user"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_edi_configuration">
+            <field name="name">Configuracion EDI</field>
+            <field name="res_model">edi.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+        </record>
+
+<!-- ************************* HERENCIAS *********************** -->
+        <!-- INHERITED sale.orders -->
+        <record model="ir.ui.view" id="view_edi_sale_order_form" >
+            <field name="name">edi.sale_order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside" >
+                    <page string="EDI">
+                        <field name="order_type"/>
+                        <field name="funcion_mode"/>
+                        <field name="urgent"/>
+                        <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+                 <field name="warehouse_id" position="after">
+                    <field name="top_date"/>
+                     <field name="num_contract"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITED product.product form -->
+        <record model="ir.ui.view" id="view_edi_product_form" >
+            <field name="name">edi.product.product</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="ean13" position="after">
+                    <field name="ean13v"/>
+                </field>
+                 <field name="default_code" position="after">
+                    <field name="refcli" />
+                    <field name="refprov" />
+                </field>
+            </field>
+        </record>
+          <!-- INHERITED product.product tree -->
+        <!--<record model="ir.ui.view" id="view_edi_product_tree" >
+            <field name="name">view.edi.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view" />
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="variants" position="replace">
+                    <field name="refcli"/>
+                    <field name="refprov"/>
+                </field>
+                <field name="default_code" position="replace">
+                </field>
+            </field>
+        </record>-->
+          <!-- INHERITED product.product search -->
+        <record model="ir.ui.view" id="view_edi_product_search" >
+            <field name="name">view.edi.product.search</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view" />
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="after">
+                    <field name="refcli"/>
+                    <field name="refprov"/>
+                </field>
+            </field>
+        </record>
+        <!-- INHERITED res.partner -->
+        <record model="ir.ui.view" id="view_edi_res_partner_form" >
+            <field name="name">edi.res.partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="gln" select="2"/>
+                    <field name="edi_operational_code" select="2"/>
+                    <field name="customer_reference" select="2"/>
+                    <field name="edi_relation" select="2"/>
+                    <field name="center_code" select="1" string="UNOR"/>
+                    <field name="fiscal_position" select="1" />
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITED payment.type -->
+        <record model="ir.ui.view" id="view_edi_payment_type_form" >
+            <field name="name">edi.payment.type</field>
+            <field name="model">payment.mode</field>
+            <field name="inherit_id" ref="account_payment.view_payment_mode_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="edi_code" select="1"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITED product_uom -->
+        <record model="ir.ui.view" id="view_edi_product_uom_form" >
+            <field name="name">edi.product.uom</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="edi_code" select="1"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITED stock_picking -->
+        <record model="ir.ui.view" id="view_edi_stock_picking_add_contract_form" >
+            <field name="name">view.edi.stock.picking.add.contract.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="backorder_id" position="after">
+                    <field name="num_contract"/>
+                    <field name="return_picking_id"/>
+                </field>
+                <notebook position="inside" >
+                    <page string="EDI">
+                        <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+                 <button name="%(stock.act_stock_return_picking)d" position="replace">
+                      <button name="%(stock.act_stock_return_picking)d" string="Return Products" attrs="{'invisible' : [ '|',('return_picking_id','!=',False),('state','!=', 'done') ]}" type="action" icon="gtk-execute"/>
+                 </button>
+            </field>
+        </record>
+
+        <record id="view_move_picking_form_add_edi_fields" model="ir.ui.view">
+            <field name="name">stock.move.form.add_edi_fields</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="product_uom_qty" position="after">
+                    <field name="acepted_qty"/>
+                </field>
+                <field name="product_packaging" position="after">
+                    <newline/>
+                    <separator string="Notas" colspan="4"/>
+                    <field name="note" colspan="4" nolabel="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_move_picking_tree_add_edi_fields" model="ir.ui.view">
+            <field name="name">stock.move.tree.add_edi_fields</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <field name="product_uom_qty" position="after">
+                    <field name="acepted_qty"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITED account_invoice -->
+        <record model="ir.ui.view" id="view_edi_account_invoice_add_contract_form" >
+            <field name="name">view.edi.account.invoice.add.contract.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="num_contract"/>
+                </field>
+                <notebook position="inside" >
+                    <page string="EDI">
+                        <field name="gi_cab_nodo"/>
+                        <field name="gi_cab_funcion"/>
+                        <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <!-- INHERITED res_company -->
+        <record model="ir.ui.view" id="view_gauzon_company_add_street2_form" >
+            <field name="name">view.gauzon.company.add.street2.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="street2" position="replace">
+                    <field name="street2"/>
+                </field>
+            </field>
+        </record>
+
+ <!-- **************************** MENUS ***************************** -->
+        <menuitem id="menu_edi" name="EDI" parent="base.menu_administration"/>
+            <menuitem id="menu_edi_configuration" parent="menu_edi" name="Configuracion EDI" action="act_edi_configuration" sequence="1"/>
+            <menuitem id="menu_edi_doc" parent="menu_edi" name="Documentos" action="act_edi_doc" sequence="1"/>
+
+    </data>
+</openerp>
+

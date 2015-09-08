@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="INVOIC" gi_cab_nodo="${ o.gi_cab_nodo or '' }" gi_cab_funcion="${ o.gi_cab_funcion or '' }">
+
+  <gi_cab>
+    <gi_cab_numcontr>${ o.num_contract or '' }</gi_cab_numcontr>
+    <gi_cab_numfac>${ o.number or '' }</gi_cab_numfac>
+    <gi_cab_fecha>${ o.date_invoice or '' }</gi_cab_fecha>
+    <gi_cab_emisor>${ o.company_id.partner_id.gln or '' }</gi_cab_emisor>
+    <gi_cab_vendedor>
+      <gi_cab_vendedor_gln>${ o.company_id.partner_id.gln or '' }</gi_cab_vendedor_gln>
+      <gi_cab_vendedor_name>${ o.company_id.name or '' }</gi_cab_vendedor_name>
+      <gi_cab_vendedor_recmerc>${ o.company_id.company_registry or '' }</gi_cab_vendedor_recmerc>
+      <gi_cab_vendedor_vat>${ o.company_id.partner_id.vat or '' }</gi_cab_vendedor_vat>
+      <gi_cab_vendedor_dir1>${ o.company_id.street or '' }</gi_cab_vendedor_dir1>
+      <gi_cab_vendedor_dir2>${ o.company_id.street2 or '' }</gi_cab_vendedor_dir2>
+      <gi_cab_vendedor_pcode>${ o.company_id.zip or '' }</gi_cab_vendedor_pcode>
+    </gi_cab_vendedor>
+    <gi_cab_comprador>${ o.address_invoice_id.gln or '' }</gi_cab_comprador>
+    <gi_cab_dirfac>
+      <gi_cab_dirfac_gln>${ o.address_invoice_id.gln or '' }</gi_cab_dirfac_gln>
+      <gi_cab_dirfac_name>${ o.partner_id.name or '' }</gi_cab_dirfac_name>
+      <gi_cab_dirfac_vat>${ o.address_invoice_id.partner_id.vat or '' }</gi_cab_dirfac_vat>
+      <gi_cab_dirfac_dir1>${ o.address_invoice_id.street or '' }</gi_cab_dirfac_dir1>
+      <gi_cab_dirfac_dir2>${ o.address_invoice_id.street2 or '' }</gi_cab_dirfac_dir2>
+      <gi_cab_dirfac_pcode>${ o.address_invoice_id.zip or '' }</gi_cab_dirfac_pcode>
+    </gi_cab_dirfac>
+    <gi_cab_totamount gi_cab_mon="${ o.currency_id.name or '' }">${ o.amount_untaxed }</gi_cab_totamount>
+    <gi_cab_taxamount gi_cab_mon="${ o.currency_id.name or '' }" percentage="${o.invoice_line and (o.invoice_line[0].invoice_line_tax_id) and (int(o.invoice_line[0].invoice_line_tax_id[0].amount * 100)) or int('0')}">${ o.amount_tax }</gi_cab_taxamount>
+    <gi_cab_payableamount gi_cab_mon="${ o.currency_id.name or '' }">${ o.amount_total }</gi_cab_payableamount>
+  </gi_cab>
+
+  <gi_lines><% count = 1 %>
+    %for l in o.invoice_line:
+    <gi_lin n="${ count }">
+      <gi_lin_numped>${ l.sale_line_id and l.sale_line_id.order_id.client_order_ref or '' }</gi_lin_numped>
+      <gi_lin_ean13v>${ l.product_id.ean13v or '' }</gi_lin_ean13v>
+      <gi_lin_refcli>${ l.sale_line_id and l.sale_line_id.refcli or '' }</gi_lin_refcli>
+      <gi_lin_refprov>${ l.sale_line_id and l.sale_line_id.refprov or '' }</gi_lin_refprov>
+      <gi_lin_descmer>${ l.sale_line_id and l.sale_line_id.name or '' }</gi_lin_descmer>
+      <gi_lin_cantfac gi_lin_umedfac="${ l.uos_id and l.uos_id.edi_code or '' }">${ l.quantity}</gi_lin_cantfac>
+      <gi_lin_precion gi_lin_mon="${ o.currency_id.name or '' }">${ l.price_unit }</gi_lin_precion><%imp = l.invoice_line_tax_id and int(l.invoice_line_tax_id[0].amount * 100) or int('0') %>
+      <gi_lin_baseamount gi_lin_mon="${ o.currency_id.name or '' }" >${ l.price_subtotal }</gi_lin_baseamount>
+      <gi_lin_taxamount gi_lin_mon="${ o.currency_id.name or '' }" percentage="${ imp }">${ round(l.price_subtotal*(imp/100.0),2) }</gi_lin_taxamount>
+    </gi_lin><% count += 1 %>
+    %endfor
+  </gi_lines>
+
+</doc>

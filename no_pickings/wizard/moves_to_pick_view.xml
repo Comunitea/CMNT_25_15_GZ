@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="wizard_moves_to_pick_form" model="ir.ui.view">
+            <field name="name">wizard.moves.to.pick.form</field>
+            <field name="model">moves.to.pick</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <separator colspan="4" string="Products"/>
+                    <field name="move_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
+                        <button name="to_pick" string="_To pick" colspan="1" type="object" icon="gtk-go-forward" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <act_window
+            id="action moves_to_pick" name="To pick"
+            res_model="moves.to.pick"
+            src_model="stock.move"
+            view_type="form"
+            view_mode="form"
+            target="new"
+            view_id="wizard_moves_to_pick_form"
+            key2="client_action_multi"
+            />
+            
+        <record id="moves_to_pick_line_tree" model="ir.ui.view">
+            <field name="name">moves.to.pick.line.tree</field>
+            <field name="model">moves.to.pick.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="update_cost" invisible="1"/>
+                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="moves_to_pick_line_form" model="ir.ui.view">
+            <field name="name">moves.to.pick.line.form</field>
+            <field name="model">moves.to.pick.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="update_cost" invisible="1"/>
+                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                 </form>
+            </field>
+        </record>
+            
+    </data>
+</openerp>

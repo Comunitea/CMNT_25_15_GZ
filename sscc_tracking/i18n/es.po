@@ -1,0 +1,92 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#   * sscc_tracking
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-12 08:55+0000\n"
+"PO-Revision-Date: 2013-06-12 08:55+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sscc_tracking
+#: field:res.company,aecoc_code:0
+msgid "AECOC Code"
+msgstr "Código AECOC"
+
+#. module: sscc_tracking
+#: model:ir.model,name:sscc_tracking.model_stock_packaging_type
+msgid "Packaging"
+msgstr "Empaquetado"
+
+#. module: sscc_tracking
+#: view:stock.packaging.type:0
+msgid "Search Inventory"
+msgstr "Buscar inventario"
+
+#. module: sscc_tracking
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "¡El nombre de la compañía debe ser único!"
+
+#. module: sscc_tracking
+#: field:stock.packaging.type,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: sscc_tracking
+#: model:ir.model,name:sscc_tracking.model_stock_tracking
+msgid "Packs"
+msgstr "Paquetes"
+
+#. module: sscc_tracking
+#: model:ir.model,name:sscc_tracking.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: sscc_tracking
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No se pueden crear compañías recursivas."
+
+#. module: sscc_tracking
+#: field:stock.tracking,packaging_type_id:0
+msgid "Packaging Type"
+msgstr "Tipo de paquete"
+
+#. module: sscc_tracking
+#: help:stock.packaging.type,alias:0
+msgid " Abbreviation name of the packaging type"
+msgstr " Nombre abreviado del tipo de paquete"
+
+#. module: sscc_tracking
+#: field:stock.packaging.type,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: sscc_tracking
+#: model:ir.ui.menu,name:sscc_tracking.menu_action_packaging_type
+msgid "Packaging Types"
+msgstr "Tipos de paquete"
+
+#. module: sscc_tracking
+#: view:stock.packaging.type:0
+msgid "Stock Packaging Types"
+msgstr "Tipos de paquete"
+
+#. module: sscc_tracking
+#: help:stock.packaging.type,name:0
+msgid "Name of the packaging type"
+msgstr "Nombre del tipo de paquete"
+
+#. module: sscc_tracking
+#: model:ir.actions.act_window,name:sscc_tracking.action_packaging_type
+msgid "Packaging types"
+msgstr "Tipos de paque"
+

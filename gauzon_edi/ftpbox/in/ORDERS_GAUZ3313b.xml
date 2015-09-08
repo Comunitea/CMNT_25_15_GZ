@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="ORDERS" gi_cab_nodo="220" gi_cab_funcion="ORI">
+  <gi_cab>
+    <gi_cab_unor>2021</gi_cab_unor>
+    <gi_cab_numped>2021201300159b</gi_cab_numped>
+    <gi_cab_fecha>2013-04-04</gi_cab_fecha>
+    <gi_cab_fechatop/>
+    <gi_cab_emisor>8435211220022</gi_cab_emisor>
+    <gi_cab_vendedor>8437013182003</gi_cab_vendedor>
+    <gi_cab_comprador>8435211220022</gi_cab_comprador>
+    <gi_cab_shipto>8435211220213</gi_cab_shipto>
+    <gi_cab_moneda>EUR</gi_cab_moneda>
+    <gi_cab_tneto>0</gi_cab_tneto>
+  </gi_cab>
+  <gi_lines>
+  <gi_lin n="1">
+    <gi_lin_ean13v>5815332069836</gi_lin_ean13v>
+    <gi_lin_refcli>5815332069836</gi_lin_refcli>
+    <gi_lin_refprov>5815332069836</gi_lin_refprov>
+    <gi_lin_descmer>FAX INDEPENDIENTE</gi_lin_descmer>
+    <gi_lin_cantped gi_lin_umedida="SE">1</gi_lin_cantped>
+    <gi_lin_precion gi_lin_monprec="EUR">0</gi_lin_precion>
+    <gi_lin_cantfac gi_lin_umedfac="SE">1</gi_lin_cantfac>
+    <gi_lin_obs>
+      <gi_lin_obs_texto1>TOFINO</gi_lin_obs_texto1>
+    </gi_lin_obs>
+  </gi_lin>
+  </gi_lines>
+</doc>
