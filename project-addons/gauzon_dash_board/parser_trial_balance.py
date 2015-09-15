@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from report import report_sxw
-from report.report_sxw import rml_parse
+from openerp.report import report_sxw
+from openerp.report.report_sxw import rml_parse
 import calendar
 import itertools
 

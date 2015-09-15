@@ -61,49 +61,49 @@ class stock_move(orm.Model):
     }
 
 
-class stock_partial_picking(orm.TransientModel):
-    _inherit = "stock.partial.picking"
+#~ class stock_partial_picking(orm.TransientModel):
+    #~ _inherit = "stock.partial.picking"
+#~
+    #~ def default_get(self, cr, uid, fields, context=None):
+        #~ if context is None: context = {}
+        #~ res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
+        #~ picking_ids = context.get('active_ids', [])
+        #~ if not picking_ids or (not context.get('active_model') == 'stock.picking') \
+            #~ or len(picking_ids) != 1:
+            #~ # Partial Picking Processing may only be done for one picking at a time
+            #~ return res
+        #~ picking_id, = picking_ids
+        #~ if 'picking_id' in fields:
+            #~ res.update(picking_id=picking_id)
+        #~ if 'move_ids' in fields:
+            #~ picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
+            #~ move_ids = [x.id for x in picking.move_lines]
+            #~ move_ids = self.pool.get('stock.move').search(cr, uid, [('id', 'in', move_ids)], order="sequence asc")
+            #~ move_ids = self.pool.get('stock.move').browse(cr, uid, move_ids)
+            #~ moves = [self._partial_move_for(cr, uid, m) for m in move_ids if m.state not in ('done','cancel')]
+            #~ res.update(move_ids=moves)
+        #~ if 'date' in fields:
+            #~ res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        #~ return res
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None: context = {}
-        res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        picking_ids = context.get('active_ids', [])
-        if not picking_ids or (not context.get('active_model') == 'stock.picking') \
-            or len(picking_ids) != 1:
-            # Partial Picking Processing may only be done for one picking at a time
-            return res
-        picking_id, = picking_ids
-        if 'picking_id' in fields:
-            res.update(picking_id=picking_id)
-        if 'move_ids' in fields:
-            picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
-            move_ids = [x.id for x in picking.move_lines]
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('id', 'in', move_ids)], order="sequence asc")
-            move_ids = self.pool.get('stock.move').browse(cr, uid, move_ids)
-            moves = [self._partial_move_for(cr, uid, m) for m in move_ids if m.state not in ('done','cancel')]
-            res.update(move_ids=moves)
-        if 'date' in fields:
-            res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        return res
 
-
-class stock_partial_picking_line(orm.TransientModel):
-
-    _inherit = "stock.partial.picking.line"
-
-    def _get_supplier_code(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for line in self.browse(cr, uid, ids):
-            res[line.id] = ""
-            if line.move_id.purchase_line_id:
-                results = self.pool.get('product.supplierinfo').search(cr, uid, [('name', '=', line.move_id.purchase_line_id.order_id.partner_id.id),('product_id', '=', line.product_id.product_tmpl_id.id),('product_code', '!=', False)])
-                if results:
-                    info = self.pool.get('product.supplierinfo').browse(cr, uid, results[0])
-                    res[line.id] = info.product_code or ""
-
-        return res
-
-    _columns = {
-        'supplier_code': fields.function(_get_supplier_code, method=True, string="Supplier code", readonly=True, type="char", size=125)
-    }
+#~ class stock_partial_picking_line(orm.TransientModel):
+#~
+    #~ _inherit = "stock.partial.picking.line"
+#~
+    #~ def _get_supplier_code(self, cr, uid, ids, field_name, arg, context):
+        #~ res = {}
+        #~ for line in self.browse(cr, uid, ids):
+            #~ res[line.id] = ""
+            #~ if line.move_id.purchase_line_id:
+                #~ results = self.pool.get('product.supplierinfo').search(cr, uid, [('name', '=', line.move_id.purchase_line_id.order_id.partner_id.id),('product_id', '=', line.product_id.product_tmpl_id.id),('product_code', '!=', False)])
+                #~ if results:
+                    #~ info = self.pool.get('product.supplierinfo').browse(cr, uid, results[0])
+                    #~ res[line.id] = info.product_code or ""
+#~
+        #~ return res
+#~
+    #~ _columns = {
+        #~ 'supplier_code': fields.function(_get_supplier_code, method=True, string="Supplier code", readonly=True, type="char", size=125)
+    #~ }
 

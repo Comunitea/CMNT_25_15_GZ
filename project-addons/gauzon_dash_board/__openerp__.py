@@ -27,7 +27,7 @@
         Añade un asistente para exportar el sumas y saldos desglosado por mes y linea de negocio al cuadro de mandos de gauzón""",
     'author': 'Pexego Sistemas Informáticos',
     'website': 'https://www.pexego.es',
-    'depends': ['base', 'account', 'account_by_business_line','report_aeroo','report_aeroo_ooo'],
+    'depends': ['base', 'account', 'account_by_business_line','report_aeroo'],
     'init_xml': [],
     'data': [
                     'wizard/trial_balance_wizard_view.xml',

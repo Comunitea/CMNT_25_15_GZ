@@ -26,7 +26,7 @@
     "website": "http://www.pexego.es",
     "category": "Enterprise Specific Modules",
     "description": """Informes para Gauzón.""",
-    "depends": ['base', 'sale', 'stock', 'purchase', 'account', 'jasper_reports','purchase_delivery','purchase_payment','purchase_discount','gauzon_edi','stock_picking_valued', 'account_by_business_line'],
+    "depends": ['base', 'sale', 'stock', 'purchase', 'account', 'jasper_reports','account_payment_purchase','purchase_discount','gauzon_edi','stock_picking_valued', 'account_by_business_line'],
     "init_xml": [],
     "demo_xml": [],
     "data": ['gauzon_reports.xml',

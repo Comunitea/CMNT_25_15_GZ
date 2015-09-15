@@ -11,7 +11,7 @@
                 <field name="order_line" position="attributes">
                     <attribute name="default_get">{'lines': order_line}</attribute>
                 </field>
-                <xpath expr="//field[@name='order_line']/form/notebook/page[@string='Order Line']/group[1]/group[1]/field[@name='invoiced']" position="after">
+                <xpath expr="//field[@name='order_line']/form//field[@name='address_allotment_id']" position="after">
                     <field name="sequence"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="before">
