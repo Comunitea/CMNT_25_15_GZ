@@ -55,7 +55,6 @@ class account_account(orm.Model):
         accounts = {}
         res = {}
         null_result = dict((fn, 0.0) for fn in field_names)
-
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
@@ -65,8 +64,6 @@ class account_account(orm.Model):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Filters: %s'%filters)
 
             if context.get('business_lines', False):
                 request = ("SELECT l.account_id as id, " +\
@@ -89,11 +86,9 @@ class account_account(orm.Model):
                            " GROUP BY l.account_id")
                 params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Status: %s'%cr.statusmessage)
 
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
+            for row in cr.dictfetchall():
+                accounts[row['id']] = row
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
@@ -172,12 +167,20 @@ class account_account(orm.Model):
             }, context=context)
         return True
 
+
+
     _columns = {
         'require_business_line': fields.boolean('Require business line'),
         'need_business_line': fields.boolean('Need business line'),
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
         'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
+        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
+                                           help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
+                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
+                                                help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
     }
 
 

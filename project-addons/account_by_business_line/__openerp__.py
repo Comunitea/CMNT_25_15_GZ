@@ -34,7 +34,7 @@
     'depends': ['base', 'account', 'account_financial_report_webkit', 'account_voucher', 'account_analytic_plans'],
     'init_xml': [],
     'data': ['account_move_line_view.xml',
-                    #'wizard/wizard_account_balance_report_view.xml',
+                    'wizard/wizard_account_balance_report_view.xml',
                     'account_view.xml',
                     'account_invoice_view.xml',
                     'business_line_view.xml',

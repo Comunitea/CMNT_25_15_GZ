@@ -5,20 +5,21 @@
         <record id="account_bank_transfer_wzd_form" model="ir.ui.view">
             <field name="name">account.bank.transfer.wzd.form</field>
             <field name="model">account.bank.transfer.wzd</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
-                    <separator string="Transfer between banks" colspan="4"/>
-                    <field name="name" colspan="4"/>
-                    <group colspan="4" col="6">
-                    <field name="orig_journal_id"/>
-                    <field name="dest_journal_id"/>
-                    <field name="date"/>
+                    <group>
+                        <separator string="Transfer between banks" colspan="4"/>
+                        <field name="name" colspan="4"/>
+                        <group colspan="4" col="6">
+                        <field name="orig_journal_id"/>
+                        <field name="dest_journal_id"/>
+                        <field name="date"/>
+                        </group>
+                        <field name="mid_account_id"/>
+                        <field name="amount"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="execute_transfer" type="object" string="Execute transfer" icon="gtk-execute"/>
                     </group>
-                    <field name="mid_account_id"/>
-                    <field name="amount"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="execute_transfer" type="object" string="Execute transfer" icon="gtk-execute"/>
                 </form>
             </field>
         </record>

@@ -20,13 +20,23 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields, api
 
-class account_balance_full_report(orm.TransientModel):
 
-    _inherit = "account.balance.full.report"
+class account_balance_full_report(models.TransientModel):
 
-    _columns = {
-        'business_line_ids': fields.many2many('account.business.line', 'balance_report_account_business_line_rel', 'wizard_id', 'business_line_id', 'Business lines')
-    }
+    _inherit = "trial.balance.webkit"
 
+    business_line_ids = fields.\
+        Many2many('account.business.line',
+                  'trial_balance_report_account_business_line_rel',
+                  'wizard_id', 'business_line_id', 'Business lines')
+
+    @api.multi
+    def _print_report(self, data):
+        res = super(account_balance_full_report, self)._print_report(data)
+        if self[0].business_line_ids:
+            res['datas']["form"]["used_context"]["business_lines"] =\
+                [x.id for x in self[0].business_line_ids]
+
+        return res

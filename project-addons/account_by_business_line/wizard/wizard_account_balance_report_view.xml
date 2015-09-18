@@ -2,18 +2,18 @@
 <openerp>
 <data>
 
-    <record id="account_balance_full_report_view_add_analytic" model="ir.ui.view">
-        <field name="name">Full Account Balance.add_analytic</field>
-        <field name="model">account.balance.full.report</field>
-        <field name="inherit_id" ref="account_financial_report.account_balance_full_report_view"/>
-        <field name="type">form</field>
+     <record id="account_trial_balance_view_webkit_add_business_line" model="ir.ui.view">
+        <field name="name">Trial Balance</field>
+        <field name="model">trial.balance.webkit</field>
+        <field name="inherit_id" ref="account_financial_report_webkit.account_trial_balance_view_webkit"/>
         <field name="arch" type="xml">
-            <xpath expr="/form/group[2]" position="before">
-                <separator string="Business lines to include" colspan="4"/>
-                <field name="business_line_ids" nolabel="1" colspan="4"/>
-            </xpath>
+            <page name="filters" position="after">
+                <page string="Business Line Filters" name="blines">
+                    <field name="business_line_ids" nolabel="1" colspan="4"/>
+                </page>
+            </page>
         </field>
-     </record>
+    </record>
 
 </data>
 </openerp>

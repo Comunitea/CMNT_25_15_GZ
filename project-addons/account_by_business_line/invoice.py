@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
+from openerp import api
 
 
 class account_invoice(orm.Model):
@@ -36,15 +37,14 @@ class account_invoice(orm.Model):
         res['business_line_id'] = x.get('business_line_id', False)
         return res
 
-    def _refund_cleanup_lines(self, cr, uid, lines):
-        res = super(account_invoice, self)._refund_cleanup_lines(cr, uid, lines)
-        for record in res:
-            line = record[2]
-            if line.get('business_line_id', False):
-                line['business_line_id'] = line['business_line_id'][0]
-
-        return res
-
+    @api.model
+    def _prepare_refund(self, invoice, date=None, period_id=None, description=None, journal_id=None):
+        vals = super(account_invoice, self)._prepare_refund(invoice, date=date,
+                                                            period_id=period_id,
+                                                            description=description,
+                                                            journal_id=journal_id)
+        vals["business_line_id"] = invoice.business_line_id.id
+        return vals
 
 
 class account_invoice_line(orm.Model):

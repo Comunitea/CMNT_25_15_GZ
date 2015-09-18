@@ -81,7 +81,7 @@
         <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
         <field name="arch" type="xml">
             <field name="analytic_id" position="after">
-                <field name="analytics_id" required="1"/>
+                <field name="analytics_id"/>
             </field>
         </field>
     </record>
@@ -92,25 +92,10 @@
         <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
         <field name="arch" type="xml">
             <xpath  expr="//field[@name='analytic_id']" position="after">
-                <field name="analytics_id" required="1"/>
+                <field name="analytics_id"/>
             </xpath>
         </field>
     </record>
-
-    <!--<record id="account_analytic_plans.view_bank_statement_inherit_form" model="ir.ui.view">
-        <field name="name">account.bank.statement.form.inherit</field>
-        <field name="model">account.bank.statement</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="account.view_bank_statement_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="after">
-                <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-            </xpath>
-            <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='analytic_account_id']" position="after">
-                <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-            </xpath>
-        </field>
-    </record>-->
 
 </data>
 </openerp>

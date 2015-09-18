@@ -24,5 +24,5 @@ import business_line
 import account
 import invoice
 import account_voucher
-#import wizard
-#import report
+import wizard
+import report

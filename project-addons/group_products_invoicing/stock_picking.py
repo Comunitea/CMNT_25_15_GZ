@@ -61,17 +61,3 @@ class account_invoice_line(orm.Model):
         'sale_line_id' : fields.many2one('sale.order.line','Sale line', readonly=True),
     }
 
-
-class account_invoice(orm.Model):
-
-    _inherit = "account.invoice"
-
-    def _refund_cleanup_lines(self, cr, uid, lines):
-        res = super(account_invoice, self)._refund_cleanup_lines(cr, uid, lines)
-        for record in res:
-            line = record[2]
-            if line.get('sale_line_id', False):
-                line['sale_line_id'] = line['sale_line_id'][0]
-
-        return res
-

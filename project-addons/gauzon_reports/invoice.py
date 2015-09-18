@@ -48,15 +48,6 @@ class account_invoice(orm.Model):
         'amount_discounted': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Discounted', multi='extra', readonly=True),
     }
 
-    def _refund_cleanup_lines(self, cr, uid, lines):
-        res = super(account_invoice, self)._refund_cleanup_lines(cr, uid, lines)
-        for record in res:
-            line = record[2]
-            if line.get('picking_id', False):
-                line['picking_id'] = line['picking_id'][0]
-
-        return res
-
 
 class account_invoice_line(orm.Model):
 

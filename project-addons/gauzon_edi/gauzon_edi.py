@@ -23,7 +23,7 @@
 from openerp.osv import orm, fields
 import time
 import openerp.addons.decimal_precision as dp
-from openerp import _, netsvc
+from openerp import _, netsvc, api
 
 class edi_doc(orm.Model):
     _name = "edi.doc"
@@ -280,10 +280,20 @@ class account_invoice(orm.Model):
         'gi_cab_nodo': fields.selection ([ ('380', 'Comercial'),('381', 'Nota de crédito'),('383', 'Nota de débito')],'Nodo'),
         'gi_cab_funcion': fields.selection ([ ('9', 'Original'),('7', 'Duplicado'),('31', 'Copia'),('5', 'Remplazo')],'Funcion'),
     }
+
     _defaults = {
         'gi_cab_nodo': '380',
         'gi_cab_funcion': '9',
     }
+
+    @api.model
+    def _prepare_refund(self, invoice, date=None, period_id=None, description=None, journal_id=None):
+        vals = super(account_invoice, self)._prepare_refund(invoice, date=date,
+                                                            period_id=period_id,
+                                                            description=description,
+                                                            journal_id=journal_id)
+        vals["num_contract"] = invoice.num_contract
+        return vals
 
 
 class stock_return_picking(orm.TransientModel):
