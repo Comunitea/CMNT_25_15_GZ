@@ -27,7 +27,8 @@
     "category": "Accounting & Finance",
     "website": "www.comunitea.com",
     "license": "AGPL-3",
-    "depends": ["base", "l10n_es_facturae"],
+    "depends": ["base", "l10n_es_facturae", "gauzon_reports",
+                "gauzon_edi"],
     "data": [],
     "installable": True,
 }
