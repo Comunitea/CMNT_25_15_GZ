@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2012 Pexego Sistemas Informáticos. All Rights Reserved
-#    $Marta Vázquez Rodríguez$
+#    OpenERP, Open Source Management Solution
+#    Copyright (c) 2015 Comunitea Servicios Tecnológicos S.L.
+#                       Omar Castiñeira Saavedra <omar@comunitea.com>
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the Affero GNU General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -14,15 +15,9 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the Affero GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm, fields
 
-class res_partner(orm.Model):
-    _inherit = "res.partner"
-
-    _columns = {
-         'valued_picking': fields.boolean('Valued picking', help="Marks this partner wants valued pickings")
-    }
+from . import create_facturae
