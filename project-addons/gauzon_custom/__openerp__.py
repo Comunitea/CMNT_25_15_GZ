@@ -31,7 +31,6 @@
     'depends': ['base', 'product', 'sale_stock', 'account', 'purchase', 'analytic', 'purchase_discount'],
     'init_xml': [],
     'data': [
-        'stock_view.xml',
         'account_invoice_view.xml',
         'account_move_view.xml',
         'account_tax_code_view.xml',

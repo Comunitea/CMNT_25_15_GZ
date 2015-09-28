@@ -46,7 +46,7 @@ class product_template(orm.Model):
         ids = []
         supp_ids = self.pool.get('product.supplierinfo').search(cr, uid, [('product_code', args[0][1], args[0][2])])
         if supp_ids:
-            ids = [x.product_id.id for x in self.pool.get('product.supplierinfo').browse(cr, uid, supp_ids, context)]
+            ids = [x.product_tmpl_id.id for x in self.pool.get('product.supplierinfo').browse(cr, uid, supp_ids, context)]
 
         return [('id', 'in', list(set(ids)))]
 
@@ -66,7 +66,7 @@ class product_product(orm.Model):
         if name:
             supp_ids = self.pool.get('product.supplierinfo').search(cr, user, [('product_code', operator, name)])
             if supp_ids:
-                template_ids = [x.product_id.id for x in self.pool.get('product.supplierinfo').browse(cr, user, supp_ids)]
+                template_ids = [x.product_tmpl_id.id for x in self.pool.get('product.supplierinfo').browse(cr, user, supp_ids)]
                 ids = self.search(cr, user, [('product_tmpl_id', 'in', template_ids)])
 
         if not ids:

@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <field name="amount" position="after">
+                <field name="amount" position="before">
                     <field name="account_debit" sum="Debit" invisible="context.get('to_invoice', False)"/>
                     <field name="account_credit" sum="Credit" invisible="context.get('to_invoice', False)"/>
                 </field>

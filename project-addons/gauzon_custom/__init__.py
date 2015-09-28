@@ -22,9 +22,7 @@
 
 import stock
 import account_move
-import account_tax_code
 import analytic_line
 import product
 import partner
 import purchase
-#import invoice

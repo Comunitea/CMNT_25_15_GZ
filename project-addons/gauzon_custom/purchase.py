@@ -31,12 +31,4 @@ class purchase_order(orm.Model):
         'global_analytic_id': fields.many2one('account.analytic.account', 'Analytic account', help="This account is entered by default for new lines")
     }
 
-    def action_cancel_draft(self, cr, uid, ids, *args):
-        res = super(purchase_order, self).action_cancel_draft(cr, uid, ids, args)
-        if not len(ids):
-            return False
-        for purchase in self.browse(cr, uid, ids):
-            self.pool.get('purchase.order.line').write(cr, uid, [x.id for x in purchase.order_line], {'state': 'draft'})
-
-        return res
 

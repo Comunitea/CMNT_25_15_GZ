@@ -8,36 +8,9 @@
             <field name="inherit_id" ref="account.view_tax_code_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="company_id" position="after">
-                    <field name="active"/>
-                </field>
                 <xpath expr="/form/group/group[3]" position="replace"></xpath>
             </field>
         </record>
-
-        <record id="view_tax_code_tree" model="ir.ui.view">
-            <field name="name">account.tax.code.tree</field>
-            <field name="model">account.tax.code</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Account Tax Code">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="account.action_tax_code_list" model="ir.actions.act_window">
-            <field name="name">Tax codes</field>
-            <field name="res_model">account.tax.code</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_tax_code_tree"/>
-            <field name="search_view_id" ref="account.view_tax_code_search"/>
-            <field name="help">The tax code definition depends on the tax declaration of your country. OpenERP allows you to define the tax structure and manage it from this menu. You can define both numeric and alphanumeric tax codes.</field>
-        </record>
-
 
     </data>
 </openerp>

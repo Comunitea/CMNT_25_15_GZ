@@ -29,14 +29,15 @@ class purchase_order_line(orm.Model):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, notes=False, context=None):
+            name=False, price_unit=False, state='draft', context=None):
         """
         onchange handler of product_id.
         """
         res = super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id, partner_id, date_order=date_order,fiscal_position_id=fiscal_position_id,
-                                                              date_planned=date_planned,name=name,price_unit=price_unit,notes=notes,context=context)
+                                                              date_planned=date_planned,name=name,price_unit=price_unit,state=state,context=context)
         if product_id and partner_id and date_order:
-            sinfo_ids = self.pool.get('product.supplierinfo').search(cr, uid, [('product_id', '=', product_id),('name','=',partner_id)])
+            product = self.pool.get('product.product').browse(cr, uid, product_id)
+            sinfo_ids = self.pool.get('product.supplierinfo').search(cr, uid, [('product_tmpl_id', '=', product.product_tmpl_id.id),('name','=',partner_id)])
             if sinfo_ids:
                 pricelist_ids = self.pool.get('pricelist.partnerinfo').search(cr, uid, [('suppinfo_id', 'in', sinfo_ids),('min_quantity','<=',qty),('from_date','<=',date_order)], order="min_quantity DESC, from_date DESC", limit=1)
                 if pricelist_ids:
