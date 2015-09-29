@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <field name="fiscal_position" position="after">
-                <field name="business_line_id" default_get="{'business_line': business_line_id}"/>
+                <field name="business_line_id" widget="selection"/>
             </field>
             <field name="quantity" position="before">
                 <field name="business_line_id" widget="selection"/>
@@ -53,9 +53,6 @@
         <field name="arch" type="xml">
             <field name="fiscal_position" position="after">
                 <field name="business_line_id" widget="selection"/>
-            </field>
-            <field name="invoice_line" position="replace">
-                <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" default_get="{'business_line': business_line_id}"/>
             </field>
         </field>
     </record>

@@ -14,17 +14,5 @@
             </field>
         </record>
 
-        <!--<record id="stock_partial_picking_form_add_supp_code" model="ir.ui.view">
-            <field name="name">stock.partial.picking.form.add_supp_code</field>
-            <field name="model">stock.partial.picking</field>
-            <field name="inherit_id" ref="stock.stock_partial_picking_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="currency"  position="after">
-                    <field name="supplier_code"/>
-                </field>
-            </field>
-        </record>-->
-
     </data>
 </openerp>

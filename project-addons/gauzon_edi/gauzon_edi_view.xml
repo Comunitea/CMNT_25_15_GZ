@@ -293,7 +293,7 @@
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="name" position="after">
+                <field name="origin" position="after">
                     <field name="num_contract"/>
                 </field>
                 <notebook position="inside" >

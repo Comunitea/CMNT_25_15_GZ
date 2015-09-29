@@ -17,10 +17,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################ç
+##############################################################################
 
-import report_custom
-import sale
-import invoice
-import stock
-import purchase
+from . import report_custom
+from . import sale
+from . import invoice
+from . import stock
+from . import purchase
+from . import procurement

@@ -47,10 +47,14 @@ class purchase_order_line(orm.Model):
             for line_record in context['lines']:
                 if not isinstance(line_record, (tuple, list)):
                     line_record_detail = self.read(cr, uid, line_record, ['sequence'])
-                else:
+                elif line_record[0] == 4:
+                    line_record_detail = self.read(cr, uid, line_record[1], ['sequence'])
+                elif line_record[0] == 0:
                     line_record_detail = line_record[2]
+                else:
+                    line_record_detail = False
 
-                if line_record_detail['sequence'] and line_record_detail['sequence'] >= sequence:
+                if line_record_detail and line_record_detail['sequence'] and line_record_detail['sequence'] >= sequence:
                     line_selected = line_record_detail
                     sequence = line_record_detail['sequence']
 
@@ -75,11 +79,12 @@ class purchase_order(orm.Model):
 
         return res
 
-    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         if context is None: context = {}
 
-        res = super(purchase_order, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context)
-        res['sequence'] = order_line.sequence
+        res = super(purchase_order, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context)
+        for rec in res:
+            rec['sequence'] = order_line.sequence
 
         return res
 

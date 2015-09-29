@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2011 Pexego Sistemas Informáticos. All Rights Reserved
+#    Copyright (C) 2015 Comunitea Servicios Tecnológivcos.
 #    $Omar Castiñeira Saavedra$
-#
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,17 +19,19 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 
-class stock_picking(orm.Model):
 
-    _inherit = "stock.picking"
+class ProcurementOrder(models.Model):
 
-    _columns = {
-        'invoice_state': fields.selection([
-            ("invoiced", "Invoiced"),
-            ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True),
-    }
+    _inherit = "procurement.order"
 
+    sequence = fields.Integer('Sequence')
+
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        vals = super(ProcurementOrder, self)._run_move_create(cr, uid,
+                                                              procurement,
+                                                              context=context)
+        if procurement.sequence:
+            vals['sequence'] = procurement.sequence
+        return vals

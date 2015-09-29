@@ -230,23 +230,11 @@ class stock_picking(orm.Model):
 
         return super(stock_picking, self).copy(cr, uid, id, default, context=context)
 
-    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,invoice_vals, context=None):
-        """Actualizamos la cantidad de la linea a la cantidad aceptada del movimiento"""
-        if context == None:
-            context={}
-        res = super(stock_picking,self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id,invoice_vals, context=context)
-        # Actualizamos la cantidad si el movimiento no es de devolución.
-        res.update({'quantity': (move_line.acepted_qty or move_line.product_qty )})
-
-        if move_line.rejected and not move_line.acepted_qty:
-            res = {}
-        return res
-
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """Lanzamos excepción al crear la factura si la posición fiscal de los pedidos de las lineas son diferentes"""
         res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type,context) #res diccionario de la forma {id_del_albaran:id_de_la_factura}
         set_fp = set()
-        for inv_id in set(res.values()):  # nos recorremos las facturas diferentes
+        for inv_id in res:  # nos recorremos las facturas diferentes
             inv = self.pool.get('account.invoice').browse(cr,uid,inv_id,context)
 
             for line in inv.invoice_line:
@@ -269,6 +257,15 @@ class stock_move(orm.Model):
     }
 
     _order = 'date desc'
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        # Actualizamos la cantidad si el movimiento no es de devolución.
+        res.update({'quantity': (move.acepted_qty or move.product_qty )})
+
+        if move.rejected and not move.acepted_qty:
+            res = {}
+        return res
 
 
 class account_invoice(orm.Model):

@@ -44,8 +44,8 @@ class sale_order(orm.Model):
         'force_warehouse_id': fields.many2one('stock.warehouse', 'Force warehouse', help="This warehouse is entered by default for new lines")
     }
 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
-        res = super(sale_order,self)._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context)
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, group_id, context=None):
+        res = super(sale_order,self)._prepare_order_line_move(cr, uid, order, line, picking_id, group_id, context=context)
         if line.warehouse_id and line.method == 'direct_delivery':
             res['location_id'] = line.warehouse_id.lot_stock_id.id
             res['location_dest_id'] = line.warehouse_id.lot_output_id.id
@@ -57,8 +57,8 @@ class sale_order(orm.Model):
 
         return res
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context=context)
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
         if line.warehouse_id and line.method == 'direct_delivery':
             res['location_id'] = line.warehouse_id.lot_stock_id.id
         return res

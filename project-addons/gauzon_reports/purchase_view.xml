@@ -5,11 +5,11 @@
         <record id="purchase_order_form_add_seq" model="ir.ui.view">
             <field name="name">purchase.order.form.add.seq</field>
             <field name="model">purchase.order</field>
-            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="inherit_id" ref="gauzon_custom.purchase_order_form_add_tree_discount"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="order_line" position="attributes">
-                    <attribute name="default_get">{'lines': order_line}</attribute>
+                    <attribute name="context">{'default_account_analytic_id': global_analytic_id, 'default_company_id': company_id, 'lines': order_line}</attribute>
                 </field>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='date_planned']" position="before">
                     <field name="sequence"/>

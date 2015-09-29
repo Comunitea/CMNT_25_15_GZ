@@ -72,10 +72,10 @@ class stock_move(orm.Model):
         if context is None: context = {}
         res = {}
         for move in self.browse(cr, uid, ids):
-            if move.purchase_line_id and move.purchase_line_id.taxes_id:
-                res[move.id] = u', '.join(map(lambda x: x.name, move.purchase_line_id.taxes_id))
-            elif move.sale_line_id and move.sale_line_id.tax_id:
-                res[move.id] = u', '.join(map(lambda x: x.name, move.sale_line_id.tax_id))
+            if move.procurement_id and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.taxes_id:
+                res[move.id] = u', '.join(map(lambda x: x.name, move.procurement_id.purchase_line_id.taxes_id))
+            elif move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.tax_id:
+                res[move.id] = u', '.join(map(lambda x: x.name, move.procurement_id.sale_line_id.tax_id))
             else:
                 res[move.id] = ""
         return res
@@ -114,6 +114,6 @@ class account_invoice(orm.Model):
             return res
 
     _columns = {
-        'expiration_dates_str': fields.function(_get_move_lines_str, method=True, string='Expiration dates', select=True),
+        'expiration_dates_str': fields.function(_get_move_lines_str, string='Expiration dates', readonly=True, type="text"),
     }
 

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-import stock
 import account_move
 import analytic_line
 import product

@@ -23,19 +23,11 @@ from openerp.osv import orm, fields
 class stock_picking(orm.Model):
     _inherit = 'stock.picking'
 
-    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,invoice_vals, context=None):
-        """ Arrastramos el campo sale_line_id del movimiento a la factura"""
-        res = super(stock_picking,self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id,invoice_vals, context=context)
-        if invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            if move_line.sale_line_id:
-                res['sale_line_id'] = move_line.sale_line_id.id
-        return res
-
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """ Agrupamos las lineas de una factura, si proceden de la misma linea de venta y el producto
         es el mismo"""
-        res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type,context) #res diccionario de la forma {id_del_albaran:id_de_la_factura}
-        for inv_id in res.values():
+        res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type,context)
+        for inv_id in res:
             inv = self.pool.get('account.invoice').browse(cr,uid,inv_id,context)
             if inv.type in ('out_invoice', 'out_refund'):
                 dlin = {}  # diccionario con las lineas agrupando sus cantidades
@@ -51,6 +43,18 @@ class stock_picking(orm.Model):
                     if inv_line.quantity < list_qty: #si la cantidad de la linea es menor que la agrupada, la actualizamos
                         inv_line.write( {'quantity' : list_qty} )
                 self.pool.get('account.invoice.line').unlink(cr,uid,del_lines) #borramos las lineas que sobran
+        return res
+
+
+class stock_move(orm.Model):
+
+    _inherit = "stock.move"
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        if inv_type in ('out_invoice', 'out_refund'):
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                res['sale_line_id'] = move.procurement_id.sale_line_id.id
         return res
 
 

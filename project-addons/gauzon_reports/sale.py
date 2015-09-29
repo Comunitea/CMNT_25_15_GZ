@@ -49,10 +49,10 @@ class sale_order(orm.Model):
         'amount_discounted': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Discounted', multi='extra', readonly=True),
     }
 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
-        res = super(sale_order, self)._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context)
-        res['sequence'] = line.sequence
-        return res
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+        vals['sequence'] = line.sequence
+        return vals
 
     def action_numbering(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -62,7 +62,7 @@ class sale_order(orm.Model):
             order_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', sale.id)], order="id asc")
             for line in order_lines:
                 self.pool.get('sale.order.line').write(cr, uid, [line], {'sequence': cont})
-                move_ids = self.pool.get('stock.move').search(cr, uid, [('sale_line_id', '=', line)])
+                move_ids = self.pool.get('stock.move').search(cr, uid, [('procurement_id.sale_line_id', '=', line)])
                 if move_ids:
                     self.pool.get('stock.move').write(cr, uid, move_ids, {'sequence': cont})
                 cont += 1
@@ -96,10 +96,14 @@ class sale_order_line(orm.Model):
             for line_record in context['lines']:
                 if not isinstance(line_record, (tuple, list)):
                     line_record_detail = self.read(cr, uid, line_record, ['sequence'])
-                else:
+                elif line_record[0] == 4:
+                    line_record_detail = self.read(cr, uid, line_record[1], ['sequence'])
+                elif line_record[0] == 0:
                     line_record_detail = line_record[2]
+                else:
+                    line_record_detail = False
 
-                if line_record_detail['sequence'] and line_record_detail['sequence'] >= sequence:
+                if line_record_detail and line_record_detail['sequence'] and line_record_detail['sequence'] >= sequence:
                     line_selected = line_record_detail
                     sequence = line_record_detail['sequence']
 
