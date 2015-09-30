@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 Pexego All Rights Reserved
-#    $Jesús Ventosinos Mayor <jesus@pexego.es>$
+#    Copyright (C) 2015 Comunitea All Rights Reserved
+#    $Omar Castiñeira Saavedra <omar@comunitea.com>$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -20,16 +20,14 @@
 ##############################################################################
 
 {
-    'name': 'Stock valued picking',
+    'name': "Edit purchase price",
     'version': '1.0',
-    'category': 'stock',
-    'description': """""",
-    'author': 'Pexego',
-    'website': '',
-    "depends": ['sale', 'stock', 'sale_stock', 'purchase'],
-    "data": [
-        'views/valued_picking_report.xml',
-        # 'stock_report.xml',
-        'partner_view.xml'],
+    'category': 'Purchases',
+    'description': """Edit purchase price""",
+    'author': 'Comunitea',
+    'website': 'www.comunitea.com',
+    "depends": ['purchase'],
+    "data": [],
     "installable": True
 }
+

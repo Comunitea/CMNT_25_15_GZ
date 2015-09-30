@@ -72,8 +72,8 @@ class stock_move(orm.Model):
         if context is None: context = {}
         res = {}
         for move in self.browse(cr, uid, ids):
-            if move.procurement_id and move.procurement_id.purchase_line_id and move.procurement_id.purchase_line_id.taxes_id:
-                res[move.id] = u', '.join(map(lambda x: x.name, move.procurement_id.purchase_line_id.taxes_id))
+            if move.purchase_line_id and move.purchase_line_id.taxes_id:
+                res[move.id] = u', '.join(map(lambda x: x.name, move.purchase_line_id.taxes_id))
             elif move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.tax_id:
                 res[move.id] = u', '.join(map(lambda x: x.name, move.procurement_id.sale_line_id.tax_id))
             else:
