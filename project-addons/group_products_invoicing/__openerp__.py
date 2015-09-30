@@ -25,7 +25,7 @@
         "website" : "http://www.pexego.es",
         "category" : "Specific Industry Applications",
         "description": """Group products in delivery note from the same sale order line in a single invoice line
-                        adding their amounts""",
+                        adding their amounts. DEPRECATED addon, it is only necessary for 6.1 living pickings""",
         "depends" : ['base','sale','stock','account'],
         "init_xml" : [],
         "demo_xml" : [],

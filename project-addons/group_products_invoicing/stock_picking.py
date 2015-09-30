@@ -55,7 +55,50 @@ class stock_move(orm.Model):
         if inv_type in ('out_invoice', 'out_refund'):
             if move.procurement_id and move.procurement_id.sale_line_id:
                 res['sale_line_id'] = move.procurement_id.sale_line_id.id
+            elif move.sale_line_history_id:
+                sale_line = move.sale_line_history_id
+                res['sale_line_id'] = sale_line.id
+                res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
+                res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
+                res['discount'] = sale_line.discount
+                if move.product_id.id != sale_line.product_id.id:
+                    res['price_unit'] = self.pool['product.pricelist'].price_get(
+                        cr, uid, [sale_line.order_id.pricelist_id.id],
+                        move.product_id.id, move.product_uom_qty or 1.0,
+                        sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
+                else:
+                    res['price_unit'] = sale_line.price_unit
+                uos_coeff = move.product_uom_qty and move.product_uos_qty / move.product_uom_qty or 1.0
+                res['price_unit'] = res['price_unit'] / uos_coeff
         return res
+
+    def _get_sale_line_history(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None: context = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id:
+                if move.procurement_id.sale_line_id:
+                    res[move.id] = move.procurement_id.sale_line_id.id
+                else:
+                    res[move.id] = False
+            else:
+                cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name='stock_move' and (column_name='sale_line_id' or column_name='openupgrade_legacy_8_0_sale_line_id')")
+                data = cr.fetchone()
+                if data and data[0]:
+                    cr.execute("select %s from stock_move where id = %s" % (data[0], move.id))
+                    data2 = cr.fetchone()
+                    if data2 and data2[0]:
+                        res[move.id] = data2[0]
+                    else:
+                        res[move.id] = False
+                else:
+                    res[move.id] = False
+        return res
+
+
+    _columns = {
+        'sale_line_history_id': fields.function(_get_sale_line_history, type="many2one", relation="sale.order.line", readonly=True)
+    }
 
 
 class account_invoice_line(orm.Model):
