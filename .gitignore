@@ -25,3 +25,5 @@ devel_*
 *.db
 *.mo
 *.pot
+*.jasper
+
