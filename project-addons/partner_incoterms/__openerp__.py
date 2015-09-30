@@ -32,13 +32,8 @@
     'description': '''
 Adds a default purchase Incoterm to the partner object which will be copied onto the Purchase Order incoterm as default
 ''',
-    'init_xml' : [
-    ],
-    'demo_xml' : [
-    ],
     'data' : [
         'partner_view.xml',
-        'purchase_view.xml',
     ],
     'active': False,
     'installable': True

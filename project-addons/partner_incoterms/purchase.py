@@ -24,9 +24,6 @@ from openerp.osv import orm, fields
 
 class purchase_order(orm.Model):
     _inherit = 'purchase.order'
-    _columns = {
-        'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
-        }
 
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
