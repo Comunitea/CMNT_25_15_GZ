@@ -37,7 +37,7 @@
     """,
     'author': 'Pexego Sistemas Informáticos',
     'website': 'https://www.pexego.es',
-    'depends': ['base', 'account', 'sale', 'account_payment', 'account_payment_sale', 'sale_order_version', 'group_products_invoicing'],
+    'depends': ['base', 'account', 'sale', 'account_payment', 'account_payment_sale', 'sale_order_revision', 'group_products_invoicing'],
     'init_xml': [],
     'data': [
         'security/ir.model.access.csv',
