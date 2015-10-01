@@ -66,10 +66,8 @@
                 </button>
                 <field name="origin" position="after">
                     <newline/>
-                    <separator string="Sale Validation" />
-                    <newline/>
+                    <separator string="Sale Validation" colspan="4"/>
                     <field name="validation_observation" colspan="4"/>
-                    <newline />
                     <field name="validation_date" />
                     <field name="validation_user" />
                 </field>
