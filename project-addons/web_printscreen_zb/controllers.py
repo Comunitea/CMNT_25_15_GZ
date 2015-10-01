@@ -87,7 +87,7 @@ class ZbExcelExport(ExcelExport):
         data = fp.read()
         fp.close()
         return data
-    
+
     @openerpweb.httprequest
     def index(self, req, data, token):
         data = json.loads(data)
@@ -108,14 +108,14 @@ class ExportPdf(Export):
         'label': 'PDF',
         'error': None
     }
-    
+
     @property
     def content_type(self):
         return 'application/pdf'
-    
+
     def filename(self, base):
         return base + '.pdf'
-    
+
     def from_data(self, uid, fields, rows, company_name):
         pageSize=[210.0,297.0]
         new_doc = etree.Element("report")
@@ -170,7 +170,7 @@ class ExportPdf(Export):
 
 class ZbPdfExport(ExportPdf):
     _cp_path = '/web/export/zb_pdf_export'
-    
+
     @openerpweb.httprequest
     def index(self, req, data, token):
         data = json.loads(data)
@@ -178,7 +178,7 @@ class ZbPdfExport(ExportPdf):
         return req.make_response(self.from_data(uid, data.get('headers', []), data.get('rows', []),
                                                 data.get('company_name','')),
                                  headers=[('Content-Disposition',
-                                           'attachment; filename=PDF Export'),
+                                           'attachment; filename=PDF Export.pdf'),
                                           ('Content-Type', self.content_type)],
                                  cookies={'fileToken': token})
 
