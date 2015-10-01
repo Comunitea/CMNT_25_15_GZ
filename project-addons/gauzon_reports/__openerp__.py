@@ -28,7 +28,7 @@
     "description": """Informes para Gauzón.""",
     "depends": ['base', 'sale', 'stock', 'purchase', 'account', 'jasper_reports',
                 'account_payment_purchase','purchase_discount','gauzon_edi','stock_picking_valued',
-                'account_by_business_line', 'gauzon_custom', 'procurement'],
+                'account_by_business_line', 'gauzon_custom', 'procurement', 'delivery', 'purchase_delivery'],
     "init_xml": [],
     "demo_xml": [],
     "data": ['gauzon_reports.xml',
