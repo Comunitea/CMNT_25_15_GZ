@@ -26,16 +26,24 @@ class sale_order(orm.Model):
 
     _inherit = "sale.order"
 
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        res = super(sale_order, self).onchange_warehouse_id(cr, uid, ids,
+                                                            warehouse_id,
+                                                            context=context)
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').\
+                browse(cr, uid, warehouse_id, context=context)
+            if warehouse.analytic_account_id:
+                res['value']['project_id'] = warehouse.analytic_account_id.id
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         sale =  self.browse (cr, uid, id)
         if sale:
-
             default.update({
-                'project_id': sale.project_id.parent_id.id
-
+                'project_id': sale.warehouse_id.analytic_account_id and sale.warehouse_id.analytic_account_id.id or False
             })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
@@ -44,12 +52,12 @@ class sale_order(orm.Model):
         if super(sale_order, self).action_wait(cr, uid, ids, context=context):
             sale_obj =self.browse (cr, uid, ids, context=context)
             for sale in sale_obj:
-                if sale.project_id and sale.project_id.name != sale.name:
+                if sale.project_id and sale.project_id.name != sale.name and sale.project_id.name != sale.unrevisioned_name:
                     analytic_obj=self.pool.get('account.analytic.account')
-                    child_ids = analytic_obj.search(cr, uid, [('parent_id', '=', sale.project_id.id),('name', '=', sale.name)])
+                    child_ids = analytic_obj.search(cr, uid, [('parent_id', '=', sale.project_id.id),('name', '=', sale.unrevisioned_name)])
                     if not child_ids:
                         vals= {
-                            'name': sale.name,
+                            'name': sale.unrevisioned_name,
                             'parent_id': sale.project_id.id,
                             'type':'normal',
                             'state':'open',

@@ -25,3 +25,4 @@ import analytic_line
 import product
 import partner
 import purchase
+import sale

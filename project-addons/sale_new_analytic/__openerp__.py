@@ -28,10 +28,8 @@
     """,
     'author': 'Pexego Sistemas Informáticos',
     'website': 'https://www.pexego.es',
-    'depends': ['base', 'sale','analytic'],
-    'init_xml': [],
-    'data': [
-    ],
+    'depends': ['base', 'analytic', 'sale_stock', 'sale_order_revision'],
+    'data': ["warehouse_view.xml"],
     'demo_xml': [],
     'installable': True,
     'certificate': '',

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2011 Pexego Sistemas Informáticos. All Rights Reserved
-#    $Javier Colmenero Fernández$
+#    Copyright (C) 2015 Comunitea Servicios Tecnológicos. All Rights Reserved
+#    $Omar Castiñeira Saavedra$
 #
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,5 +20,12 @@
 #
 ##############################################################################
 
-from . import sale_order
-from . import warehouse
+from openerp import models, fields
+
+
+class StockWarehouse(models.Model):
+
+    _inherit = "stock.warehouse"
+
+    analytic_account_id = fields.Many2one("account.analytic.account",
+                                          "Analytic account")
