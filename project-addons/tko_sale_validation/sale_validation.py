@@ -31,34 +31,25 @@ class sale_validation(orm.Model):
     _inherit="sale.order"
     _description = "Sales Order with Validation"
 
-    STATE_SELECTION = [('draft', 'Request for Quotation'),
+    STATE_SELECTION = [('draft', 'Draft Quotation'),
                        ('wait_valid', 'Waiting for Validation'),
                        ('wait_correct', 'Waiting for Correction'),
-                       ('draft', 'Quotation'),
+                       ('sent', 'Quotation Sent'),
                        ('waiting_date', 'Waiting Schedule'),
-                       ('manual', 'Manual In Progress'),
-                       ('progress', 'In Progress'),
+                       ('manual', 'Sale to Invoice'),
+                       ('progress', 'Sales Order'),
                        ('shipping_except', 'Shipping Exception'),
                        ('invoice_except', 'Invoice Exception'),
                        ('done', 'Done'),
                        ('cancel', 'Cancelled')]
 
-    _columns = {'validation_date':fields.datetime('Validation Date', readonly=True, select=True, help="Date on which sale order has been approved"),
-                'validation_user': fields.many2one('res.users', 'Validated by', readonly=True),
-                'validation_observation': fields.text('Observations', size=128, readonly=True),
-                'state': fields.selection(STATE_SELECTION, 'State', readonly=True, help="The state of the sale order.", select=True)}
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None: context = {}
-        if not default:
-            default = {}
-
-        default.update({
-                'validation_date': False,
-                'validation_user': False,
-                'validation_observation': False
-        })
-        return super(sale_validation, self).copy(cr, uid, id, default, context=context)
+    _columns = {'validation_date':fields.datetime('Validation Date', readonly=True, copy=False, help="Date on which sale order has been approved"),
+                'validation_user': fields.many2one('res.users', 'Validated by', readonly=True, copy=False),
+                'validation_observation': fields.text('Observations', size=128, readonly=True, copy=False),
+                'state': fields.selection(STATE_SELECTION,  'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True)}
 
     #TODO: implement messages system
     def wkf_wait_validation_order(self, cr, uid, ids, context=None):
