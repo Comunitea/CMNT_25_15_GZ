@@ -44,59 +44,9 @@ class sale_order(orm.Model):
         'force_warehouse_id': fields.many2one('stock.warehouse', 'Force warehouse', help="This warehouse is entered by default for new lines")
     }
 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, group_id, context=None):
-        res = super(sale_order,self)._prepare_order_line_move(cr, uid, order, line, picking_id, group_id, context=context)
-        if line.warehouse_id and line.method == 'direct_delivery':
-            res['location_id'] = line.warehouse_id.lot_stock_id.id
-            res['location_dest_id'] = line.warehouse_id.lot_output_id.id
-            if res.get('picking_id', False) and not self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context).warehouse_id:
-                self.pool.get('stock.picking').write(cr, uid, picking_id, {'warehouse_id': line.warehouse_id.id})
-        else:
-            if res.get('picking_id', False) and not self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context).warehouse_id:
-                self.pool.get('stock.picking').write(cr, uid, picking_id, {'warehouse_id': order.shop_id.warehouse_id.id})
-
-        return res
-
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
         if line.warehouse_id and line.method == 'direct_delivery':
-            res['location_id'] = line.warehouse_id.lot_stock_id.id
+            res['warehouse_id'] = line.warehouse_id.id
         return res
-
-    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
-        """
-        Create so many pickings as different warehouses
-        have between all the lines of a sale.
-
-        :param browse_record order: sale order to which the order lines belong
-        :param list(browse_record) order_lines: sale order line records to procure
-        :param int picking_id: optional ID of a stock picking to which the created stock moves
-                               will be added. A new picking will be created if ommitted.
-        :return: True
-        """
-        warehouses = {}
-
-        for line in order_lines:
-            if line.warehouse_id and line.method == 'direct_delivery':
-                if warehouses.get(line.warehouse_id):
-                    warehouses[line.warehouse_id].append(line)
-                else:
-                    warehouses[line.warehouse_id] = []
-                    warehouses[line.warehouse_id].append(line)
-            else:
-                if warehouses.get('default'):
-                    warehouses['default'].append(line)
-                else:
-                    warehouses['default'] = []
-                    warehouses['default'].append(line)
-
-        for warehouse_line in warehouses:
-
-            super(sale_order, self)._create_pickings_and_procurements(cr, uid,
-                                                                    order,
-                                                                    warehouses[warehouse_line],
-                                                                    picking_id=False,
-                                                                    context=None)
-
-        return True
 
