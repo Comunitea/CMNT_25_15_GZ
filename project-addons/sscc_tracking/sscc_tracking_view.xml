@@ -56,18 +56,16 @@
             sequence="1"
             parent="stock.menu_traceability"/>
 
-        <!-- stock.tracking inherit form add field packaging_type_id -->
-        <!--<record model="ir.ui.view" id="view_tracking_add_packaging_type_form" >
-            <field name="name">view.tracking.add.packaging.type.form</field>
-            <field name="model">stock.tracking</field>
-            <field name="inherit_id" ref="stock.view_tracking_form" />
-            <field name="type">form</field>
+        <record model="ir.ui.view" id="view_quant_package_form_add_pack_type">
+            <field name="name">stock.quant.package.form.add_pack_type</field>
+            <field name="model">stock.quant.package</field>
+            <field name="inherit_id" ref="stock.view_quant_package_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="after">
+                <field name="packaging_id" position="after">
                     <field name="packaging_type_id"/>
                 </field>
             </field>
-        </record>-->
+        </record>
 
         <!-- res.company inherit form add field aecoc_code -->
         <record id="view_company_form_add_aecoc" model="ir.ui.view">

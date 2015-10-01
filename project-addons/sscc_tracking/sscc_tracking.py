@@ -31,40 +31,39 @@ class stock_packaging_type(orm.Model):
    }
 
 
-#~ class stock_tracking(orm.Model):
-    #~ _inherit = "stock.tracking"
-#~
-    #~ def checksum(self,sscc):
-        #~ """Devuelve el sscc pasado mas un dígito calculado"""
-        #~ iSum = 0
-        #~ for i in xrange(len(sscc)-1,-1,-2):
-            #~ iSum += int(sscc[i])
-        #~ iSum *= 3
-        #~ for i in xrange(len(sscc)-2,-1,-2):
-            #~ iSum += int(sscc[i])
-#~
-        #~ iCheckSum = (10 - (iSum % 10)) % 10
-#~
-        #~ return "%s%s" % (sscc, iCheckSum)
-#~
-    #~ def make_sscc(self, cr, uid, context=None):
-        #~ """Método con el que se calcula el sscc a partir del 1+ aecoc + una sequencia de 9 caracteres + 1 digito checksum
-        #~ para escribir en el name del paquete"""
-        #~ sequence = self.pool.get('ir.sequence').get(cr, uid, 'scc.tracking.sequence') #sequencia definida en sscc_sequence.tracking
-        #~ aecoc = self.pool.get('res.users').browse(cr,uid,uid).company_id.aecoc_code
-        #~ try:
-            #~ return str(self.checksum("1" + aecoc + sequence ))
-        #~ except Exception:
-            #~ return sequence
-#~
-#~
-    #~ _columns = {
-        #~ 'name': fields.char('Pack Reference', size=64, required=True, select=True, help="By default, the pack reference is generated following the sscc standard. (Serial number + 1 check digit)"), #lo redefino porque los métodos del default y de los campos no se heredan
-        #~ 'packaging_type_id' : fields.many2one('stock.packaging.type','Packaging Type'),
-    #~ }
-    #~ _defaults = {
-        #~ 'name': make_sscc,
-    #~ }
+class stock_quant_package(orm.Model):
+
+    _inherit = "stock.quant.package"
+
+    def checksum(self,sscc):
+        """Devuelve el sscc pasado mas un dígito calculado"""
+        iSum = 0
+        for i in xrange(len(sscc)-1,-1,-2):
+            iSum += int(sscc[i])
+        iSum *= 3
+        for i in xrange(len(sscc)-2,-1,-2):
+            iSum += int(sscc[i])
+
+        iCheckSum = (10 - (iSum % 10)) % 10
+
+        return "%s%s" % (sscc, iCheckSum)
+
+    def make_sscc(self, cr, uid, context=None):
+        """Método con el que se calcula el sscc a partir del 1+ aecoc + una sequencia de 9 caracteres + 1 digito checksum
+        para escribir en el name del paquete"""
+        sequence = self.pool.get('ir.sequence').get(cr, uid, 'scc.tracking.sequence') #sequencia definida en sscc_sequence.tracking
+        aecoc = self.pool.get('res.users').browse(cr,uid,uid).company_id.aecoc_code
+        try:
+            return str(self.checksum("1" + aecoc + sequence ))
+        except Exception:
+            return sequence
+
+    _columns = {
+        'packaging_type_id' : fields.many2one('stock.packaging.type','Packaging Type'),
+    }
+    _defaults = {
+        'name': make_sscc,
+    }
 
 
 class res_company(orm.Model):
