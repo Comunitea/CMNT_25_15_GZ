@@ -92,10 +92,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configuracion EDI">
-                    <field name="name"/>
-                    <field name="salesman"/>
-                    <field name="local_mode"/>
-                    <field name="ftpbox_path"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="salesman"/>
+                        <field name="local_mode"/>
+                        <field name="ftpbox_path"/>
+                    </group>
                     <newline/>
                     <group attrs="{'invisible':[('local_mode','=',True)]}" string="Buzon FTP" colspan="4">
                         <field name="ftp_host" attrs="{'required':[('local_mode','=',False)]}"/>
@@ -136,10 +138,12 @@
             <field name="arch" type="xml">
                 <notebook position="inside" >
                     <page string="EDI">
-                        <field name="order_type"/>
-                        <field name="funcion_mode"/>
-                        <field name="urgent"/>
-                        <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                        <group>
+                            <field name="order_type"/>
+                            <field name="funcion_mode"/>
+                            <field name="urgent"/>
+                            <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                        </group>
                     </page>
                 </notebook>
                  <field name="warehouse_id" position="after">
@@ -200,13 +204,15 @@
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="gln" select="2"/>
-                    <field name="edi_operational_code" select="2"/>
-                    <field name="customer_reference" select="2"/>
-                    <field name="edi_relation" select="2"/>
-                    <field name="center_code" select="1" string="UNOR"/>
-                    <field name="fiscal_position" select="1" />
+                <field name="category_id" position="after">
+                    <group colspan="4" col="4">
+                        <field name="gln"/>
+                        <field name="edi_operational_code"/>
+                        <field name="customer_reference"/>
+                        <field name="edi_relation"/>
+                        <field name="center_code" string="UNOR"/>
+                        <field name="fiscal_position" attrs="{'invisible': [('is_company','=',True)]}"/>
+                    </group>
                 </field>
             </field>
         </record>
@@ -298,9 +304,11 @@
                 </field>
                 <notebook position="inside" >
                     <page string="EDI">
-                        <field name="gi_cab_nodo"/>
-                        <field name="gi_cab_funcion"/>
-                        <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                        <group>
+                            <field name="gi_cab_nodo"/>
+                            <field name="gi_cab_funcion"/>
+                            <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
+                        </group>
                     </page>
                 </notebook>
             </field>

@@ -40,10 +40,6 @@ class sale_order(orm.Model):
 
     _inherit = 'sale.order'
 
-    _columns = {
-        'force_warehouse_id': fields.many2one('stock.warehouse', 'Force warehouse', help="This warehouse is entered by default for new lines")
-    }
-
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
         if line.warehouse_id and line.method == 'direct_delivery':

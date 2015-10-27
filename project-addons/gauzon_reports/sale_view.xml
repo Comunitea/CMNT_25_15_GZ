@@ -17,7 +17,7 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="before">
                     <field name="sequence"/>
                 </xpath>
-                <field name='client_order_ref' position="after">
+                <field name='pricelist_id' position="after">
                     <button
                         name="action_numbering"
                         string="Numbering"
