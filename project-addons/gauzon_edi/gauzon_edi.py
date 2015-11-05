@@ -236,10 +236,13 @@ class stock_picking(orm.Model):
         set_fp = set()
         for inv_id in res:  # nos recorremos las facturas diferentes
             inv = self.pool.get('account.invoice').browse(cr,uid,inv_id,context)
-
+            visited_order_ids = []
             for line in inv.invoice_line:
-                if line.sale_line_id:
-                    set_fp.add(line.sale_line_id.order_id.fiscal_position.id)
+                if line.picking_id:
+                    for move in line.picking_id.move_lines:
+                        if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.id not in visited_order_ids:
+                            visited_order_ids.append(move.procurement_id.sale_line_id.order_id.id)
+                            set_fp.add(move.procurement_id.sale_line_id.order_id.fiscal_position.id)
 
             if len(set_fp) > 1: #hay mas de una posición fiscal
                 raise orm.except_orm(_('Error'), _('Las posiciones fiscales de los pedidos son diferentes'))
