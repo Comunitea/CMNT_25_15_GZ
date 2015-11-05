@@ -25,6 +25,7 @@ import openerp.addons.decimal_precision as dp
 class account_invoice(orm.Model):
 
     _inherit = "account.invoice"
+    _order = "id desc"
 
     def _amount_extra(self, cr, uid, ids, field_name, arg, context):
         res = {}
