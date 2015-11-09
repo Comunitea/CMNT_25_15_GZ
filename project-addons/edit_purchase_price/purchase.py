@@ -26,7 +26,7 @@ class PurchaseOrder(models.Model):
 
     _inherit = "purchase.order"
 
-    order_line = fields.One2many(states={'done': [('readonly', True)]})
+#    order_line = fields.One2many(states={'done': [('readonly', True)]})
 
 
 class PurchaseOrderLine(models.Model):
