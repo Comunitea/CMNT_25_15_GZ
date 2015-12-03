@@ -14,6 +14,9 @@
                 <field name="order_line" position="attributes">
                     <attribute name="context">{'default_account_analytic_id': global_analytic_id, 'default_company_id': company_id}</attribute>
                 </field>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="replace">
+                    <field name="product_qty"/>
+                </xpath>
             </field>
         </record>
 
