@@ -249,7 +249,6 @@ class stock_picking(orm.Model):
             invoice_obj = self.pool['account.invoice'].browse(cr, uid,invoice)
             contract_number = ''
             if(invoice_obj):
-                import ipdb; ipdb.set_trace()
                 for pick in invoice_obj.invoice_line:
                     if(pick.picking_id.num_contract):
                         if(contract_number):
