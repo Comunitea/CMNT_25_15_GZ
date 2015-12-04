@@ -40,7 +40,8 @@
         'product_view.xml',
         'partner_view.xml',
         'purchase_view.xml',
-        'sale_view.xml'
+        'sale_view.xml',
+        'stock_view.xml'
     ],
     'demo_xml': [],
     'installable': True,

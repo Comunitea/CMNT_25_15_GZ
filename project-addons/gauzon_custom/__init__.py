@@ -27,3 +27,4 @@ import partner
 import purchase
 import sale
 import invoice
+import stock
