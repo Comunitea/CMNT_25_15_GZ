@@ -24,10 +24,8 @@ from openerp import models, fields, api
 class stock_transfer_details(models.TransientModel):
     _inherit = 'stock.transfer_details_items'
 
-    product_sup_code = fields.Char('Supplier Product Code', help="This \
-            supplier's product code will be used when printing a request for \
-            quotation. Keep empty to use the internal one.",
-            compute='_get_product_supplier_code')
+    product_sup_code = fields.Char('Supplier Product Code',
+                                   compute='_get_product_supplier_code')
 
     @api.one
     @api.depends('product_id')

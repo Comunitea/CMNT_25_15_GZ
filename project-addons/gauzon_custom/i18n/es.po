@@ -42,6 +42,11 @@ msgid "Credit"
 msgstr "Haber"
 
 #. module: gauzon_custom
+#: field:stock.transfer_details_items,product_sup_code:0
+msgid "Supplier Product Code"
+msgstr "Cód. producto prov."
+
+#. module: gauzon_custom
 #: field:purchase.order,global_analytic_id:0
 msgid "Analytic account"
 msgstr "Cuenta analítica"

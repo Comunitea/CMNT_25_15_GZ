@@ -251,9 +251,11 @@ class stock_picking(orm.Model):
             if(invoice_obj):
                 for pick in invoice_obj.invoice_line:
                     if(pick.picking_id.num_contract):
-                        if(contract_number):
-                            contract_number += ', '
-                        contract_number += pick.picking_id.num_contract
+                        if contract_number:
+                            if pick.picking_id.num_contract not in contract_number:
+                                contract_number += u', ' + pick.picking_id.num_contract
+                        else:
+                            contract_number = pick.picking_id.num_contract
             invoice_obj.num_contract = contract_number
         return res
 
