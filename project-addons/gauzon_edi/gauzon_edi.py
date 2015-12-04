@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp.osv import orm, fields, osv
 import time
 import openerp.addons.decimal_precision as dp
 from openerp import _, netsvc, api
@@ -116,14 +116,10 @@ class sale_order(orm.Model):
         sale = self.pool.get('sale.order').write(cr,uid,ids,{'funcion_mode' : '0'})
         return super(sale_order, self).action_ship_create(cr, uid, ids,*args)
 
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        if context is None: context = {}
-        res = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-        if order.num_contract:
-            res['num_contract'] = order.num_contract
-
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
+        res.update({'num_contract': order.num_contract or ''})
         return res
-
 
 class sale_order_line(orm.Model):
 
@@ -248,6 +244,18 @@ class stock_picking(orm.Model):
                 raise orm.except_orm(_('Error'), _('Las posiciones fiscales de los pedidos son diferentes'))
             elif set_fp:
                 inv.write({'fiscal_position' : list(set_fp)[0] })
+
+        for invoice in res:
+            invoice_obj = self.pool['account.invoice'].browse(cr, uid,invoice)
+            contract_number = ''
+            if(invoice_obj):
+                import ipdb; ipdb.set_trace()
+                for pick in invoice_obj.invoice_line:
+                    if(pick.picking_id.num_contract):
+                        if(contract_number):
+                            contract_number += ', '
+                        contract_number += pick.picking_id.num_contract
+            invoice_obj.num_contract = contract_number
         return res
 
 
@@ -270,6 +278,17 @@ class stock_move(orm.Model):
             res = {}
         return res
 
+    def _prepare_picking_assign(self, cr, uid, move, context=None):
+        values = super(stock_move, self)._prepare_picking_assign(cr, uid, move, context=context)
+        values['num_contract'] = move.group_id and move.group_id.num_contract or ''
+
+        return values
+
+class procurement_group(osv.osv):
+    _inherit = 'procurement.group'
+    _columns = {
+        'num_contract': fields.char('Contract Number', size=128),
+    }
 
 class account_invoice(orm.Model):
     _inherit = 'account.invoice'
@@ -334,4 +353,3 @@ class stock_return_picking(orm.TransientModel):
                 pick.write({'return_picking_id':return_pick_id[0]})
 
         return res
-
