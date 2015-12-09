@@ -259,8 +259,6 @@ class stock_picking(orm.Model):
                                 contract_number += u', ' + pick.picking_id.num_contract
                         else:
                             contract_number = pick.picking_id.num_contract
-                    import ipdb; ipdb.set_trace()
-                    
                     if(pick.picking_id.note):
                         if notes:
                             if pick.picking_id.note not in notes:
