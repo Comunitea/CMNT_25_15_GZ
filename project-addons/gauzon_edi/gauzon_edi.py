@@ -119,6 +119,7 @@ class sale_order(orm.Model):
     def _prepare_procurement_group(self, cr, uid, order, context=None):
         res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
         res.update({'num_contract': order.num_contract or ''})
+        res.update({'note': order.note or ''})
         return res
 
 class sale_order_line(orm.Model):
@@ -211,6 +212,7 @@ class stock_picking(orm.Model):
     _inherit = 'stock.picking'
     _columns = {
         'num_contract': fields.char('Contract Number', size=128),
+        'note': fields.text('Notes'),
         'edi_docs': fields.one2many('edi.doc','picking_id','Documentos EDI'),
         'return_picking_id': fields.many2one('stock.picking','Albaran de devolucion', readonly=True),
     }
@@ -248,6 +250,7 @@ class stock_picking(orm.Model):
         for invoice in res:
             invoice_obj = self.pool['account.invoice'].browse(cr, uid,invoice)
             contract_number = ''
+            notes = ''
             if(invoice_obj):
                 for pick in invoice_obj.invoice_line:
                     if(pick.picking_id.num_contract):
@@ -256,7 +259,16 @@ class stock_picking(orm.Model):
                                 contract_number += u', ' + pick.picking_id.num_contract
                         else:
                             contract_number = pick.picking_id.num_contract
+                    import ipdb; ipdb.set_trace()
+                    
+                    if(pick.picking_id.note):
+                        if notes:
+                            if pick.picking_id.note not in notes:
+                                notes += u', ' + pick.picking_id.note
+                        else:
+                            notes += pick.picking_id.note
             invoice_obj.num_contract = contract_number
+            invoice_obj.note = notes
         return res
 
 
@@ -282,6 +294,7 @@ class stock_move(orm.Model):
     def _prepare_picking_assign(self, cr, uid, move, context=None):
         values = super(stock_move, self)._prepare_picking_assign(cr, uid, move, context=context)
         values['num_contract'] = move.group_id and move.group_id.num_contract or ''
+        values['note'] = move.group_id and move.group_id.note or ''
 
         return values
 
@@ -289,6 +302,7 @@ class procurement_group(osv.osv):
     _inherit = 'procurement.group'
     _columns = {
         'num_contract': fields.char('Contract Number', size=128),
+        'note': fields.text('Notes'),
     }
 
 class account_invoice(orm.Model):
@@ -296,6 +310,7 @@ class account_invoice(orm.Model):
 
     _columns = {
         'num_contract': fields.char('Contract Number', size=128),
+        'note': fields.text('Notes'),
         'edi_docs': fields.one2many('edi.doc','invoice_id','Documentos EDI'),
         'gi_cab_nodo': fields.selection ([ ('380', 'Comercial'),('381', 'Nota de crédito'),('383', 'Nota de débito')],'Nodo'),
         'gi_cab_funcion': fields.selection ([ ('9', 'Original'),('7', 'Duplicado'),('31', 'Copia'),('5', 'Remplazo')],'Funcion'),
@@ -313,6 +328,7 @@ class account_invoice(orm.Model):
                                                             description=description,
                                                             journal_id=journal_id)
         vals["num_contract"] = invoice.num_contract
+        vals["note"] = invoice.note
         return vals
 
 
