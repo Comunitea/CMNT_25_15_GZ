@@ -15,14 +15,33 @@
           </field>
       </record>
 
-      <record id="view_picking_internal_search2" model="ir.ui.view">
-          <field name="name">stock.picking.internal.search</field>
+      <record id="view_picking_form2" model="ir.ui.view">
+          <field name="name">stock.picking.form</field>
           <field name="model">stock.picking</field>
-          <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+          <field name="inherit_id" ref="stock.view_picking_form"/>
           <field name="arch" type="xml">
-            <xpath expr="//group[@string='Group By']" position="inside">
-                <filter string="Company" domain="[]" context="{'group_by':'partner_id'}"/>
-            </xpath>
+              <xpath expr="//page[@string='Products']/field[@name='move_lines']" position="after">
+                  <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                      <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                      <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                      <div class="oe_subtotal_footer_separator oe_inline">
+                          <label for="amount_total" />
+                      </div>
+                      <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                  </group>
+                  <div class="oe_clear"/>
+              </xpath>
+          </field>
+      </record>
+
+      <record id="view_move_picking_tree2" model="ir.ui.view">
+          <field name="name">stock.move.tree</field>
+          <field name="model">stock.move</field>
+          <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+          <field name="arch" type="xml">
+              <xpath expr="//tree[@string='Stock Moves']/field[@name='state']" position="after">
+                <field name="price_subtotal"/>
+              </xpath>
           </field>
       </record>
 
