@@ -851,7 +851,7 @@
 			</rectangle>
 			<staticText>
 				<reportElement positionType="Float" x="322" y="62" width="226" height="26" uuid="d8b3c7a5-aaad-4b9d-a6f0-b3bc9d66d5e7">
-					<printWhenExpression><![CDATA[$F{State-state} == "draft"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{State-state} == "draft" || $F{State-state} == "sent"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="16" isBold="true"/>
@@ -874,7 +874,7 @@
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="322" y="61" width="229" height="27" uuid="28bb601a-4aa1-42f1-b6e1-ec0a59ff9cbd">
-					<printWhenExpression><![CDATA[$F{State-state} != "draft"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{State-state} != "draft" && $F{State-state} != "sent"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="16" isBold="true"/>
