@@ -10,9 +10,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
                     <attribute name="context">{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'warehouse':parent.warehouse_id, 'uom':product_uom}</attribute>
+                    <attribute name="onchange"></attribute>
                 </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uos_qty']" position="attributes">
+                  <attribute name="onchange"></attribute>
+                  </xpath>
             </field>
         </record>
-
     </data>
 </openerp>
