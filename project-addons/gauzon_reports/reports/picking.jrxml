@@ -387,7 +387,7 @@
                                                         <jr:detailCell height="13" rowSpan="1">
                                                                 <textField isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="29" height="13" uuid="13bac7ac-cb1e-47cd-9f9d-988441326738"/>
-                                                                        <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                                                                        <textElement textAlignment="Center" verticalAlignment="Top"/>
                                                                         <textFieldExpression><![CDATA[$F{Sequence-sequence}]]></textFieldExpression>
                                                                 </textField>
                                                         </jr:detailCell>
@@ -412,7 +412,7 @@
                                                                 <textField>
                                                                         <reportElement x="0" y="0" width="57" height="13" uuid="8383272a-a259-4d4d-9edb-98a7cfcc93d7"/>
                                                                         <box leftPadding="2"/>
-                                                                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Left" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Referencia-default_code}]]></textFieldExpression>

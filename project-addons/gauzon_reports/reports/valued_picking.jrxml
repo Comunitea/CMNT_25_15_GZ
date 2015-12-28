@@ -387,7 +387,7 @@
                                                         <jr:detailCell height="13" rowSpan="1">
                                                                 <textField isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="29" height="13" uuid="b2502c82-7d6d-4ae2-b500-d4e1babadd91"/>
-                                                                        <textElement textAlignment="Center" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Center" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Sequence-sequence}]]></textFieldExpression>
@@ -404,7 +404,7 @@
                                                                                 <bottomPen lineWidth="0.5"/>
                                                                                 <rightPen lineWidth="0.5"/>
                                                                         </box>
-                                                                        <textElement textAlignment="Center" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Center" verticalAlignment="Top">
                                                                                 <font size="8" isBold="true"/>
                                                                         </textElement>
                                                                         <text><![CDATA[CÓDIGO]]></text>
@@ -414,7 +414,7 @@
                                                                 <textField>
                                                                         <reportElement x="0" y="0" width="57" height="13" uuid="df7ee0e4-aae6-4484-a9b9-dd518e71843b"/>
                                                                         <box leftPadding="2"/>
-                                                                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Left" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Referencia-default_code}]]></textFieldExpression>
@@ -441,7 +441,7 @@
                                                                 <textField isStretchWithOverflow="true">
                                                                         <reportElement x="0" y="0" width="210" height="13" uuid="35c469a7-b7e9-4660-88a6-5783bdbbd582"/>
                                                                         <box leftPadding="2"/>
-                                                                        <textElement verticalAlignment="Middle">
+                                                                        <textElement verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Notas-note}.isEmpty() ? ($F{id2} == "0" ? $F{Name-name} : $F{Descripcion-name}.replace("[" + $F{Referencia-default_code} + "]","")) : $F{Notas-note}]]></textFieldExpression>
@@ -468,14 +468,14 @@
                                                                 <textField isStretchWithOverflow="true" isBlankWhenNull="true">
                                                                         <reportElement x="49" y="0" width="17" height="13" uuid="e27c97ea-ce46-4429-9179-8fa03ff51eb0"/>
                                                                         <box leftPadding="2" rightPadding="1"/>
-                                                                        <textElement textAlignment="Left" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Left" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Codigo_edi-edi_code}]]></textFieldExpression>
                                                                 </textField>
                                                                 <textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="49" height="13" uuid="f52f5964-44f0-479a-8bea-9547cabc86a3"/>
-                                                                        <textElement textAlignment="Right" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Right" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Cantidad-product_qty}]]></textFieldExpression>
@@ -502,7 +502,7 @@
                                                                 <textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="58" height="13" uuid="0504aad5-58f5-4872-aeac-9e3397cf0dcb"/>
                                                                         <box rightPadding="2"/>
-                                                                        <textElement textAlignment="Right" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Right" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Price_unit-order_price_unit}]]></textFieldExpression>
@@ -529,7 +529,7 @@
                                                                 <textField isStretchWithOverflow="true" isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="70" height="13" uuid="3ed5112a-f56b-4502-bfee-4eb1ce0b8167"/>
                                                                         <box rightPadding="2"/>
-                                                                        <textElement textAlignment="Right" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Right" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Tax_line-taxes_str}]]></textFieldExpression>
@@ -556,7 +556,7 @@
                                                                 <textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
                                                                         <reportElement x="0" y="0" width="65" height="13" uuid="ec08e2c3-f3b8-4334-a040-79d194ae7d86"/>
                                                                         <box rightPadding="2"/>
-                                                                        <textElement textAlignment="Right" verticalAlignment="Middle">
+                                                                        <textElement textAlignment="Right" verticalAlignment="Top">
                                                                                 <font size="8"/>
                                                                         </textElement>
                                                                         <textFieldExpression><![CDATA[$F{Subtotal-price_subtotal}]]></textFieldExpression>
