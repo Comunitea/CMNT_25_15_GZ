@@ -83,9 +83,8 @@ class CreateFacturae(models.TransientModel):
             note = doc.xpath("//InvoiceAdditionalInformation")[0]
             text = u""
             for pick in picking_ids:
-                if pick.name:
+                if pick.name and pick.note and pick.note.strip():
                     text += unidecode(unicode(pick.name + u': '))
-                if pick.note:
                     text += unidecode(unicode(pick.note + u"\n"))
             if note.text:
                 text += note.text
