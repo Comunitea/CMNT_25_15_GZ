@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import no_pickings
-import wizard
+# import no_pickings
+# import wizard
 

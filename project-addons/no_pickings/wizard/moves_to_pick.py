@@ -5,7 +5,7 @@ from datetime import datetime
 from openerp import _, netsvc
 
 
-class moves_to_pick_line(orm.TranientModel):
+class moves_to_pick_line(orm.TransientModel):
     _name = "moves.to.pick.line"
     _inherit = "stock.partial.picking.line"
     _columns = {

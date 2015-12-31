@@ -15,9 +15,9 @@
     'depends': ['base','sale','stock'],
     'init_xml': [],
     'data': [
-        'no_pickings_view.xml',
-        'no_pickings_workflow.xml',
-        'wizard/moves_to_pick_view.xml'
+        # 'no_pickings_view.xml',
+        # 'no_pickings_workflow.xml',
+        # 'wizard/moves_to_pick_view.xml'
     ],
     'demo_xml': [],
     'installable': True,
