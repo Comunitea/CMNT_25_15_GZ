@@ -65,8 +65,8 @@ class edi_export(orm.TransientModel):
                 name = obj.name.replace('/','')
                 gln_e = obj.company_id.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
-                gln_c = obj.address_id.partner_id.gln
-                gln_r = obj.address_id.partner_id.gln
+                gln_c = obj.partner_id.gln
+                gln_r = obj.partner_id.gln
                 doc_type = 'desadv'
                 picking_id = obj.id
                 mode = '3'
@@ -120,6 +120,7 @@ class edi_export(orm.TransientModel):
         return os.path.dirname( self.path() )
 
     def export_files(self,cr,uid,ids,context=None):
+        # import ipdb; ipdb.set_trace()
         if context is None:
             context = {}
         wizard = self.browse(cr,uid,ids[0])
