@@ -128,6 +128,7 @@ class sale_order_line(orm.Model):
     _columns = {
         'refcli': fields.char('Ref. Cliente', size=80),
         'refprov': fields.char('Ref. Proveedor', size=80),
+        'notes': fields.text('Notas')
     }
 
     def create(self, cr, uid, values, context=None):

@@ -45,13 +45,16 @@ class edi_export(orm.TransientModel):
         res.update({'configuration': conf_ids[0]})
         return res
 
-    def create_doc(self,cr,uid,ids,obj,file_name,context):
+    def create_doc(self,cr,uid,ids,obj,file_name, context=None):
+        if context is None:
+            context = {}
         if obj:
             name=gln_e=gln_v=gln_c=gln_r=doc_type=sale_order_id=picking_id=invoice_id=False
 
             if context['active_model'] == u'sale.order':
                 name = obj.name.replace(' ','').replace('.','')
-                gln_e = obj.partner_order_id.gln
+                # gln_e = obj.partner_order_id.gln
+                gln_e = obj.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
                 gln_c = obj.partner_invoice_id.gln
                 gln_r = obj.partner_shipping_id.gln
@@ -117,6 +120,8 @@ class edi_export(orm.TransientModel):
         return os.path.dirname( self.path() )
 
     def export_files(self,cr,uid,ids,context=None):
+        if context is None:
+            context = {}
         wizard = self.browse(cr,uid,ids[0])
         path = wizard.configuration.ftpbox_path + "/out"
         templates_path = wizard.addons_path('gauzon_edi')+os.sep+'wizard'+os.sep+'templates'+os.sep
@@ -136,8 +141,12 @@ class edi_export(orm.TransientModel):
             mylookup = TemplateLookup( input_encoding='utf-8', output_encoding='utf-8', encoding_errors='replace')
             tmp = Template(filename=templates_path+tmp_name, lookup=mylookup, default_filters=['decode.utf8'])
             doc = tmp.render_unicode(o=obj).encode('utf-8','replace')
-            f = file(file_name,'w'); f.write(doc);f.close()
-            wizard.create_doc(obj,file_name,context)
+            try:
+                f = file(file_name,'w'); f.write(doc);f.close()
+            except:
+                raise orm.except_orm(_('Error'), _('No se puedo abrir el archivo %s' % file_name))
+            # wizard.create_doc(obj,file_name,context=context)
+            self.create_doc(cr, uid, [wizard.id], obj,file_name,context=context)
             data_pool = self.pool.get('ir.model.data')
             action_model,action_id = data_pool.get_object_reference(cr, uid, 'gauzon_edi', "act_edi_doc")
             action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
