@@ -74,8 +74,8 @@ class edi_export(orm.TransientModel):
                 name = obj.name.replace('/','')
                 gln_e = obj.company_id.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
-                gln_c = obj.address_invoice_id.gln
-                gln_r = obj.address_invoice_id.gln
+                gln_c = obj.partner_id.commercial_partner_id.gln
+                gln_r = obj.partner_id.commercial_partner_id.gln
                 doc_type = 'invoic'
                 invoice_id = obj.id
                 mode = obj.gi_cab_funcion
@@ -153,4 +153,3 @@ class edi_export(orm.TransientModel):
             action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
 
         return action
-

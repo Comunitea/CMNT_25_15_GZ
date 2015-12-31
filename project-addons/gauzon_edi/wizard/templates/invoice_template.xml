@@ -15,14 +15,14 @@
       <gi_cab_vendedor_dir2>${ o.company_id.street2 or '' }</gi_cab_vendedor_dir2>
       <gi_cab_vendedor_pcode>${ o.company_id.zip or '' }</gi_cab_vendedor_pcode>
     </gi_cab_vendedor>
-    <gi_cab_comprador>${ o.address_invoice_id.gln or '' }</gi_cab_comprador>
+    <gi_cab_comprador>${ o.partner_id.commercial_partner_id.gln or '' }</gi_cab_comprador>
     <gi_cab_dirfac>
-      <gi_cab_dirfac_gln>${ o.address_invoice_id.gln or '' }</gi_cab_dirfac_gln>
+      <gi_cab_dirfac_gln>${ o.partner_id.commercial_partner_id.gln or '' }</gi_cab_dirfac_gln>
       <gi_cab_dirfac_name>${ o.partner_id.name or '' }</gi_cab_dirfac_name>
-      <gi_cab_dirfac_vat>${ o.address_invoice_id.partner_id.vat or '' }</gi_cab_dirfac_vat>
-      <gi_cab_dirfac_dir1>${ o.address_invoice_id.street or '' }</gi_cab_dirfac_dir1>
-      <gi_cab_dirfac_dir2>${ o.address_invoice_id.street2 or '' }</gi_cab_dirfac_dir2>
-      <gi_cab_dirfac_pcode>${ o.address_invoice_id.zip or '' }</gi_cab_dirfac_pcode>
+      <gi_cab_dirfac_vat>${ o.partner_id.commercial_partner_id.vat or '' }</gi_cab_dirfac_vat>
+      <gi_cab_dirfac_dir1>${ o.partner_id.commercial_partner_id.street or '' }</gi_cab_dirfac_dir1>
+      <gi_cab_dirfac_dir2>${ o.partner_id.commercial_partner_id.street2 or '' }</gi_cab_dirfac_dir2>
+      <gi_cab_dirfac_pcode>${ o.partner_id.commercial_partner_id.zip or '' }</gi_cab_dirfac_pcode>
     </gi_cab_dirfac>
     <gi_cab_totamount gi_cab_mon="${ o.currency_id.name or '' }">${ o.amount_untaxed }</gi_cab_totamount>
     <gi_cab_taxamount gi_cab_mon="${ o.currency_id.name or '' }" percentage="${o.invoice_line and (o.invoice_line[0].invoice_line_tax_id) and (int(o.invoice_line[0].invoice_line_tax_id[0].amount * 100)) or int('0')}">${ o.amount_tax }</gi_cab_taxamount>
