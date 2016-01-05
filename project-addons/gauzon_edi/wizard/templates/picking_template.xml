@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 <%
-    def get_tracking(obj):
-        track_list = set()
-        for m in obj.move_lines:
-            if m.tracking_id:
-                track_list.add(m.tracking_id)
+    def get_operation(obj):
+        operation_list = set()
+        for op in obj.pack_operation_ids:
+            if op.id:
+                operation_list.add(op)
             else:
-                track_list.add(False)
-        return track_list
-        
-    def get_move_lines(pack,obj):
+                operation_list.add(False)
+        return operation_list
+
+    def get_operation_lines(pack,obj):
         lines_list = []
-        for m in obj.move_lines:
+        for op in obj.pack_operation_ids:
             if not pack:
-                if not m.tracking_id:
-                    lines_list.append(m)
-            elif m.tracking_id and m.tracking_id.id == pack.id:
-                lines_list.append(m)
+                if not op.id:
+                    lines_list.append(op)
+            elif op.id and op.id == pack.id:
+                lines_list.append(op)
         return lines_list
-    
+
 %><?xml version="1.0" encoding="UTF-8"?>
 <doc c="DESADV" gi_cab_nodo="351" gi_cab_funcion="9">
 
@@ -34,21 +34,23 @@
   </gi_cab>
 
   <gi_empaqs><% count = 1 %>
-    %for p in get_tracking(o):
-    <gi_empaq n="${ count }" gi_empaq_tipo="${ p!=False and p.packaging_type_id.alias or '' }" gi_empaq_sscc="${ p!=False and p.name or ''}">
+    %for x in get_operation(o):
+    <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False}" gi_empaq_sscc="${ x!=False}">
       <gi_lines><% count2 = 1 %>
-        %for m in get_move_lines(p,o):
+        %for y in get_operation_lines(x,o):
+        %for l in y.linked_move_operation_ids:
         <gi_lin n="${ count2 }">
-          <gi_lin_numped>${ m.sale_line_id and m.sale_line_id.order_id.client_order_ref or '' }</gi_lin_numped>
-          <gi_lin_ean13v>${ m.product_id.ean13v or '' }</gi_lin_ean13v>
-          <gi_lin_refcli>${ m.sale_line_id and m.sale_line_id.refcli or '' }</gi_lin_refcli>
-          <gi_lin_refprov>${ m.sale_line_id and m.sale_line_id.refprov or '' }</gi_lin_refprov>
-          <gi_lin_numserie>${ m.prodlot_id and m.prodlot_id.name or '' }</gi_lin_numserie>
-          <gi_lin_descmer>${ m.sale_line_id and m.sale_line_id.name  or '' }</gi_lin_descmer>
-          <gi_lin_cantent gi_lin_umedida="${ m.product_uom and m.product_uom.edi_code or ''}">${ m.product_qty or '' }</gi_lin_cantent>
-          <gi_lin_cantentfac gi_lin_umedfac="${ m.product_uos and m.product_uos.edi_code or ''}">${ m.product_uos_qty  or '' }</gi_lin_cantentfac>
-          <gi_lin_cantped gi_lin_umedida="${ m.sale_line_id and m.sale_line_id.product_uom.edi_code or '' }">${ m.sale_line_id.product_uom_qty or '' }</gi_lin_cantped>
+          <gi_lin_numped>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.order_id.client_order_ref or ''}</gi_lin_numped>
+          <gi_lin_ean13v>${ y.product_id.ean13v and y.product_id.ean13v or ''}</gi_lin_ean13v>
+          <gi_lin_refcli>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refcli or ''}</gi_lin_refcli>
+          <gi_lin_refprov>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refprov or ''}</gi_lin_refprov>
+          <gi_lin_numserie>${ y.lot_id and y.lot_id.name or '' }</gi_lin_numserie>
+          <gi_lin_descmer>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.name or ''}</gi_lin_descmer>
+          <gi_lin_cantent gi_lin_umedida="${ y.product_uom_id and y.product_uom_id.edi_code or ''}">${ l.qty or '' }</gi_lin_cantent>
+          <gi_lin_cantentfac gi_lin_umedfac="${ y.product_uom_id and y.product_uom_id.edi_code or ''}">${ l.qty  or '' }</gi_lin_cantentfac>
+          <gi_lin_cantped gi_lin_umedida="${ y.product_uom_id and y.product_uom_id.edi_code or '' }">${ l.qty or '' }</gi_lin_cantped>
         </gi_lin><% count2 += 1 %>
+        %endfor
         %endfor
       </gi_lines>
     </gi_empaq><% count += 1 %>

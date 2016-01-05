@@ -7,13 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
+                  <group col="4" string="Import files">
                     <field name="downloaded_files"/>
                     <field name="pending_process"/>
                     <field name="state" invisible="1"/>
+                  </group>
+
+                  <footer>
                     <button name="get_files" string="Obtener ficheros" type="object" icon="gtk-print" default_focus="1" states="start"/>
                     <button name="process_files" string="Procesar ficheros" type="object" icon="gtk-ok" default_focus="1" states="to_process"/>
                     <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                   
+                  </footer>
+
                 </form>
             </field>
         </record>
@@ -28,6 +33,6 @@
         </record>
 
         <menuitem action="action_edi_import" id="view_wizard_edi_import"  name="Importar ficheros" parent="menu_edi"/>
-       
+
     </data>
 </openerp>
