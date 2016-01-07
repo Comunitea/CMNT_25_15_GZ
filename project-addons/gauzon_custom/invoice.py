@@ -28,3 +28,9 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(size=64)
     origin = fields.Char(size=64)
+
+
+class account_invoice_line(models.Model):
+
+    _inherit = "account.invoice.line"
+    picking_id = fields.Many2one('stock.picking', 'Picking', readonly=True)

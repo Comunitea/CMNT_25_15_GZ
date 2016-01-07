@@ -93,6 +93,6 @@ class account_invoice_line(orm.Model):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True)
+        #'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True)
     }
 
