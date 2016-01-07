@@ -50,6 +50,7 @@ class edi_export(orm.TransientModel):
             context = {}
         if obj:
             name=gln_e=gln_v=gln_c=gln_r=doc_type=sale_order_id=picking_id=invoice_id=False
+            # import ipdb; ipdb.set_trace()
 
             if context['active_model'] == u'sale.order':
                 name = obj.name.replace(' ','').replace('.','')
@@ -71,13 +72,14 @@ class edi_export(orm.TransientModel):
                 picking_id = obj.id
                 mode = '3'
             elif context['active_model'] == u'account.invoice':
-                name = obj.name.replace('/','')
+                name = obj.number.replace('/','')
                 gln_e = obj.company_id.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
                 gln_c = obj.partner_id.commercial_partner_id.gln
                 gln_r = obj.partner_id.commercial_partner_id.gln
                 doc_type = 'invoic'
                 invoice_id = obj.id
+                picking_id = self.pool.get('stock.picking').search(cr, uid, [('name', '=', obj.origin)])[0]
                 mode = obj.gi_cab_funcion
             else:
                 raise orm.except_orm(_('Error'), _('El modelo no es ni un pedido ni un albarán ni una factura.'))
@@ -137,7 +139,7 @@ class edi_export(orm.TransientModel):
                 file_name = '%s%sDESADV_%s.xml' % (path,os.sep,obj.name.replace('/',''))
             elif context['active_model'] == u'account.invoice':
                 tmp_name = '/invoice_template.xml'
-                file_name = '%s%sINVOIC_%s.xml' % (path,os.sep,obj.name.replace('/',''))
+                file_name = '%s%sINVOIC_%s.xml' % (path,os.sep,obj.number.replace('/',''))
 
             mylookup = TemplateLookup( input_encoding='utf-8', output_encoding='utf-8', encoding_errors='replace')
             tmp = Template(filename=templates_path+tmp_name, lookup=mylookup, default_filters=['decode.utf8'])

@@ -56,6 +56,5 @@ class stock_move(orm.Model):
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         res['sequence'] = move.sequence
-        res['picking_id'] = move.picking_id.id
+        # res['picking_id'] = move.picking_id.id
         return res
-
