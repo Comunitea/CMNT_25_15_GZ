@@ -89,7 +89,13 @@ class edi_import(orm.TransientModel):
             log.info(u"%s documento(s) han sido importados." % files_downloaded)
             log.info(u"%s documento(s) están pendientes de procesar." % len(doc_ids))
 
-        return True
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'edi.import',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'res_id': ids[0],
+                'views': [(False, 'form')],
+                'target': 'new'}
 
     def get_partner(self,cr,uid,gln):
         ids = self.pool.get('res.partner').search(cr,uid,[('gln','=',gln)])
@@ -100,6 +106,7 @@ class edi_import(orm.TransientModel):
         return partner
 
     def gln_to_dir(self,cr,uid,gln):
+
         ids = self.pool.get('res.partner').search(cr,uid,[('gln','=',gln)])
         if not ids:
             raise orm.except_orm(_('Error'), _(u'No existen ninguna dirección con gln %s.' % gln))
@@ -115,7 +122,8 @@ class edi_import(orm.TransientModel):
         return observation
 
     def get_partner_bank(self,cr,uid,partner):
-        pay_type = partner.payment_type_customer
+
+        pay_type = partner.customer_payment_mode
         if pay_type and pay_type.suitable_bank_types and pay_type.suitable_bank_types[0].code=='bank':
             if partner.bank_ids:
                 return partner.bank_ids[0].id
@@ -123,20 +131,22 @@ class edi_import(orm.TransientModel):
             return False
 
     def create_order_version(self,cr,uid,mode,order_id,doc):
+        # import ipdb; ipdb.set_trace()
+
         sale_obj = self.pool.get('sale.order').browse(cr,uid,order_id)
         version_id = self.pool.get('sale.order').search(cr,uid,[('client_order_ref','=',sale_obj.client_order_ref),('id','!=',sale_obj.id)])
         if version_id:
             old_sale = self.pool.get('sale.order').browse(cr,uid,version_id[0])
             vals = {}
-            if not old_sale.sale_version_id:
-                vals.update({'sale_version_id':old_sale.id,
-                                'version': 1,
+            if not old_sale.current_revision_id:
+                vals.update({'current_revision_id':old_sale.id,
+                                'revision_number': 1,
                                 'name': old_sale.name + u" V.1",
                 })
             else:
-                vals.update({'sale_version_id':old_sale.sale_version_id.id,
-                                'version': old_sale.version + 1,
-                                'name': old_sale.sale_version_id.name + u" V." + str(old_sale.version + 1)
+                vals.update({'current_revision_id':old_sale.current_revision_id.id,
+                                'revision_number': old_sale.revision_number + 1,
+                                'name': old_sale.current_revision_id.name + u" V." + str(old_sale.revision_number + 1)
                 })
             old_sale.write({'active':False})
             sale_obj.write(vals)
@@ -166,7 +176,7 @@ class edi_import(orm.TransientModel):
             shipping_dir = self.gln_to_dir(cr,uid,cdic['gi_cab_shipto'].text)
             values = {
                 'date_order': cdic.get('gi_cab_fecha',False)!= False and cdic['gi_cab_fecha'].text or time.strftime('%Y-%m-%d'),
-                'shop_id': self.pool.get('sale.shop').search(cr,uid,[])[0] ,
+                'warehouse_id': self.pool.get('stock.warehouse').search(cr,uid,[])[0] ,
                 'top_date': cdic.get('gi_cab_fechatop',False)!= False and cdic['gi_cab_fechatop'].text or False,
                 'client_order_ref': ref,
                 'partner_id': partner.id,
@@ -179,12 +189,13 @@ class edi_import(orm.TransientModel):
                 'order_type': root.attrib['gi_cab_funcion'],
                 'urgent': root.attrib['gi_cab_nodo'] == '224' and True or False,
                 'payment_term': partner.property_payment_term.id,
-                'payment_type': partner.payment_type_customer.id,
+                'payment_type': partner.customer_payment_mode.id,
                 'partner_bank': self.get_partner_bank(cr,uid,partner),
                 'user_id' : wizard.salesman.id,
             }
             order_id = self.pool.get('sale.order').create(cr,uid,values)
             log.info(u"Creada orden de venta a partir del documento %s." % doc.name)
+            import ipdb; ipdb.set_trace()
             if root.attrib['gi_cab_funcion'] in ['REP','DEL']:
                 version_id = self.create_order_version(cr,uid,root.attrib['gi_cab_funcion'],order_id,doc)
         else:
@@ -225,6 +236,7 @@ class edi_import(orm.TransientModel):
 
     def create_lines(self,cr,uid,ldic,order_id):
         """ Crea las lineas del pedido de ventas"""
+        # import ipdb; ipdb.set_trace()
         for l in ldic:
             lines = dict([x.tag,x] for x in ldic[l])
             umedida = lines.get('gi_lin_cantped',False) != False and lines['gi_lin_cantped'].attrib['gi_lin_umedida'] or False
@@ -241,7 +253,7 @@ class edi_import(orm.TransientModel):
                 'product_uos': self.get_product_uom(cr,uid,umedfac),
                 'notes':lines.get('gi_lin_obs',False)!= False and self.get_notes(cr,uid,lines['gi_lin_obs']) or False,
                 'tax_id': [(6,0,self.get_taxes(cr,uid,product,order_id))],
-                'type': product.procure_method,
+                # 'type': product.procure_method,
                 'refcli': lines.get('gi_lin_refcli',False)!= False and lines['gi_lin_refcli'].text or False ,
                 'refprov': lines.get('gi_lin_refprov',False)!= False and lines['gi_lin_refprov'].text or False,
             }
@@ -265,6 +277,8 @@ class edi_import(orm.TransientModel):
 
     def parse_order_file(self,cr,uid,filename,doc):
         """Procesa el fichero orders, creando un pedido de venta"""
+        # import ipdb; ipdb.set_trace()
+
         xml = etree.parse(filename)
         root = xml.getroot()
         mode = root.attrib['gi_cab_funcion']
@@ -381,18 +395,23 @@ class edi_import(orm.TransientModel):
         path = wizard.configuration.ftpbox_path + "/in"
         doc_ids = self.pool.get('edi.doc').search(cr,uid,[('status','in',['draft','error'])])
         model='sale'
-        act='action_order_form'
+        act='action_quotations'
+        sales = []
+        # import ipdb; ipdb.set_trace()
+
         for doc in self.pool.get('edi.doc').browse(cr,uid,doc_ids):
             file_path = path + "/" + doc.file_name
             if doc.type == 'orders':
-                self.parse_order_file(cr,uid,file_path,doc)
+                line = self.parse_order_file(cr,uid,file_path,doc)
+                sales.append(line)
             elif doc.type == 'recadv':
                 model = 'stock'; act='action_picking_tree'
-                self.parse_recadv_file(cr,uid,file_path,doc)
+                line = self.parse_recadv_file(cr,uid,file_path,doc)
+                sales.append(line)
 
         data_pool = self.pool.get('ir.model.data')
         action_model,action_id = data_pool.get_object_reference(cr, uid, model, act)
         action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
+        action['domain'] = [('id', 'in', doc_ids)]
 
         return action
-
