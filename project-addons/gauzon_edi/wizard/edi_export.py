@@ -79,7 +79,6 @@ class edi_export(orm.TransientModel):
                 gln_r = obj.partner_id.commercial_partner_id.gln
                 doc_type = 'invoic'
                 invoice_id = obj.id
-                picking_id = self.pool.get('stock.picking').search(cr, uid, [('name', '=', obj.origin)])[0]
                 mode = obj.gi_cab_funcion
             else:
                 raise orm.except_orm(_('Error'), _('El modelo no es ni un pedido ni un albarán ni una factura.'))
@@ -138,6 +137,8 @@ class edi_export(orm.TransientModel):
                 tmp_name = '/picking_template.xml'
                 file_name = '%s%sDESADV_%s.xml' % (path,os.sep,obj.name.replace('/',''))
             elif context['active_model'] == u'account.invoice':
+                if obj.state in ('draft'):
+                    raise orm.except_orm(_('Error'), _('No se pueden exportar facturas en estado borrador'))
                 tmp_name = '/invoice_template.xml'
                 file_name = '%s%sINVOIC_%s.xml' % (path,os.sep,obj.number.replace('/',''))
 

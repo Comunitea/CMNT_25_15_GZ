@@ -195,7 +195,6 @@ class edi_import(orm.TransientModel):
             }
             order_id = self.pool.get('sale.order').create(cr,uid,values)
             log.info(u"Creada orden de venta a partir del documento %s." % doc.name)
-            import ipdb; ipdb.set_trace()
             if root.attrib['gi_cab_funcion'] in ['REP','DEL']:
                 version_id = self.create_order_version(cr,uid,root.attrib['gi_cab_funcion'],order_id,doc)
         else:
