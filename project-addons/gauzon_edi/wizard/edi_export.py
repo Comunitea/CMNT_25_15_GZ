@@ -50,8 +50,6 @@ class edi_export(orm.TransientModel):
             context = {}
         if obj:
             name=gln_e=gln_v=gln_c=gln_r=doc_type=sale_order_id=picking_id=invoice_id=False
-            # import ipdb; ipdb.set_trace()
-
             if context['active_model'] == u'sale.order':
                 name = obj.name.replace(' ','').replace('.','')
                 # gln_e = obj.partner_order_id.gln

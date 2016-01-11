@@ -35,7 +35,7 @@
 
   <gi_empaqs><% count = 1 %>
     %for x in get_operation(o):
-    <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False}" gi_empaq_sscc="${ x!=False}">
+    <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False and x.result_package_id.packaging_type_id.alias or ''}" gi_empaq_sscc="${ x!=False and x.result_package_id.name or ''}">
       <gi_lines><% count2 = 1 %>
         %for y in get_operation_lines(x,o):
         %for l in y.linked_move_operation_ids:

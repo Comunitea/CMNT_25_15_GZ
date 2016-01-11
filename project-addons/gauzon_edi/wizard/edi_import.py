@@ -79,7 +79,9 @@ class edi_import(orm.TransientModel):
                     f.close()
                     files_downloaded += 1
                     log.info(u"Importado %s " % name)
+                    print u"Importado %s " % name
                 else:
+                    print "ignortado"
                     log.info(u"Ignorado %s, ya existe en el sistema." % name)
 
             doc_ids = self.pool.get('edi.doc').search(cr,uid,[('status','in',['draft','error'])])
@@ -266,10 +268,14 @@ class edi_import(orm.TransientModel):
             'status': 'imported',
             'mode': mode,
             'sale_order_id': order_id,
-            'gln_e': cdic.get('gi_cab_emisor',False) and cdic['gi_cab_emisor'].text or False,
-            'gln_v': cdic.get('gi_cab_vendedor',False) and cdic['gi_cab_vendedor'].text or False,
-            'gln_c': cdic.get('gi_cab_comprador',False) and cdic['gi_cab_comprador'].text or False,
-            'gln_r': cdic.get('gi_cab_shipto',False) and cdic['gi_cab_shipto'].text or False,
+            #'gln_e': cdic.get('gi_cab_emisor',False) and cdic['gi_cab_emisor'].text or False,
+            'gln_e': cdic['gi_cab_emisor'].text or False,
+            #'gln_v': cdic.get('gi_cab_vendedor',False) and cdic['gi_cab_vendedor'].text or False,
+            'gln_v': cdic['gi_cab_vendedor'].text or False,
+            #'gln_c': cdic.get('gi_cab_comprador',False) and cdic['gi_cab_comprador'].text or False,
+            'gln_c': cdic['gi_cab_comprador'].text or False,
+            #'gln_r': cdic.get('gi_cab_shipto',False) and cdic['gi_cab_shipto'].text or False,
+            'gln_r': cdic['gi_cab_shipto'].text or False,
         }
         return doc.write(values)
 
@@ -297,19 +303,43 @@ class edi_import(orm.TransientModel):
         """ recibe un elemento glin, se lo recorre y comprueba si existen los productos,empaquetado,
         lote y cantidad indicads"""
         dc = dict( [ (x.tag,x) for x in gilin ] )
-        id_track=False
+        package_id = False
+        #
+        # <gi_lin_descmer>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id))
+        # move_id =
+
+        sale_order_id = False
+        num_ped = dc['gi_lin_numped'].text
+        if num_ped:
+            sale_order_id = self.pool.get('sale.order').search(cr,uid,[('client_order_ref','=',num_ped)])
+            if sale_order_id:
+                sale_order_id = sale_order_id[0]
+                #sale_order = self.pool.get('sale.order').browse(cr, uid, [sale_order_id])
+            else:
+                raise orm.except_orm(_('Error'), _(u'No existe el pedido con referencia %s.' % num_ped))
+
         if sscc:
-            id_track = self.pool.get('stock.tracking').search(cr,uid,[('name','=',sscc)])
-            if id_track:
-                id_track = id_track[0]
+            package_id = self.pool.get('stock.quant.package').search(cr,uid,[('name','=',sscc)])
+            if package_id:
+                package_id = package_id[0]
             else:
                 raise orm.except_orm(_('Error'), _(u'No existe el paquete con sscc %s.' % sscc))
+
 
         id_product = self.pool.get('product.product').search(cr,uid,[('ean13v','=',dc['gi_lin_ean13v'].text)])
         if id_product:
             id_product = id_product[0]
         else:
             raise orm.except_orm(_('Error'), _(u'No existe el producto con ean13v %s.' % dc['gi_lin_ean13v'].text))
+
+        if id_alb:
+            id_alb = self.pool.get('stock.picking').search(cr,uid,[('name','=',id_alb)])
+            if id_alb:
+                id_alb = id_alb[0]
+            else:
+                raise orm.except_orm(_('Error'),
+                    _(u'No existe el albaran %s' % (id_alb)))
+
 
         num_lot = dc['gi_lin_numserie'].text or False
         id_lot=False
@@ -321,19 +351,29 @@ class edi_import(orm.TransientModel):
                 raise orm.except_orm(_('Error'),
                     _(u'No existe el lote con nombre %s para el producto con ean13v %s.' % (num_lot,dc['gi_lin_ean13v'].text)))
 
-        move_id = self.pool.get('stock.move').search(cr,uid,[ ('picking_id','=',id_alb),('product_id','=',id_product),
-                        ('tracking_id','=',id_track),('prodlot_id','=',id_lot),
-                        ('product_qty','=',float(dc['gi_lin_cantent'].text)) ])
+        ops_ids = self.pool.get('stock.pack.operation').search(cr, uid, [('result_package_id', '=', package_id),
+                                                                    ('picking_id', '=', id_alb)])
+        move_links_ids = self.pool.get('stock.move.operation.link').search(cr, uid, [('operation_id', 'in', ops_ids)])
+        move_links_ids = self.pool.get('stock.move.operation.link').browse(cr, uid, move_links_ids)
+        move_ids = []
+        for t in move_links_ids:
+            move_ids.append(t.move_id.id)
+        move_id = self.pool.get('stock.move').search(cr,uid,[('picking_id','=',id_alb),
+                                                             ('id','in',move_ids),
+                                                             ('product_id', '=', id_product),
+                                                             ('procurement_id.sale_line_id.order_id', '=', sale_order_id)])
         if move_id:
-            move_id = move_id[0]
+            move_id = self.pool.get('stock.move').browse(cr, uid, [move_id[0]])
         else:
             raise orm.except_orm(_('Error'),
                 _(u'No se encontraron movimientos con las características requeridas.Es posible que el paquete, el lote o la cantidad estén mal asignados en el fichero'))
 
-        move = self.pool.get('stock.move').browse(cr,uid,move_id)
-        if float(dc['gi_lin_cantrec'].text) >  move.product_qty:
+        #move = self.pool.get('stock.move').browse(cr,uid,move_id)
+        if float(dc['gi_lin_cantrec'].text) >  move_id.product_qty:
             raise orm.except_orm(_('Error'),_(u'No es posible que la cantidad recibida sea mayor que la cantidad entregada'))
-        move.write({'acepted_qty': float(dc['gi_lin_cantrec'].text),
+
+        new_acepted_qty = move_id.acepted_qty + float(dc['gi_lin_cantrec'].text)
+        move_id.write({'acepted_qty': new_acepted_qty,
                     'note': dc.get('gi_lin_obs',False)!= False and self.get_notes(cr,uid,dc['gi_lin_obs']) or False,
                     'rejected' : dc['gi_lin_reccode'].text == 'REJECTED' or False
         })
