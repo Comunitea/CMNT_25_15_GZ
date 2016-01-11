@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="ORDERS" gi_cab_nodo="220" gi_cab_funcion="ORI">
+  <gi_cab>
+    <gi_cab_unor></gi_cab_unor>
+    <gi_cab_numped>22622013MQ112</gi_cab_numped>
+    <gi_cab_fecha>2016-01-20 18:39:53</gi_cab_fecha>
+    <gi_cab_fechatop></gi_cab_fechatop>
+    <gi_cab_emisor>8437013182003</gi_cab_emisor>
+    <gi_cab_vendedor>8437013182003</gi_cab_vendedor>
+    <gi_cab_comprador>8435211220022</gi_cab_comprador>
+    <gi_cab_shipto></gi_cab_shipto>
+    <gi_cab_moneda>EUR</gi_cab_moneda>
+    <gi_cab_tneto>333.46</gi_cab_tneto>
+    <gi_cab_obs>
+      <gi_cab_obs_texto/>
+    </gi_cab_obs>
+  </gi_cab>
+  <gi_lines>
+    <gi_lin n="1">
+      <gi_lin_ean13v>5210007319900</gi_lin_ean13v>
+      <gi_lin_refcli>5210007319900</gi_lin_refcli>
+      <gi_lin_refprov>5210007319900</gi_lin_refprov>
+      <gi_lin_descmer>[5210007319900] CALIBRADOR, RECAMARA, AMETRALLADORA</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">3.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">25.0</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">3.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>5.25</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto/>
+      </gi_lin_obs>
+    </gi_lin>
+    <gi_lin n="2">
+      <gi_lin_ean13v>1001107233700</gi_lin_ean13v>
+      <gi_lin_refcli></gi_lin_refcli>
+      <gi_lin_refprov>0B107M3X-700-A15</gi_lin_refprov>
+      <gi_lin_descmer>[1001107233700] IM-LINTERNA DE FUSIL MX-3</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">3.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">15.0</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">3.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>3.15</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto/>
+      </gi_lin_obs>
+    </gi_lin>
+    <gi_lin n="3">
+      <gi_lin_ean13v>1142132231018</gi_lin_ean13v>
+      <gi_lin_refcli>8470016418895</gi_lin_refcli>
+      <gi_lin_refprov>4W1N2MD101-IIIA-XL-DP</gi_lin_refprov>
+      <gi_lin_descmer>[1142132231018] CHALECO ANTIBALAS BASICO  TALLA XL</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">4.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">12.0</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">4.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>2.52</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto/>
+      </gi_lin_obs>
+    </gi_lin>
+    <gi_lin n="4">
+      <gi_lin_ean13v>7310332080909</gi_lin_ean13v>
+      <gi_lin_refcli>7310332080909</gi_lin_refcli>
+      <gi_lin_refprov>7310332080909</gi_lin_refprov>
+      <gi_lin_descmer>[7310332080909] CARRO, REPARTO DE COMIDA</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">5.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">5.23</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">5.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>1.1</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto/>
+      </gi_lin_obs>
+    </gi_lin>
+    <gi_lin n="5">
+      <gi_lin_ean13v>1048436191031</gi_lin_ean13v>
+      <gi_lin_refcli></gi_lin_refcli>
+      <gi_lin_refprov>4SEN6191031-001OD</gi_lin_refprov>
+      <gi_lin_descmer>[1048436191031] BOTIQUIN TACTICO</gi_lin_descmer>
+      <gi_lin_cantped gi_lin_umedida="EA">5.0</gi_lin_cantped>
+      <gi_lin_precion gi_lin_monprec="EUR">37.0</gi_lin_precion>
+      <gi_lin_cantfac gi_lin_umedfac="EA">5.0</gi_lin_cantfac>
+      <gi_lin_tax>21</gi_lin_tax>
+      <gi_lin_taxamount>7.77</gi_lin_taxamount>
+      <gi_lin_obs>
+        <gi_lin_obs_texto/>
+      </gi_lin_obs>
+    </gi_lin>
+  </gi_lines>
+</doc>
+

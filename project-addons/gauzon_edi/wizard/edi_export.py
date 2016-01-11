@@ -119,7 +119,6 @@ class edi_export(orm.TransientModel):
         return os.path.dirname( self.path() )
 
     def export_files(self,cr,uid,ids,context=None):
-        # import ipdb; ipdb.set_trace()
         if context is None:
             context = {}
         wizard = self.browse(cr,uid,ids[0])

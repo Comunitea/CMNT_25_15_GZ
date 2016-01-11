@@ -19,7 +19,8 @@
                 lines_list.append(op)
         return lines_list
 
-%><?xml version="1.0" encoding="UTF-8"?>
+%>
+        <?xml version="1.0" encoding="UTF-8"?>
 <doc c="DESADV" gi_cab_nodo="351" gi_cab_funcion="9">
 
   <gi_cab>
@@ -33,9 +34,10 @@
     <gi_cab_shipto>${ o.partner_id.gln or '' }</gi_cab_shipto>
   </gi_cab>
 
-  <gi_empaqs><% count = 1 %>
+  <gi_empaqs>
+    <% count = 1 %>
     %for x in get_operation(o):
-    <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False and x.result_package_id.packaging_type_id.alias or ''}" gi_empaq_sscc="${ x!=False and x.result_package_id.name or ''}">
+    <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False and x.result_package_id and x.result_package_id.packaging_type_id.alias or ''}" gi_empaq_sscc="${ x!=False and x.result_package_id and x.result_package_id.name or ''}">
       <gi_lines><% count2 = 1 %>
         %for y in get_operation_lines(x,o):
         %for l in y.linked_move_operation_ids:

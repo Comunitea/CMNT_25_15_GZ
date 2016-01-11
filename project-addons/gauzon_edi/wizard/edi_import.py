@@ -318,6 +318,7 @@ class edi_import(orm.TransientModel):
             else:
                 raise orm.except_orm(_('Error'), _(u'No existe el pedido con referencia %s.' % num_ped))
 
+        package_id = False
         if sscc:
             package_id = self.pool.get('stock.quant.package').search(cr,uid,[('name','=',sscc)])
             if package_id:
