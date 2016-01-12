@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc c="ORDERS" gi_cab_nodo="220" gi_cab_funcion="ORI">
+    <gi_cab>
+        <gi_cab_unor></gi_cab_unor>
+        <gi_cab_numped>100000042401</gi_cab_numped>
+        <gi_cab_fecha>2016-01-12 11:52:48</gi_cab_fecha>
+        <gi_cab_fechatop></gi_cab_fechatop>
+        <gi_cab_emisor>8435211220022</gi_cab_emisor>
+        <gi_cab_vendedor>8437013182003</gi_cab_vendedor>
+        <gi_cab_comprador>8435211220022</gi_cab_comprador>
+        <gi_cab_shipto>8435211221002</gi_cab_shipto>
+        <gi_cab_moneda>EUR</gi_cab_moneda>
+        <gi_cab_tneto>54.0</gi_cab_tneto>
+        <gi_cab_obs>
+            <gi_cab_obs_texto/>
+        </gi_cab_obs>
+    </gi_cab>
+    <gi_lines>
+        <gi_lin n="1">
+            <gi_lin_ean13v>1063806844667</gi_lin_ean13v>
+            <gi_lin_refcli>4220014873661</gi_lin_refcli>
+            <gi_lin_refprov>63806I446GRN-05-NAV</gi_lin_refprov>
+            <gi_lin_descmer>[1063806844667] CHALECO, SALVAVIDAS</gi_lin_descmer>
+            <gi_lin_cantped gi_lin_umedida="EA">3.0</gi_lin_cantped>
+            <gi_lin_precion gi_lin_monprec="EUR">15.0</gi_lin_precion>
+            <gi_lin_cantfac gi_lin_umedfac="EA">3.0</gi_lin_cantfac>
+            <gi_lin_tax>21</gi_lin_tax>
+            <gi_lin_taxamount>3.15</gi_lin_taxamount>
+            <gi_lin_obs>
+                <gi_lin_obs_texto/>
+            </gi_lin_obs>
+        </gi_lin>
+        <gi_lin n="2">
+            <gi_lin_ean13v>1001107233700</gi_lin_ean13v>
+            <gi_lin_refcli></gi_lin_refcli>
+            <gi_lin_refprov>0B107M3X-700-A15</gi_lin_refprov>
+            <gi_lin_descmer>[1001107233700] IM-LINTERNA DE FUSIL MX-3</gi_lin_descmer>
+            <gi_lin_cantped gi_lin_umedida="EA">4.0</gi_lin_cantped>
+            <gi_lin_precion gi_lin_monprec="EUR">8.0</gi_lin_precion>
+            <gi_lin_cantfac gi_lin_umedfac="EA">4.0</gi_lin_cantfac>
+            <gi_lin_tax>21</gi_lin_tax>
+            <gi_lin_taxamount>1.68</gi_lin_taxamount>
+            <gi_lin_obs>
+                <gi_lin_obs_texto/>
+            </gi_lin_obs>
+        </gi_lin>
+        <gi_lin n="3">
+            <gi_lin_ean13v>1000076027901</gi_lin_ean13v>
+            <gi_lin_refcli></gi_lin_refcli>
+            <gi_lin_refprov>U0UR6ACH9019</gi_lin_refprov>
+            <gi_lin_descmer>[1000076027901] PILA AA RECARGABLE NIMH HR6 1PG=4EA</gi_lin_descmer>
+            <gi_lin_cantped gi_lin_umedida="PG">3.0</gi_lin_cantped>
+            <gi_lin_precion gi_lin_monprec="EUR">1.0</gi_lin_precion>
+            <gi_lin_cantfac gi_lin_umedfac="PG">3.0</gi_lin_cantfac>
+            <gi_lin_tax>21</gi_lin_tax>
+            <gi_lin_taxamount>0.21</gi_lin_taxamount>
+            <gi_lin_obs>
+                <gi_lin_obs_texto/>
+            </gi_lin_obs>
+        </gi_lin>
+    </gi_lines>
+</doc>
+

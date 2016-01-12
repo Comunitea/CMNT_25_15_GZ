@@ -106,7 +106,6 @@ class edi_export(orm.TransientModel):
             else:
                 log.info(u"Ignorado %s, ya existe en el sistema." % file_name)
                 raise orm.except_orm(_('Error'), _('El documento ya ha sido exportado con anterioridad.'))
-
         return file_id
 
     def addons_path(self,cr,uid,ids, path=False):
@@ -115,7 +114,6 @@ class edi_export(orm.TransientModel):
             for addons_path in tools.config['addons_path'].split(','):
                 if os.path.lexists(addons_path+os.path.sep+report_module):
                     return os.path.normpath( addons_path+os.path.sep+path )
-
         return os.path.dirname( self.path() )
 
     def export_files(self,cr,uid,ids,context=None):
@@ -123,7 +121,7 @@ class edi_export(orm.TransientModel):
             context = {}
         wizard = self.browse(cr,uid,ids[0])
         path = wizard.configuration.ftpbox_path + "/out"
-        templates_path = wizard.addons_path('gauzon_edi')+os.sep+'wizard'+os.sep+'templates'+os.sep
+        templates_path = wizard.addons_path('gauzon_edi') + os.sep + 'wizard' + os.sep + 'templates' + os.sep
         tmp_name = ''
 
         for obj in self.pool.get(context['active_model']).browse(cr,uid,context['active_ids']):

@@ -268,14 +268,10 @@ class edi_import(orm.TransientModel):
             'status': 'imported',
             'mode': mode,
             'sale_order_id': order_id,
-            #'gln_e': cdic.get('gi_cab_emisor',False) and cdic['gi_cab_emisor'].text or False,
-            'gln_e': cdic['gi_cab_emisor'].text or False,
-            #'gln_v': cdic.get('gi_cab_vendedor',False) and cdic['gi_cab_vendedor'].text or False,
-            'gln_v': cdic['gi_cab_vendedor'].text or False,
-            #'gln_c': cdic.get('gi_cab_comprador',False) and cdic['gi_cab_comprador'].text or False,
-            'gln_c': cdic['gi_cab_comprador'].text or False,
-            #'gln_r': cdic.get('gi_cab_shipto',False) and cdic['gi_cab_shipto'].text or False,
-            'gln_r': cdic['gi_cab_shipto'].text or False,
+            'gln_e': cdic.get('gi_cab_emisor',False) != False and cdic['gi_cab_emisor'].text or False,
+            'gln_v': cdic.get('gi_cab_vendedor',False) != False and cdic['gi_cab_vendedor'].text or False,
+            'gln_c': cdic.get('gi_cab_comprador',False) != False and cdic['gi_cab_comprador'].text or False,
+            'gln_r': cdic.get('gi_cab_shipto',False) != False and cdic['gi_cab_shipto'].text or False,
         }
         return doc.write(values)
 
@@ -289,8 +285,8 @@ class edi_import(orm.TransientModel):
         mode = root.attrib['gi_cab_funcion']
         cab = root[0]
         lines = root[1]
-        cdic = dict( [ (x.tag,x) for x in cab ] )
-        ldic = dict( [ (x.tag + x.attrib['n'],x) for x in lines] )
+        cdic = dict([(x.tag,x) for x in cab])
+        ldic = dict([(x.tag + x.attrib['n'],x) for x in lines])
 
         order_id = self.create_order(cr,uid,cdic,root,doc)
         if order_id:
@@ -362,6 +358,7 @@ class edi_import(orm.TransientModel):
         move_id = self.pool.get('stock.move').search(cr,uid,[('picking_id','=',id_alb),
                                                              ('id','in',move_ids),
                                                              ('product_id', '=', id_product),
+                                                             #('product_qty','=',float(dc['gi_lin_cantent'].text)),
                                                              ('procurement_id.sale_line_id.order_id', '=', sale_order_id)])
         if move_id:
             move_id = self.pool.get('stock.move').browse(cr, uid, [move_id[0]])
@@ -369,15 +366,13 @@ class edi_import(orm.TransientModel):
             raise orm.except_orm(_('Error'),
                 _(u'No se encontraron movimientos con las características requeridas.Es posible que el paquete, el lote o la cantidad estén mal asignados en el fichero'))
 
-        #move = self.pool.get('stock.move').browse(cr,uid,move_id)
         if float(dc['gi_lin_cantrec'].text) >  move_id.product_qty:
             raise orm.except_orm(_('Error'),_(u'No es posible que la cantidad recibida sea mayor que la cantidad entregada'))
 
         new_acepted_qty = move_id.acepted_qty + float(dc['gi_lin_cantrec'].text)
         move_id.write({'acepted_qty': new_acepted_qty,
                     'note': dc.get('gi_lin_obs',False)!= False and self.get_notes(cr,uid,dc['gi_lin_obs']) or False,
-                    'rejected' : dc['gi_lin_reccode'].text == 'REJECTED' or False
-        })
+                    'rejected' : dc['gi_lin_reccode'].text == 'REJECTED' or False })
         log.info(u"Ean13v producto -> %s : La cantidad aceptada de %s actualizada en el movimiento. " % (dc['gi_lin_ean13v'].text,dc['gi_lin_cantrec'].text) )
 
         return True
@@ -390,7 +385,7 @@ class edi_import(orm.TransientModel):
         mode = root.attrib['gi_cab_funcion']
         cab = root[0]
         empacs = root[1]
-        gi_cab_dic = dict( [ (x.tag,x.text) for x in cab ] )
+        gi_cab_dic = dict([(x.tag,x.text) for x in cab])
         num_alb = gi_cab_dic['gi_cab_numalb']  #sumar el OUT/
         id_alb = self.pool.get('stock.picking').search(cr,uid,[('name','=',num_alb)])
         if id_alb:
@@ -453,5 +448,4 @@ class edi_import(orm.TransientModel):
         action_model,action_id = data_pool.get_object_reference(cr, uid, model, act)
         action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
         action['domain'] = [('id', 'in', doc_ids)]
-
         return action

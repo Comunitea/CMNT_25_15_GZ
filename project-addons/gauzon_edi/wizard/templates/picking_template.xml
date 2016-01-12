@@ -19,8 +19,41 @@
                 lines_list.append(op)
         return lines_list
 
-%>
-        <?xml version="1.0" encoding="UTF-8"?>
+    def get_grouped_links (x, o):
+        vals = []
+        values = {}
+        lines_list = get_operation_lines(x,o)
+        for y in lines_list:
+            for l in y.linked_move_operation_ids:
+                num_ped =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.order_id.client_order_ref or 'num_ped'
+                ean13v = y.product_id.ean13v and y.product_id.ean13v or 'ean13v'
+                refcli =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refcli or ''
+                refprov =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refprov or ''
+                numserie = y.lot_id and y.lot_id.name or ''
+                descmer = ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.name or ''
+                edi_code = y.product_uom_id and y.product_uom_id.edi_code or ''
+                cant =  l.qty or 0.0
+                nuevo = True
+                if vals:
+                    for val in vals:
+                        if val['num_ped'] == num_ped and val['ean13v'] == ean13v and val['numserie'] == numserie:
+                            val['qty'] += cant
+                            nuevo = False
+
+                if nuevo:
+                    values = {'num_ped': num_ped,
+                                'ean13v': ean13v,
+                                'refcli': refcli,
+                                'refprov': refprov,
+                                'numserie': numserie,
+                                'descmer': descmer,
+                                'edi_code': edi_code,
+                                'qty': cant
+                                }
+                    vals.append (values)
+        return vals
+
+%><?xml version="1.0" encoding="UTF-8"?>
 <doc c="DESADV" gi_cab_nodo="351" gi_cab_funcion="9">
 
   <gi_cab>
@@ -39,20 +72,18 @@
     %for x in get_operation(o):
     <gi_empaq n="${ count }" gi_empaq_tipo="${ x!=False and x.result_package_id and x.result_package_id.packaging_type_id.alias or ''}" gi_empaq_sscc="${ x!=False and x.result_package_id and x.result_package_id.name or ''}">
       <gi_lines><% count2 = 1 %>
-        %for y in get_operation_lines(x,o):
-        %for l in y.linked_move_operation_ids:
+        %for val in get_grouped_links (x, o):
         <gi_lin n="${ count2 }">
-          <gi_lin_numped>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.order_id.client_order_ref or ''}</gi_lin_numped>
-          <gi_lin_ean13v>${ y.product_id.ean13v and y.product_id.ean13v or ''}</gi_lin_ean13v>
-          <gi_lin_refcli>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refcli or ''}</gi_lin_refcli>
-          <gi_lin_refprov>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refprov or ''}</gi_lin_refprov>
-          <gi_lin_numserie>${ y.lot_id and y.lot_id.name or '' }</gi_lin_numserie>
-          <gi_lin_descmer>${ ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.name or ''}</gi_lin_descmer>
-          <gi_lin_cantent gi_lin_umedida="${ y.product_uom_id and y.product_uom_id.edi_code or ''}">${ l.qty or '' }</gi_lin_cantent>
-          <gi_lin_cantentfac gi_lin_umedfac="${ y.product_uom_id and y.product_uom_id.edi_code or ''}">${ l.qty  or '' }</gi_lin_cantentfac>
-          <gi_lin_cantped gi_lin_umedida="${ y.product_uom_id and y.product_uom_id.edi_code or '' }">${ l.qty or '' }</gi_lin_cantped>
+          <gi_lin_numped>${ val['num_ped'] }</gi_lin_numped>
+          <gi_lin_ean13v>${ val['ean13v'] }</gi_lin_ean13v>
+          <gi_lin_refcli>${ val['refcli'] }</gi_lin_refcli>
+          <gi_lin_refprov>${ val['refprov'] }</gi_lin_refprov>
+          <gi_lin_numserie>${ val['numserie'] }</gi_lin_numserie>
+          <gi_lin_descmer>${ val['descmer'] }</gi_lin_descmer>
+          <gi_lin_cantent gi_lin_umedida="${ val['edi_code'] }">${ val['qty'] }</gi_lin_cantent>
+          <gi_lin_cantentfac gi_lin_umedfac="${ val['edi_code'] }">${ val['qty'] }</gi_lin_cantentfac>
+          <gi_lin_cantped gi_lin_umedida="${ val['edi_code'] }">${ val['qty'] }</gi_lin_cantped>
         </gi_lin><% count2 += 1 %>
-        %endfor
         %endfor
       </gi_lines>
     </gi_empaq><% count += 1 %>
