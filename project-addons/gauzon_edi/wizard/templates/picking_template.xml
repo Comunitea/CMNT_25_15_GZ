@@ -32,12 +32,12 @@
                 numserie = y.lot_id and y.lot_id.name or ''
                 descmer = ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.name or ''
                 edi_code = y.product_uom_id and y.product_uom_id.edi_code or ''
-                cant =  l.qty or 0.0
+                qty =  l.qty or 0.0
                 nuevo = True
                 if vals:
                     for val in vals:
                         if val['num_ped'] == num_ped and val['ean13v'] == ean13v and val['numserie'] == numserie:
-                            val['qty'] += cant
+                            val['qty'] += qty
                             nuevo = False
 
                 if nuevo:
@@ -48,7 +48,7 @@
                                 'numserie': numserie,
                                 'descmer': descmer,
                                 'edi_code': edi_code,
-                                'qty': cant
+                                'qty': qty
                                 }
                     vals.append (values)
         return vals
