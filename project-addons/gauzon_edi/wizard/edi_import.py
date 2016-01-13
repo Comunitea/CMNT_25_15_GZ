@@ -133,8 +133,6 @@ class edi_import(orm.TransientModel):
             return False
 
     def create_order_version(self,cr,uid,mode,order_id,doc):
-        # import ipdb; ipdb.set_trace()
-
         sale_obj = self.pool.get('sale.order').browse(cr,uid,order_id)
         version_id = self.pool.get('sale.order').search(cr,uid,[('client_order_ref','=',sale_obj.client_order_ref),('id','!=',sale_obj.id)])
         if version_id:
@@ -237,7 +235,6 @@ class edi_import(orm.TransientModel):
 
     def create_lines(self,cr,uid,ldic,order_id):
         """ Crea las lineas del pedido de ventas"""
-        # import ipdb; ipdb.set_trace()
         for l in ldic:
             lines = dict([x.tag,x] for x in ldic[l])
             umedida = lines.get('gi_lin_cantped',False) != False and lines['gi_lin_cantped'].attrib['gi_lin_umedida'] or False
@@ -278,7 +275,6 @@ class edi_import(orm.TransientModel):
 
     def parse_order_file(self,cr,uid,filename,doc):
         """Procesa el fichero orders, creando un pedido de venta"""
-        # import ipdb; ipdb.set_trace()
 
         xml = etree.parse(filename)
         root = xml.getroot()
@@ -292,7 +288,7 @@ class edi_import(orm.TransientModel):
         if order_id:
             self.create_lines(cr,uid,ldic,order_id)
             self.update_doc(cr,uid,order_id,mode,cdic,doc)
-
+            return order_id
         return True
 
     def change_moves(self,cr,uid,gilin,sscc,id_alb,doc):
@@ -417,7 +413,7 @@ class edi_import(orm.TransientModel):
             })
         log.info(u"El documento %s ha sido importado." % doc.name)
         f.close()
-        return True
+        return id_alb
 
     def process_files(self,cr,uid,ids,context=None):
         """Busca todos los ficheros que estén en error o en borrador y los procesa dependiendo del
@@ -431,21 +427,21 @@ class edi_import(orm.TransientModel):
         doc_ids = self.pool.get('edi.doc').search(cr,uid,[('status','in',['draft','error'])])
         model='sale'
         act='action_quotations'
-        sales = []
-        # import ipdb; ipdb.set_trace()
+        order_picks = []
 
         for doc in self.pool.get('edi.doc').browse(cr,uid,doc_ids):
             file_path = path + "/" + doc.file_name
             if doc.type == 'orders':
                 line = self.parse_order_file(cr,uid,file_path,doc)
-                sales.append(line)
+                order_picks.append(line)
             elif doc.type == 'recadv':
                 model = 'stock'; act='action_picking_tree'
                 line = self.parse_recadv_file(cr,uid,file_path,doc)
-                sales.append(line)
-
+                order_picks.append(line)
         data_pool = self.pool.get('ir.model.data')
         action_model,action_id = data_pool.get_object_reference(cr, uid, model, act)
         action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
-        action['domain'] = [('id', 'in', doc_ids)]
+        action['context'] = {}
+        action['domain'] = [('id', 'in', order_picks)]
+        import ipdb; ipdb.set_trace()
         return action
