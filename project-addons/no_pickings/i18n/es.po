@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * no_pickings
+#       * no_pickings
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-12 08:57+0000\n"
-"PO-Revision-Date: 2013-06-12 08:57+0000\n"
+"POT-Creation-Date: 2016-01-15 17:52+0000\n"
+"PO-Revision-Date: 2016-01-15 17:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,125 +16,61 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: no_pickings
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "¡La referencia del pedido debe ser única por compañía!"
+#: view:moves.to.pick:no_pickings.wizard_moves_to_pick_form
+msgid "Are you sure to pick selected moves?"
+msgstr "¿Está usted seguro de albaranar los movimientos seleccionados?"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,update_cost:0
-msgid "Need cost update"
-msgstr "Necesaria actualización de coste"
+#: view:moves.to.pick:no_pickings.wizard_moves_to_pick_form
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: no_pickings
-#: view:moves.to.pick:0
-msgid "_To pick"
-msgstr "Albaranar"
+#: field:moves.to.pick,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,wizard_id:0
-msgid "Wizard"
-msgstr "Asistente"
+#: field:moves.to.pick,create_date:0
+msgid "Created on"
+msgstr "Creado el"
 
 #. module: no_pickings
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Debe asignar un lote de producción para este producto"
+#: code:addons/no_pickings/wizard/moves_to_pick.py:31
+#, python-format
+msgid "Customer of moves must be the same."
+msgstr "El cliente de los movimientos debe ser el mismo."
 
 #. module: no_pickings
-#: view:stock.move:0
-msgid "State"
-msgstr "Estado"
+#: code:addons/no_pickings/no_pickings.py:56
+#, python-format
+msgid "Error"
+msgstr "Error"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,location_id:0
+#: field:moves.to.pick,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: no_pickings
+#: field:moves.to.pick,write_uid:0
+msgid "Last Updated by"
+msgstr "Últ. actualización por"
+
+#. module: no_pickings
+#: field:moves.to.pick,write_date:0
+msgid "Last Updated on"
+msgstr "Últ. actualización el"
+
+#. module: no_pickings
+#: model:ir.model,name:no_pickings.model_stock_location
 msgid "Location"
-msgstr "Localización"
+msgstr "Ubicación"
 
 #. module: no_pickings
-#: model:ir.model,name:no_pickings.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: no_pickings
-#: field:moves.to.pick.line,product_uom:0
-msgid "Unit of Measure"
-msgstr "Undad de medida"
-
-#. module: no_pickings
-#: field:moves.to.pick.line,product_id:0
-msgid "Product"
-msgstr "Producto"
-
-#. module: no_pickings
-#: model:ir.model,name:no_pickings.model_sale_order
-msgid "Sales Order"
-msgstr "Pedido de venta"
-
-#. module: no_pickings
-#: view:sale.order:0
-msgid "Packings"
-msgstr "Albaranes"
-
-#. module: no_pickings
-#: code:addons/no_pickings/no_pickings.py:131
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "No de pueden cancelar los pedidos de ventas !"
-
-#. module: no_pickings
-#: code:addons/no_pickings/wizard/moves_to_pick.py:57
-#, python-format
-msgid "Destination address of moves must be the same."
-msgstr "La direcciones de destino de los movimientos deben ser las mismas."
-
-#. module: no_pickings
-#: code:addons/no_pickings/wizard/moves_to_pick.py:74
-#, python-format
-msgid "Stock Picking OUT"
-msgstr "Albaranes de salida"
-
-#. module: no_pickings
-#: model:ir.actions.act_window,name:no_pickings.action moves_to_pick
-msgid "To pick"
-msgstr "Albaranar"
-
-#. module: no_pickings
-#: code:addons/no_pickings/wizard/moves_to_pick.py:116
-#, python-format
-msgid "Quantity can't be higer than the original one."
-msgstr "Quantity can't be higer than the original one."
-
-#. module: no_pickings
-#: model:ir.model,name:no_pickings.model_moves_to_pick
-msgid "moves.to.pick"
-msgstr "moves.to.pick"
-
-#. module: no_pickings
-#: field:moves.to.pick.line,tracking:0
-msgid "Tracking"
-msgstr "Paquete"
-
-#. module: no_pickings
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "No puede mover productos desde o hacia una ubicación de tipo vista."
-
-#. module: no_pickings
-#: code:addons/no_pickings/no_pickings.py:131
-#, python-format
-msgid "You must first cancel all moves attached to sale order lines of this sales order."
-msgstr "Debes cancelar primero todos los movimientos de las lineas de este pedido."
-
-#. module: no_pickings
-#: field:moves.to.pick,move_ids:0
-#: view:moves.to.pick.line:0
-msgid "Product Moves"
-msgstr "Movimientos de productos"
-
-#. module: no_pickings
-#: model:ir.model,name:no_pickings.model_moves_to_pick_line
-msgid "moves.to.pick.line"
-msgstr "moves.to.pick.line"
+#: field:moves.to.pick,name:0
+msgid "Name"
+msgstr "Nombre"
 
 #. module: no_pickings
 #: field:sale.order,no_picking:0
@@ -142,79 +78,59 @@ msgid "No picking"
 msgstr "No albaranar"
 
 #. module: no_pickings
-#: view:moves.to.pick:0
-msgid "Products"
-msgstr "Productos"
+#: view:stock.move:no_pickings.view_move_search_add_groups
+msgid "Origin"
+msgstr "Origen"
 
 #. module: no_pickings
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "¡La referencia debe ser única por compañía!"
+#: view:stock.move:no_pickings.view_move_search_add_groups
+msgid "Partner"
+msgstr "Empresa"
 
 #. module: no_pickings
-#: code:addons/no_pickings/wizard/moves_to_pick.py:57
-#: code:addons/no_pickings/wizard/moves_to_pick.py:116
-#, python-format
-msgid "Error"
-msgstr "Error"
+#: view:stock.move:no_pickings.view_move_search_add_groups
+msgid "Picking"
+msgstr "Albarán"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,quantity:0
-msgid "Quantity"
-msgstr "Cantidad"
+#: model:ir.model,name:no_pickings.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,prodlot_id:0
-msgid "Production Lot"
-msgstr "Lote de producción"
-
-#. module: no_pickings
-#: view:stock.move:0
-msgid "Destination address"
-msgstr "Dirección de destino"
+#: model:ir.model,name:no_pickings.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
 
 #. module: no_pickings
 #: model:ir.model,name:no_pickings.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento stock"
+msgstr "Movimiento de existencias"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,move_id:0
-msgid "Move"
-msgstr "Movimiento"
+#: model:ir.actions.act_window,name:no_pickings.action_move_form_no_picking
+#: model:ir.ui.menu,name:no_pickings.menu_moves_to_pick
+msgid "Stock Moves To Pick"
+msgstr "Movimientos a albaranar"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,currency:0
-msgid "Currency"
-msgstr "Moneda"
+#: model:ir.actions.act_window,name:no_pickings.action moves_to_pick
+#: view:moves.to.pick:no_pickings.wizard_moves_to_pick_form
+msgid "To pick"
+msgstr "Albaranar"
 
 #. module: no_pickings
-#: field:moves.to.pick.line,cost:0
-msgid "Cost"
-msgstr "Coste"
+#: view:stock.picking:no_pickings.view_picking_form_add_undo_btn
+msgid "Undo"
+msgstr "Deshacer"
 
 #. module: no_pickings
-#: view:moves.to.pick:0
-msgid "_Cancel"
-msgstr "Cancelar"
+#: view:stock.move:no_pickings.view_move_search_add_groups
+msgid "Warehouse"
+msgstr "Almacén"
 
 #. module: no_pickings
-#: help:moves.to.pick.line,cost:0
-msgid "Unit Cost for this product line"
-msgstr "Coste unitario para esta linea de poducto"
-
-#. module: no_pickings
-#: help:moves.to.pick.line,currency:0
-msgid "Currency in which Unit cost is expressed"
-msgstr "Moneda en que se expresa el coste unitario"
-
-#. module: no_pickings
-#: field:moves.to.pick.line,location_dest_id:0
-msgid "Dest. Location"
-msgstr "Dirección de destino"
-
-#. module: no_pickings
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Está intentando asignar un lote que no es del mismo producto"
-
+#: code:addons/no_pickings/wizard/moves_to_pick.py:34
+#, python-format
+msgid "Warehouse of moves must be the same."
+msgstr "El almacén de los movimientos debe ser el mismo."

@@ -132,33 +132,6 @@ class edi_import(orm.TransientModel):
         else:
             return False
 
-    def create_order_version(self,cr,uid,mode,order_id,doc):
-        sale_obj = self.pool.get('sale.order').browse(cr,uid,order_id)
-        version_id = self.pool.get('sale.order').search(cr,uid,[('client_order_ref','=',sale_obj.client_order_ref),('id','!=',sale_obj.id)])
-        if version_id:
-            old_sale = self.pool.get('sale.order').browse(cr,uid,version_id[0])
-            vals = {}
-            if not old_sale.current_revision_id:
-                vals.update({'current_revision_id':old_sale.id,
-                                'revision_number': 1,
-                                'name': old_sale.name + u" V.1",
-                })
-            else:
-                vals.update({'current_revision_id':old_sale.current_revision_id.id,
-                                'revision_number': old_sale.revision_number + 1,
-                                'name': old_sale.current_revision_id.name + u" V." + str(old_sale.revision_number + 1)
-                })
-            old_sale.write({'active':False})
-            sale_obj.write(vals)
-            log.info(u"Creada version para el documento %s." % doc.name)
-            if mode == 'DEL':
-                wf_service = netsvc.LocalService('workflow')
-                wf_service.trg_validate(uid, 'sale.order', sale_obj.id, 'cancel', cr)
-                log.info(u"La venta %s ha sido cancelada." % sale_obj.name)
-
-        return True
-
-
     def create_order(self,cr,uid,cdic,root,doc):
         conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
         if not conf_ids:
@@ -189,14 +162,30 @@ class edi_import(orm.TransientModel):
                 'order_type': root.attrib['gi_cab_funcion'],
                 'urgent': root.attrib['gi_cab_nodo'] == '224' and True or False,
                 'payment_term': partner.property_payment_term.id,
-                'payment_type': partner.customer_payment_mode.id,
+                'payment_mode_id': partner.customer_payment_mode.id,
                 'partner_bank': self.get_partner_bank(cr,uid,partner),
                 'user_id' : wizard.salesman.id,
             }
-            order_id = self.pool.get('sale.order').create(cr,uid,values)
-            log.info(u"Creada orden de venta a partir del documento %s." % doc.name)
-            if root.attrib['gi_cab_funcion'] in ['REP','DEL']:
-                version_id = self.create_order_version(cr,uid,root.attrib['gi_cab_funcion'],order_id,doc)
+            if not sale_id:
+                order_id = self.pool.get('sale.order').create(cr,uid,values)
+                log.info(u"Creada orden de venta a partir del documento %s." % doc.name)
+            else:
+                order_id = sale_id[0]
+                self.pool.get('sale.order').copy_quotation(cr, uid, order_id)
+                sale_obj = self.pool.get('sale.order').browse(cr, uid, order_id)
+                last_rev_id = False
+                for rev in sale_obj.old_revision_ids:
+                    if not last_rev_id or rev.id > last_rev_id:
+                        last_rev_id = rev.id
+                doc_ids = self.pool.get('edi.doc').search(cr, uid, [('sale_order_id', '=', order_id),('id', '!=', doc.id)])
+                if doc_ids and last_rev_id:
+                    self.pool.get('edi.doc').write(cr, uid, doc_ids, {'sale_order_id': last_rev_id})
+                self.pool.get('sale.order').write(cr, uid, [order_id], values)
+                self.pool.get('sale.order.line').unlink(cr, uid, [x.id for x in sale_obj.order_line])
+                if root.attrib['gi_cab_funcion'] == 'DEL':
+                    wf_service = netsvc.LocalService('workflow')
+                    wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
+                    log.info(u"La venta %s ha sido cancelada." % sale_obj.name)
         else:
             doc.write({'status' : 'error',
                         'message':'La referencia de este documento no existe en el sistema',
@@ -289,7 +278,7 @@ class edi_import(orm.TransientModel):
             self.create_lines(cr,uid,ldic,order_id)
             self.update_doc(cr,uid,order_id,mode,cdic,doc)
             return order_id
-        return True
+        return False
 
     def change_moves(self,cr,uid,gilin,sscc,id_alb,doc):
         """ recibe un elemento glin, se lo recorre y comprueba si existen los productos,empaquetado,
@@ -433,15 +422,17 @@ class edi_import(orm.TransientModel):
             file_path = path + "/" + doc.file_name
             if doc.type == 'orders':
                 line = self.parse_order_file(cr,uid,file_path,doc)
-                order_picks.append(line)
+                if line:
+                    order_picks.append(line)
             elif doc.type == 'recadv':
                 model = 'stock'; act='action_picking_tree'
                 line = self.parse_recadv_file(cr,uid,file_path,doc)
                 order_picks.append(line)
-        data_pool = self.pool.get('ir.model.data')
-        action_model,action_id = data_pool.get_object_reference(cr, uid, model, act)
-        action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
-        action['context'] = {}
-        action['domain'] = [('id', 'in', order_picks)]
-        import ipdb; ipdb.set_trace()
-        return action
+        if order_picks:
+            data_pool = self.pool.get('ir.model.data')
+            action_model,action_id = data_pool.get_object_reference(cr, uid, model, act)
+            action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
+            action['context'] = {}
+            action['domain'] = [('id', 'in', order_picks)]
+            return action
+        return True

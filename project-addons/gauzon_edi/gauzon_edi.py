@@ -91,7 +91,7 @@ class sale_order(orm.Model):
         'order_type': fields.selection(
             [ ('ORI', 'ORI'),('REP', 'REP'),('DEL','DEL') ],
             'Tipo', readonly=True),
-        'funcion_mode': fields.selection ([ ('0', 'Aceptación ORDERS'),('1', 'Rechazo ORDERS'),('2', 'Oferta alternativa'),('3', 'Valoración ORDERS')],'Funcion'),
+        'funcion_mode': fields.selection ([ ('0', 'Aceptación ORDERS'),('1', 'Rechazo ORDERS'),('2', 'Oferta alternativa'),('3', 'Valoración ORDERS')],'Funcion', copy=False),
         'top_date':fields.date('Fecha limite'),
         'urgent':fields.boolean('Urgente'),
         'num_contract': fields.char('Contract Number', size=128),
@@ -274,9 +274,33 @@ class stock_picking(orm.Model):
 class stock_move(orm.Model):
     _inherit = 'stock.move'
 
+    def _get_sale_line_history(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None: context = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id:
+                if move.procurement_id.sale_line_id:
+                    res[move.id] = move.procurement_id.sale_line_id.id
+                else:
+                    res[move.id] = False
+            else:
+                cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name='stock_move' and (column_name='sale_line_id' or column_name='openupgrade_legacy_8_0_sale_line_id')")
+                data = cr.fetchone()
+                if data and data[0]:
+                    cr.execute("select %s from stock_move where id = %s" % (data[0], move.id))
+                    data2 = cr.fetchone()
+                    if data2 and data2[0]:
+                        res[move.id] = data2[0]
+                    else:
+                        res[move.id] = False
+                else:
+                    res[move.id] = False
+        return res
+
     _columns = {
         'acepted_qty' : fields.float('Cantidad aceptada', digits_compute=dp.get_precision('Product UoM'),readonly=True),
         'rejected' : fields.boolean('Rechazado'),
+        'sale_line_history_id': fields.function(_get_sale_line_history, type="many2one", relation="sale.order.line", readonly=True)
     }
 
     _order = 'date desc'
@@ -284,7 +308,8 @@ class stock_move(orm.Model):
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         # Actualizamos la cantidad si el movimiento no es de devolución.
-        res.update({'quantity': (move.acepted_qty or move.product_qty )})
+        res.update({'quantity': (move.acepted_qty or move.product_qty),
+                    'sale_line_id': move.sale_line_history_id and move.sale_line_history_id.id or False})
 
         if move.rejected and not move.acepted_qty:
             res = {}
@@ -330,6 +355,14 @@ class account_invoice(orm.Model):
         vals["note"] = invoice.note
         return vals
 
+
+class account_invoice_line(orm.Model):
+
+    _inherit = "account.invoice.line"
+
+    _columns = {
+        'sale_line_id' : fields.many2one('sale.order.line','Sale line', readonly=True),
+    }
 
 class stock_return_picking(orm.TransientModel):
     _inherit = 'stock.return.picking'
