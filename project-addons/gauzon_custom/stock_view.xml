@@ -13,5 +13,16 @@
             </field>
         </record>
 
+        <record id="view_picking_internal_search_inherit_add_gb_partner" model="ir.ui.view">
+            <field name="name">stock.picking.search.inherit.add_gb_partner</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sale_stock.view_picking_internal_search_inherit"/>
+            <field name="arch" type="xml">
+                <filter string="Procurement Group" position="after">
+                    <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                </filter>
+            </field>
+        </record>
+
     </data>
 </openerp>
