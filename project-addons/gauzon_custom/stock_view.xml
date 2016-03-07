@@ -24,5 +24,25 @@
             </field>
         </record>
 
+        <record id="view_move_picking_tree_add_info" model="ir.ui.view">
+            <field name="name">stock.move.tree.add_info</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <field name="picking_id" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+                <field name="create_date" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+                <field name="date_expected" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+                <field name="location_dest_id" position="before">
+                    <field name="location_id" groups="stock.group_locations"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
