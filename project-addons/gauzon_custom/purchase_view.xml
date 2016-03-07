@@ -29,6 +29,20 @@
                 <field name="product_qty" position="replace">
                     <field name="product_qty"/>
                 </field>
+                <field name="company_id" position="after">
+                    <field name="state" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="purchase_order_line_form2_add_state" model="ir.ui.view">
+            <field name="name">purchase.order.line.form2.add_state</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+            <field name="model">purchase.order.line</field>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="state" invisible="1"/>
+                </field>
             </field>
         </record>
 
