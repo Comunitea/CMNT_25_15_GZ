@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Copyright (C) 1016
+#    Comunitea Servicios Tecnológicos S.L. (http://www.comunitea.com)
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,14 @@
 #
 ##############################################################################
 
-import business_line
-import account
-import invoice
-import account_voucher
-import wizard
-import report
-import account_analytic_line
+from openerp import models, fields
+
+
+class AccountAnalyticLine(models.Model):
+
+    _inherit = "account.analytic.line"
+
+    business_line_id = fields.Many2one('account.business.line',
+                                       'Business line', readonly=True,
+                                       related="move_id.business_line_id",
+                                       store=True)
