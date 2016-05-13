@@ -987,7 +987,7 @@ $F{Referencia-name} + ": " +
 				<textElement verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{Nombre-name4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Nombre-name4}.equals($F{Nombre-name}) ? "" : $F{Nombre-name4}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="273" y="157" width="88" height="13" uuid="b987635d-a053-4abc-b44a-93bf9e796bdc"/>

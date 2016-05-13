@@ -949,7 +949,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{Nombre-name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Nombre-name}.equals($F{Nombre-name3}) ? "" : $F{Nombre-name}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="273" y="157" width="88" height="13" uuid="1a61d0a8-4a15-42e3-887f-df566ba56f83"/>
