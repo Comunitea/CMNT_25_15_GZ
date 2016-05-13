@@ -29,7 +29,9 @@ class account_invoice(orm.Model):
     _inherit = "account.invoice"
 
     _columns = {
-        'business_line_id': fields.many2one('account.business.line', 'Business line')
+        'business_line_id': fields.\
+            many2one('account.business.line', 'Business line', readonly=True,
+                     states={'draft': [('readonly', False)]})
     }
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
