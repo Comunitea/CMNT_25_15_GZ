@@ -117,3 +117,11 @@ class account_invoice(orm.Model):
         'expiration_dates_str': fields.function(_get_move_lines_str, string='Expiration dates', readonly=True, type="text"),
     }
 
+
+class payment_mode(orm.Model):
+
+    _inherit = "payment.mode"
+
+    _columns = {
+        'no_print': fields.boolean("Not print")
+    }

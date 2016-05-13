@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_analytic_line_form_add_business_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.dd_business_line</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="move_id" position="after">
+                    <field name="business_line_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_line_tree_add_business_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.add_business_line</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="general_account_id" position="after">
+                    <field name="business_line_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_line_filter_add_business_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.select.add_business_line</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Journal" position="after">
+                    <filter string="Busines line" context="{'group_by':'business_line_id'}" name="group_business_line"/>
+                </filter>
+            </field>
+        </record>
+
+    </data>
+</openerp>

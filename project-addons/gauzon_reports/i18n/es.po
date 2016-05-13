@@ -37,6 +37,11 @@ msgid "Expiration dates"
 msgstr "Fechas vencimiento"
 
 #. module: gauzon_reports
+#: field:payment.mode,no_print:0
+msgid "Not print"
+msgstr "No imprimir"
+
+#. module: gauzon_reports
 #: model:ir.model,name:gauzon_reports.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
 msgstr "Línea pedido de compra realiza factura"
