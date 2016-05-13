@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7c437b98-ce98-4e6e-9679-ac7559aaff55">
 	<property name="ireport.zoom" value="1.3310000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="480"/>
 	<subDataset name="Table Dataset 1" uuid="7b157520-85a6-4c23-b609-3d08abcbb148">
 		<parameter name="REWIND" class="java.lang.Object" isForPrompting="false">
 			<parameterDescription><![CDATA[]]></parameterDescription>
@@ -225,6 +225,9 @@
 	</field>
 	<field name="Nombre-name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="No print-no_print" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[/data/record/Modo_de_pago-payment_mode_id/No print-no_print]]></fieldDescription>
 	</field>
 	<group name="invoice" isStartNewPage="true" isResetPageNumber="true" footerPosition="ForceAtBottom">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
@@ -747,7 +750,9 @@ $F{Referencia-name} + ": " +
 					<text><![CDATA[VENCIMIENTOS:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="318" y="144" width="223" height="13" uuid="8050429a-f766-4c4a-9865-a232df97aad7"/>
+					<reportElement positionType="Float" x="318" y="144" width="223" height="13" uuid="8050429a-f766-4c4a-9865-a232df97aad7">
+						<printWhenExpression><![CDATA[!$F{No print-no_print}]]></printWhenExpression>
+					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -755,7 +760,9 @@ $F{Referencia-name} + ": " +
 					<textFieldExpression><![CDATA[$F{Numero_de_cuenta-acc_number}.isEmpty() ? ($F{Numero_de_cuenta-acc_number2}.isEmpty() ? "" : $F{Numero_de_cuenta-acc_number2}) : $F{Numero_de_cuenta-acc_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="318" y="161" width="223" height="13" uuid="961fcc8a-33fa-498a-b2a5-453eb111f035"/>
+					<reportElement positionType="Float" x="318" y="161" width="223" height="13" uuid="961fcc8a-33fa-498a-b2a5-453eb111f035">
+						<printWhenExpression><![CDATA[!$F{No print-no_print}]]></printWhenExpression>
+					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -763,14 +770,18 @@ $F{Referencia-name} + ": " +
 					<textFieldExpression><![CDATA[$F{Numero_de_cuenta-acc_number}.isEmpty() ? ($F{Numero_de_cuenta-acc_number2}.isEmpty() ? "" : $F{Codigo_de_identificacion_bancaria-bank_bic3}) : $F{Codigo_de_identificacion_bancaria-bank_bic}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement positionType="Float" x="256" y="144" width="62" height="13" uuid="1b28bdef-22c9-40d2-a5f1-56b07a46fd2e"/>
+					<reportElement positionType="Float" x="256" y="144" width="62" height="13" uuid="1b28bdef-22c9-40d2-a5f1-56b07a46fd2e">
+						<printWhenExpression><![CDATA[!$F{No print-no_print}]]></printWhenExpression>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[Nº de IBAN:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" x="256" y="161" width="62" height="13" uuid="f1c6e3b1-1a52-4ea2-8c58-9560f1c77ec7"/>
+					<reportElement positionType="Float" x="256" y="161" width="62" height="13" uuid="f1c6e3b1-1a52-4ea2-8c58-9560f1c77ec7">
+						<printWhenExpression><![CDATA[!$F{No print-no_print}]]></printWhenExpression>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>

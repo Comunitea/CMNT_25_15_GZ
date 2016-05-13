@@ -57,5 +57,16 @@
             </field>
         </record>
 
+        <record id="view_payment_mode_form_add_no_print" model="ir.ui.view">
+            <field name="name">payment.mode.form.add_no_print</field>
+            <field name="model">payment.mode</field>
+            <field name="inherit_id" ref="account_payment.view_payment_mode_form"/>
+            <field name="arch" type="xml">
+                <field name="bank_id" position="after">
+                    <field name="no_print"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
