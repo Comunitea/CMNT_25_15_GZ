@@ -36,7 +36,7 @@
       <gi_lin_ean13v>${ l.product_id.ean13v or '' }</gi_lin_ean13v>
       <gi_lin_refcli>${ l.sale_line_id and l.sale_line_id.refcli or '' }</gi_lin_refcli>
       <gi_lin_refprov>${ l.sale_line_id and l.sale_line_id.refprov or '' }</gi_lin_refprov>
-      <gi_lin_descmer>${ l.sale_line_id and l.sale_line_id.name or '' }</gi_lin_descmer>
+      <gi_lin_descmer>${ l.sale_line_id and l.sale_line_id.name.replace('>', '&gt;').replace('<','&lt;') or '' }</gi_lin_descmer>
       <gi_lin_cantfac gi_lin_umedfac="${ l.uos_id and l.uos_id.edi_code or '' }">${ l.quantity}</gi_lin_cantfac>
       <gi_lin_precion gi_lin_mon="${ o.currency_id.name or '' }">${ l.price_unit }</gi_lin_precion><%imp = l.invoice_line_tax_id and int(l.invoice_line_tax_id[0].amount * 100) or int('0') %>
       <gi_lin_baseamount gi_lin_mon="${ o.currency_id.name or '' }" >${ l.price_subtotal }</gi_lin_baseamount>
