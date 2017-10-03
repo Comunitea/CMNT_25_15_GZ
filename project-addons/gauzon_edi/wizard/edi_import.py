@@ -165,6 +165,7 @@ class edi_import(orm.TransientModel):
                 'payment_mode_id': partner.customer_payment_mode.id,
                 'partner_bank': self.get_partner_bank(cr,uid,partner),
                 'user_id' : wizard.salesman.id,
+                'num_contract': cdic.get('gi_cab_numcontr',False)!= False and cdic['gi_cab_numcontr'].text or False
             }
             if not sale_id:
                 order_id = self.pool.get('sale.order').create(cr,uid,values)

@@ -70,5 +70,5 @@ class res_company(orm.Model):
     _inherit = "res.company"
 
     _columns = {
-        'aecoc_code' : fields.char('AECOC Code', size=7),
+        'aecoc_code' : fields.char('AECOC Code', size=8),
     }
