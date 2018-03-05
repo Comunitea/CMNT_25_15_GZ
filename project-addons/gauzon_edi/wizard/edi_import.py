@@ -115,6 +115,14 @@ class edi_import(orm.TransientModel):
         dir_obj = self.pool.get('res.partner').browse(cr,uid,ids[0])
         return dir_obj
 
+    def unor_to_dir(self,cr,uid,unor):
+
+        ids = self.pool.get('res.partner').search(cr,uid,[('center_code','=',unor)])
+        if not ids:
+            raise orm.except_orm(_('Error'), _(u'No existen ninguna dirección con UNOR %s.' % unor))
+        dir_obj = self.pool.get('res.partner').browse(cr,uid,ids[0])
+        return dir_obj
+
     def get_notes(self,cr,uid,obs):
         observation = ''
         for line in obs:
@@ -122,15 +130,6 @@ class edi_import(orm.TransientModel):
                 observation += (line.text + u'\n')
 
         return observation
-
-    def get_partner_bank(self,cr,uid,partner):
-
-        pay_type = partner.customer_payment_mode
-        if pay_type and pay_type.suitable_bank_types and pay_type.suitable_bank_types[0].code=='bank':
-            if partner.bank_ids:
-                return partner.bank_ids[0].id
-        else:
-            return False
 
     def create_order(self,cr,uid,cdic,root,doc):
         conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
@@ -147,23 +146,23 @@ class edi_import(orm.TransientModel):
             contact_dir = self.gln_to_dir(cr,uid,cdic['gi_cab_emisor'].text)
             invoice_dir = self.gln_to_dir(cr,uid,cdic['gi_cab_comprador'].text)
             shipping_dir = self.gln_to_dir(cr,uid,cdic['gi_cab_shipto'].text)
+            unor_dir = self.unor_to_dir(cr, uid, cdic['gi_cab_unor'].text)
             values = {
                 'date_order': cdic.get('gi_cab_fecha',False)!= False and cdic['gi_cab_fecha'].text or time.strftime('%Y-%m-%d'),
                 'warehouse_id': self.pool.get('stock.warehouse').search(cr,uid,[])[0] ,
                 'top_date': cdic.get('gi_cab_fechatop',False)!= False and cdic['gi_cab_fechatop'].text or False,
                 'client_order_ref': ref,
                 'partner_id': partner.id,
-                'partner_order_id': contact_dir.id,
                 'partner_invoice_id': invoice_dir.id,
                 'partner_shipping_id': shipping_dir.id,
+                'partner_unor_id': unor_dir.id,
                 'pricelist_id': partner.property_product_pricelist.id,
-                'fiscal_position': shipping_dir.fiscal_position.id,
+                'fiscal_position': unor_dir.fiscal_position.id,
                 'note': cdic.get('gi_cab_obs', False) and self.get_notes(cr,uid,cdic['gi_cab_obs']) or "",
                 'order_type': root.attrib['gi_cab_funcion'],
                 'urgent': root.attrib['gi_cab_nodo'] == '224' and True or False,
                 'payment_term': partner.property_payment_term.id,
                 'payment_mode_id': partner.customer_payment_mode.id,
-                'partner_bank': self.get_partner_bank(cr,uid,partner),
                 'user_id' : wizard.salesman.id,
                 'num_contract': cdic.get('gi_cab_numcontr',False)!= False and cdic['gi_cab_numcontr'].text or False
             }
@@ -215,7 +214,7 @@ class edi_import(orm.TransientModel):
 
     def get_taxes(self,cr,uid,product,order_id):
         order = self.pool.get('sale.order').browse(cr,uid,order_id)
-        fiscal_position = order.partner_shipping_id.fiscal_position
+        fiscal_position = order.partner_unor_id.fiscal_position
         if fiscal_position:
             taxes = self.pool.get('account.fiscal.position').map_tax(cr,uid,fiscal_position,product.taxes_id)
         else:
