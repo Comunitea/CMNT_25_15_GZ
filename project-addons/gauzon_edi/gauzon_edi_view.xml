@@ -137,7 +137,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="partner_shipping_id" position="after">
-                    <field name="partner_unor_id"/>
+                    <field name="partner_unor_id" readonly="1"/>
                 </field>
                 <notebook position="inside" >
                     <page string="EDI">
