@@ -95,7 +95,7 @@ class sale_order(orm.Model):
         'top_date':fields.date('Fecha limite'),
         'urgent':fields.boolean('Urgente'),
         'num_contract': fields.char('Contract Number', size=128),
-        'partner_unor_id': fields.many2one('res.partner', 'UNOR')
+        'partner_unor_id': fields.many2one('res.partner', 'UNOR EDI')
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
