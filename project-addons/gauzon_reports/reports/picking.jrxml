@@ -190,29 +190,24 @@
                                 <rectangle>
                                         <reportElement positionType="Float" x="317" y="65" width="238" height="75" uuid="1816d195-f16b-4003-9143-330ebe2e2c2e"/>
                                 </rectangle>
+
                                 <staticText>
-                                        <reportElement positionType="Float" x="326" y="71" width="99" height="32" uuid="13f6427d-c823-40c1-8112-ca071cc22880"/>
+                                        <reportElement positionType="Float" x="320" y="71" width="300" height="32" uuid="13f6427d-c823-40c1-8112-ca071cc22880"/>
                                         <box leftPadding="1"/>
                                         <textElement>
-                                                <font size="18" isBold="true"/>
+                                                <font size="14" isBold="true"/>
                                         </textElement>
-                                        <text><![CDATA[ALBARAN]]></text>
+                                        <text><![CDATA[ALBARAN / ACTA DE RECEPCION]]></text>
                                 </staticText>
                                 <textField>
-                                        <reportElement positionType="Float" x="425" y="71" width="123" height="32" uuid="ab0cdaa2-063c-4812-8dae-87a73a2fd244"/>
+                                        <reportElement positionType="Float" x="340" y="103" width="200" height="32" uuid="ab0cdaa2-063c-4812-8dae-87a73a2fd244"/>
                                         <box rightPadding="1"/>
-                                        <textElement textAlignment="Right">
+                                        <textElement textAlignment="Center">
                                                 <font size="18" isBold="true"/>
                                         </textElement>
                                         <textFieldExpression><![CDATA[$F{Referencia_del_pedido-name}]]></textFieldExpression>
                                 </textField>
-                                <staticText>
-                                        <reportElement positionType="Float" x="326" y="103" width="222" height="32" uuid="8edec13f-8f6e-4eac-9cbb-ff19acd902fc"/>
-                                        <textElement textAlignment="Left">
-                                                <font size="18" isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[ACTA DE RECEPCION]]></text>
-                                </staticText>
+
                                 <staticText>
                                         <reportElement positionType="Float" x="10" y="161" width="53" height="13" uuid="e72c6c5f-41c1-48b5-b5d5-4d5837bfff02"/>
                                         <box leftPadding="2"/>
@@ -496,7 +491,7 @@
                                 <textField>
                                         <reportElement positionType="Float" x="104" y="29" width="203" height="28" uuid="43cf4e08-0825-46d5-9a11-dcfefc77b4fc"/>
                                         <textElement verticalAlignment="Bottom">
-                                                <font size="15" isBold="true"/>
+                                                <font size="14" isBold="true"/>
                                         </textElement>
                                         <textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
                                 </textField>

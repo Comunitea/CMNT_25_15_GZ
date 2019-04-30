@@ -536,7 +536,7 @@ PURPOSES ONLY]]></text>
                                 <textField>
                                         <reportElement positionType="Float" x="104" y="29" width="203" height="28" uuid="019b82a4-8178-4c8f-a2a1-8e00e24232f2"/>
                                         <textElement verticalAlignment="Bottom">
-                                                <font size="15" isBold="true"/>
+                                                <font size="14" isBold="true"/>
                                         </textElement>
                                         <textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
                                 </textField>

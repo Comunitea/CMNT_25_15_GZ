@@ -39,8 +39,8 @@ class sale_order(orm.Model):
                     val1 += line.price_subtotal
                     val2 += (line.price_unit * line.product_uom_qty)
 
-            res[sale.id]['amount_gross'] = round(val2, 2)
-            res[sale.id]['amount_discounted'] = round(val2 - val1, 2)
+            res[sale.id]['amount_gross'] = round(val1, 2)
+            res[sale.id]['amount_discounted'] = round(val2 - val1, 2) > 0.1 and round(val2 - val1, 2) or 0.0 
 
         return res
 

@@ -1027,7 +1027,7 @@
 			<textField>
 				<reportElement x="101" y="0" width="202" height="28" uuid="65c85ed5-56a9-4b0e-b79a-8f357edf96b3"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="15" isBold="true"/>
+					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
 			</textField>

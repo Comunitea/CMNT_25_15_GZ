@@ -1065,7 +1065,7 @@ $F{Referencia-name} + ": " +
 			<textField>
 				<reportElement x="101" y="0" width="202" height="28" uuid="e5b75ee9-5459-4f9d-891b-52496f46ff2c"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="15" isBold="true"/>
+					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
 			</textField>

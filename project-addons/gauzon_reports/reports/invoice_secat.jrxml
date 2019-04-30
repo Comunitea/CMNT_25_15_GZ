@@ -1065,7 +1065,7 @@ $F{Descripcion-name}.replace("["+$F{Referencia-default_code}+"]","")]]></textFie
 			<textField>
 				<reportElement x="101" y="0" width="202" height="28" uuid="54661447-c095-40c8-a8c6-95a0aa966f4f"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="15" isBold="true"/>
+					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
 			</textField>

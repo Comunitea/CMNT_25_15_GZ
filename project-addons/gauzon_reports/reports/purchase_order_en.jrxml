@@ -529,7 +529,7 @@ $F{Taxes-taxes_str}.substring(0, $F{Taxes-taxes_str}.indexOf(" ") == -1 ? 0 : $F
 					<textElement markup="none">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA["\n        Sales department:                                                     "+(($F{Total-amount_total}<500.0) ? "" : ("Purchase manager:" + "\n                                                                                        " + ($F{Fecha_aprobacion-date_approve}.toString().equals("")?"":"APPROVED: Susana Fernandez ["+$F{Fecha_aprobacion-date_approve}.toString()+"]")))]]></textFieldExpression>
+					<textFieldExpression><![CDATA["\n        Sales department:                                                     "+(($F{Total-amount_total}<500.0) ? "" : ("Purchase manager:" + "\n                                                                                        " + ($F{Fecha_aprobacion-date_approve}.toString().equals("")?"":"APPROVED: ________________ ["+$F{Fecha_aprobacion-date_approve}.toString()+"]")))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement positionType="Float" x="10" y="32" width="214" height="13" uuid="f440c156-96c5-43ab-830b-7b3f9fd7a5ad"/>
@@ -773,7 +773,7 @@ $F{Taxes-taxes_str}.substring(0, $F{Taxes-taxes_str}.indexOf(" ") == -1 ? 0 : $F
 			<textField>
 				<reportElement x="96" y="3" width="202" height="28" uuid="ea5e2e78-a55a-4abf-9ca0-b672cd002af4"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="15" isBold="true"/>
+					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Nombre_de_la_compania-name}]]></textFieldExpression>
 			</textField>

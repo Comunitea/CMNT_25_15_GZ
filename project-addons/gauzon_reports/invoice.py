@@ -39,8 +39,8 @@ class account_invoice(orm.Model):
                 val1 += line.price_subtotal
                 val2 += (line.price_unit * line.quantity)
 
-            res[invoice.id]['amount_gross'] = round(val2, 2)
-            res[invoice.id]['amount_discounted'] = round(val2 - val1, 2)
+            res[invoice.id]['amount_gross'] = round(val1, 2)
+            res[invoice.id]['amount_discounted'] = round(val2 - val1, 2) > 0.1 and round(val2 - val1, 2) or 0.0 
 
         return res
 
