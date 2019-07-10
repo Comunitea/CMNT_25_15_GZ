@@ -9,6 +9,7 @@
     'license': 'GPL-3',
     'depends': ['hr_attendance'],
     'data': [
+        'security/ir.model.access.csv',
         'views/biometric_data_view.xml',
         'views/biometric_machine_view.xml',
         'views/hr_attendance.xml',
