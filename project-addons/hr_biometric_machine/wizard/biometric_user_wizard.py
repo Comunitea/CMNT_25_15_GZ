@@ -21,7 +21,8 @@ class BiometricUser(models.TransientModel):
         'biometric.machine', 'Biometric device',
     )
 
-    def import_users(self, cr, uid, ids, context):
+    @api.multi
+    def import_users(self):
         """
         wrapper function
         """
