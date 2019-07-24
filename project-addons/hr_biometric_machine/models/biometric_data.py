@@ -93,29 +93,29 @@ class BiometricData(models.Model):
 
         # CMNT: Hago yo el calculo del sign in y el sign out ignorando el que
         # le llega
-        action_perform == 'sign_in'
-        if prev_att and prev_att.action == 'sign_in':
-            action_perform = 'sign_out' 
+        # action_perform == 'sign_in'
+        # if prev_att and prev_att.action == 'sign_in':
+        #     action_perform = 'sign_out' 
 
-        if action_perform == 'sign_in':
-            if prev_att and prev_att.action == action_perform:
-                if abs(employee_date - date) >= max_time:
-                    new_time = employee_date + max_time
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-                else:
-                    new_time = date - delta_1_minute
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-        else:
-            if (not prev_att or prev_att.action == action_perform or
-                    abs(employee_date - date) > max_time):
-                new_time = date - delta_1_minute
-                self.create_hr_attendace(
-                    employee_id, new_time, 'sign_in',
-                    biometric_id, state='fix',)
+        # if action_perform == 'sign_in':
+        #     if prev_att and prev_att.action == action_perform:
+        #         if abs(employee_date - date) >= max_time:
+        #             new_time = employee_date + max_time
+        #             self.create_hr_attendace(
+        #                 employee_id, new_time, 'sign_out',
+        #                 biometric_id, state='fix',)
+        #         else:
+        #             new_time = date - delta_1_minute
+        #             self.create_hr_attendace(
+        #                 employee_id, new_time, 'sign_out',
+        #                 biometric_id, state='fix',)
+        # else:
+        #     if (not prev_att or prev_att.action == action_perform or
+        #             abs(employee_date - date) > max_time):
+        #         new_time = date - delta_1_minute
+        #         self.create_hr_attendace(
+        #             employee_id, new_time, 'sign_in',
+        #             biometric_id, state='fix',)
 
         if mode == 'auto':
             action_perform == 'sign_in'
