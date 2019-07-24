@@ -300,7 +300,7 @@ msgid "Name in biometric device"
 msgstr "Nombre en dispositivo biométrico"
 
 #. module: hr_biometric_machine
-#: field:biometric.machine,omit_ping:0
+#: field:biometric.machine,ommit_ping:0
 msgid "Omit Ping"
 msgstr "Omitir ping"
 

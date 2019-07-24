@@ -12,7 +12,7 @@
                     <field name="password" password="True"/>
                     <field name="port"/>                 
                     <field name="mode"/>                 
-                    <field name="omit_ping"/>                 
+                    <field name="ommit_ping"/>                 
                     <field name="sequence"/> 
                     <field name="timezone"/>
                 </tree>
@@ -49,7 +49,7 @@
                                     required="True"/>
                             </div>   
                             <field name="mode"/>                     
-                            <field name="omit_ping"/>                     
+                            <field name="ommit_ping"/>                     
                         </group>
                     </group>
                 </form>

@@ -81,7 +81,7 @@ class BiometricData(models.Model):
     mode = fields.Selection(
         [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
         default='manual', required=True)
-    omit_ping = fields.Boolean('Omit Ping')
+    ommit_ping = fields.Boolean('Omit Ping')
 
     @api.model
     def get_users(self):
@@ -89,7 +89,7 @@ class BiometricData(models.Model):
         Function use to get all the registered users
         at the biometric device
         """
-        with ConnectToDevice(self.ip_address, self.port, self.omit_ping, self.password) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             users = conn.get_users()
         return users
 
@@ -99,7 +99,7 @@ class BiometricData(models.Model):
         Function use to clean all attendances
         at the biometric device
         """
-        with ConnectToDevice(self.ip_address, self.port, self.omit_ping, self.password) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             conn.clear_attendance()
 
     @api.model
@@ -127,7 +127,7 @@ class BiometricData(models.Model):
         Function uses to get attendances
         """
         self.create_user()
-        with ConnectToDevice(self.ip_address, self.port, self.omit_ping, self.password) as conn:
+        with ConnectToDevice(self.ip_address, self.port, self.ommit_ping, self.password) as conn:
             attendaces = conn.get_attendance()
         # Attendances are group by user
         for user_attendances in attendaces:
@@ -147,9 +147,9 @@ class ConnectToDevice(object):
     It is using to disable the device when it is been reading or busy
     """
 
-    def __init__(self, ip_address, port, omit_ping=False, password=0):
+    def __init__(self, ip_address, port, ommit_ping=False, password=0):
         try:
-            zk = ZkOpenerp(ip_address, port, omit_ping=True, password=password)
+            zk = ZkOpenerp(ip_address, port, ommit_ping=True, password=password)
             conn = zk.connect()
         except:
             raise UserError(
