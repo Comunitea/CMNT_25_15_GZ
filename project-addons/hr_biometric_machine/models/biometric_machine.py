@@ -137,7 +137,8 @@ class BiometricData(models.Model):
                 if a.action_perform != b.action_perform:
                     continue
                 if abs(a.timestamp - b.timestamp) < self.min_time:
-                    user_attendances.remove(a)
+                    if a in user_attendances:
+                        user_attendances.remove(a)
         return attendaces
 
 
