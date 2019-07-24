@@ -81,7 +81,7 @@ class BiometricData(models.Model):
     mode = fields.Selection(
         [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
         default='manual', required=True)
-    ommit_ping = fields.Boolean('Omit Ping')
+    ommit_ping = fields.Boolean('Ommit Ping')
 
     @api.model
     def get_users(self):
