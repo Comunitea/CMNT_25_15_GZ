@@ -150,7 +150,7 @@ class ConnectToDevice(object):
 
     def __init__(self, ip_address, port, ommit_ping=False, password=0):
         try:
-            zk = ZkOpenerp(ip_address, port, ommit_ping=True, password=password)
+            zk = ZkOpenerp(ip_address, port, ommit_ping=ommit_ping, password=password)
             conn = zk.connect()
         except:
             raise UserError(
