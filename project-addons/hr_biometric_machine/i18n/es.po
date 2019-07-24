@@ -287,7 +287,7 @@ msgstr "Min(s)"
 #. module: hr_biometric_machine
 #: field:biometric.machine,mode:0
 msgid "Mode"
-msgstr "Mode"
+msgstr "Modo"
 
 #. module: hr_biometric_machine
 #: field:biometric.machine,name:0
@@ -301,7 +301,7 @@ msgstr "Nombre en dispositivo biométrico"
 
 #. module: hr_biometric_machine
 #: field:biometric.machine,ommit_ping:0
-msgid "Omit Ping"
+msgid "Ommit Ping"
 msgstr "Omitir ping"
 
 #. module: hr_biometric_machine
