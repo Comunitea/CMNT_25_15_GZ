@@ -75,7 +75,6 @@ class BiometricData(models.Model):
         # Get the max time of working set up for the device
         max_time = biometric_machine.max_time
         # Get a delta time of 1 minute
-        delta_1_minute = datetime.timedelta(minutes=1)
         delta_1_sec = datetime.timedelta(seconds=1)
         # Get previous attendace
         prev_att = hr_attendance_obj.search(
@@ -90,32 +89,6 @@ class BiometricData(models.Model):
             employee_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
         employee_date = convert_from_local_to_utc(employee_date)
-
-        # CMNT: Hago yo el calculo del sign in y el sign out ignorando el que
-        # le llega
-        # action_perform == 'sign_in'
-        # if prev_att and prev_att.action == 'sign_in':
-        #     action_perform = 'sign_out' 
-
-        # if action_perform == 'sign_in':
-        #     if prev_att and prev_att.action == action_perform:
-        #         if abs(employee_date - date) >= max_time:
-        #             new_time = employee_date + max_time
-        #             self.create_hr_attendace(
-        #                 employee_id, new_time, 'sign_out',
-        #                 biometric_id, state='fix',)
-        #         else:
-        #             new_time = date - delta_1_minute
-        #             self.create_hr_attendace(
-        #                 employee_id, new_time, 'sign_out',
-        #                 biometric_id, state='fix',)
-        # else:
-        #     if (not prev_att or prev_att.action == action_perform or
-        #             abs(employee_date - date) > max_time):
-        #         new_time = date - delta_1_minute
-        #         self.create_hr_attendace(
-        #             employee_id, new_time, 'sign_in',
-        #             biometric_id, state='fix',)
 
         if mode == 'auto':
             action_perform = 'sign_in'
