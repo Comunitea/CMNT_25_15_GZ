@@ -54,6 +54,8 @@ class BiometricData(models.Model):
         biometric_machine_obj = self.env['biometric.machine']
         biometric_machine = biometric_machine_obj.browse(biometric_id)
 
+        mode = biometric_machine.mode
+
         def convert_date_to_utc(date):
             local = pytz.timezone(
                 biometric_machine.timezone,)
@@ -74,6 +76,7 @@ class BiometricData(models.Model):
         max_time = biometric_machine.max_time
         # Get a delta time of 1 minute
         delta_1_minute = datetime.timedelta(minutes=1)
+        delta_1_sec = datetime.timedelta(seconds=1)
         # Get previous attendace
         prev_att = hr_attendance_obj.search(
             [('employee_id', '=', employee_id),
@@ -114,7 +117,21 @@ class BiometricData(models.Model):
                     employee_id, new_time, 'sign_in',
                     biometric_id, state='fix',)
 
+        if mode == 'auto':
+            action_perform == 'sign_in'
+            if prev_att and prev_att.action == 'sign_in':
+                action_perform = 'sign_out'
 
+        # Modo manual, puede que cree fix
+        elif prev_att and prev_att.action == action_perform:
+            sign_state = \
+                'sign_in' if prev_att.action == 'sign_out' else 'sign_out'
+            if abs(employee_date - date) >= max_time:
+                new_time = employee_date + max_time
+            else:
+                new_time = employee_date + delta_1_sec
+            self.create_hr_attendace(employee_id, new_time, sign_state,
+                                     biometric_id, state='fix')
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)

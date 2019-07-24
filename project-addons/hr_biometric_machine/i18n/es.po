@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-08 15:37+0000\n"
-"PO-Revision-Date: 2019-07-08 15:37+0000\n"
+"POT-Creation-Date: 2019-07-24 11:41+0000\n"
+"PO-Revision-Date: 2019-07-24 11:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,12 @@ msgstr "Importación Asistencias"
 #. module: hr_biometric_machine
 #: model:ir.ui.menu,name:hr_biometric_machine.menu_biometric_data_data
 msgid "Attendances imported (no user)"
-msgstr "Attendances imported (sin empleado)"
+msgstr "Asistencias importadas (sin empleado)"
+
+#. module: hr_biometric_machine
+#: selection:biometric.machine,mode:0
+msgid "Auto"
+msgstr "Automático"
 
 #. module: hr_biometric_machine
 #: view:biometric.machine:hr_biometric_machine.view_biometric_machine_form
@@ -229,9 +234,14 @@ msgid "Last Updated on"
 msgstr "Last Updated on"
 
 #. module: hr_biometric_machine
+#: selection:biometric.machine,mode:0
+msgid "Manual"
+msgstr "Manual"
+
+#. module: hr_biometric_machine
 #: field:biometric.machine,interval_max:0
 msgid "Max allowed time"
-msgstr "Tiempo máximo permitido""
+msgstr "Tiempo máximo permitido\""
 
 #. module: hr_biometric_machine
 #: help:biometric.machine,time_interval_max:0
@@ -275,6 +285,11 @@ msgid "Min(s)"
 msgstr "Min(s)"
 
 #. module: hr_biometric_machine
+#: field:biometric.machine,mode:0
+msgid "Mode"
+msgstr "Mode"
+
+#. module: hr_biometric_machine
 #: field:biometric.machine,name:0
 msgid "Name"
 msgstr "Nombre"
@@ -283,6 +298,16 @@ msgstr "Nombre"
 #: field:biometric.user,name:0
 msgid "Name in biometric device"
 msgstr "Nombre en dispositivo biométrico"
+
+#. module: hr_biometric_machine
+#: field:biometric.machine,omit_ping:0
+msgid "Omit Ping"
+msgstr "Omitir ping"
+
+#. module: hr_biometric_machine
+#: field:biometric.machine,password:0
+msgid "Password"
+msgstr "Password"
 
 #. module: hr_biometric_machine
 #: field:biometric.machine,port:0
@@ -347,6 +372,7 @@ msgstr "Zona horaria"
 
 #. module: hr_biometric_machine
 #: code:addons/hr_biometric_machine/models/biometric_machine.py:151
+#: code:addons/hr_biometric_machine/models/biometric_machine.py:156
 #, python-format
 msgid "Unexpected error: {error}"
 msgstr "Error inesperado: {error}"
