@@ -118,7 +118,7 @@ class BiometricData(models.Model):
         #             biometric_id, state='fix',)
 
         if mode == 'auto':
-            action_perform == 'sign_in'
+            action_perform = 'sign_in'
             if prev_att and prev_att.action == 'sign_in':
                 action_perform = 'sign_out'
 
