@@ -90,15 +90,18 @@ class BiometricData(models.Model):
                 prev_att.check_in, '%Y-%m-%d %H:%M:%S',)
         employee_date = convert_from_local_to_utc(employee_date)
 
+        # obtengo entrada/salida del último registro
+        acton_prev_att = 'sign_in' if not prev_att.check_out else 'sign_out'
+
         if mode == 'auto':
             action_perform = 'sign_in'
-            if prev_att and prev_att.action == 'sign_in':
+            if prev_att and acton_prev_att == 'sign_in':
                 action_perform = 'sign_out'
 
         # Modo manual, puede que cree fix
-        elif prev_att and prev_att.action == action_perform:
+        elif prev_att and acton_prev_att == action_perform:
             sign_state = \
-                'sign_in' if prev_att.action == 'sign_out' else 'sign_out'
+                'sign_in' if acton_prev_att == 'sign_out' else 'sign_out'
             if abs(employee_date - date) >= max_time:
                 new_time = employee_date + max_time
             else:
