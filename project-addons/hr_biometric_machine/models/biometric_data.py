@@ -54,6 +54,8 @@ class BiometricData(models.Model):
         biometric_machine_obj = self.env['biometric.machine']
         biometric_machine = biometric_machine_obj.browse(biometric_id)
 
+        mode = biometric_machine.mode
+
         def convert_date_to_utc(date):
             local = pytz.timezone(
                 biometric_machine.timezone,)
@@ -72,8 +74,8 @@ class BiometricData(models.Model):
 
         # Get the max time of working set up for the device
         max_time = biometric_machine.max_time
-        # Get a delta time of 1 minute
-        delta_1_minute = datetime.timedelta(minutes=1)
+        # Get a delta time of 1 second
+        delta_1_sec = datetime.timedelta(seconds=1)
         # Get previous attendace
         prev_att = hr_attendance_obj.search(
             [
@@ -88,31 +90,21 @@ class BiometricData(models.Model):
                 prev_att.check_in, '%Y-%m-%d %H:%M:%S',)
         employee_date = convert_from_local_to_utc(employee_date)
 
-        # CMNT: Hago yo el calculo del sign in y el sign out ignorando el que
-        # le llega
-        action_perform == 'sign_in'
-        if prev_att and not prev_att.check_out:
-            action_perform = 'sign_out'
+        if mode == 'auto':
+            action_perform = 'sign_in'
+            if prev_att and prev_att.action == 'sign_in':
+                action_perform = 'sign_out'
 
-        if action_perform == 'sign_in':
-            if prev_att and not prev_att.check_out:
-                if abs(employee_date - date) >= max_time:
-                    new_time = employee_date + max_time
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-                else:
-                    new_time = date - delta_1_minute
-                    self.create_hr_attendace(
-                        employee_id, new_time, 'sign_out',
-                        biometric_id, state='fix',)
-        else:
-            if (not prev_att or prev_att.check_out or
-                    abs(employee_date - date) > max_time):
-                new_time = date - delta_1_minute
-                self.create_hr_attendace(
-                    employee_id, new_time, 'sign_in',
-                    biometric_id, state='fix',)
+        # Modo manual, puede que cree fix
+        elif prev_att and prev_att.action == action_perform:
+            sign_state = \
+                'sign_in' if prev_att.action == 'sign_out' else 'sign_out'
+            if abs(employee_date - date) >= max_time:
+                new_time = employee_date + max_time
+            else:
+                new_time = employee_date + delta_1_sec
+            self.create_hr_attendace(employee_id, new_time, sign_state,
+                                     biometric_id, state='fix')
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
