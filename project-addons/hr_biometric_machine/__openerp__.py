@@ -7,7 +7,7 @@
     'category': 'Human Resources',
     'website': 'http://www.openpyme.mx',
     'license': 'GPL-3',
-    'depends': ['hr_attendance'],
+    'depends': ['hr_attendance', 'hr_attendance_apk'],
     'data': [
         'security/ir.model.access.csv',
         'views/biometric_data_view.xml',
