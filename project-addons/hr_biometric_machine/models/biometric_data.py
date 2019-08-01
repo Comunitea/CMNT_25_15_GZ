@@ -8,6 +8,8 @@ from openerp import api, fields, models
 import datetime
 import pytz
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class BiometricData(models.Model):
     _name = 'biometric.data'
@@ -173,8 +175,11 @@ class BiometricData(models.Model):
         biometric_user_obj = self.env['biometric.user']
         # First of all convert the oldest registers
         # into hr.attendance registers
-        self.convert_to_hr_attendance()
-        biometric_machines = biometric_machine_obj.search([])
-        for biometric_machine in biometric_machines:
-            self.import_data_classmethod(
-                biometric_machine, self, biometric_user_obj,)
+        try:
+            self.convert_to_hr_attendance()
+            biometric_machines = biometric_machine_obj.search([])
+            for biometric_machine in biometric_machines:
+                self.import_data_classmethod(
+                    biometric_machine, self, biometric_user_obj,)
+        except:
+            _logger.error("Error Importing attendances from cron")
