@@ -4,10 +4,19 @@
 ##############################################################################
 
 from openerp import api, fields, models
+from openerp.osv import fields as oldfields, osv
 
+
+class hr_attendance(osv.osv):
+    _inherit = "hr.attendance"
+
+    _columns = {
+        'name': oldfields.datetime('Date', required=True, select=1, track_visibility='onchange'),
+    }
 
 class HrAttendance(models.Model):
-    _inherit = 'hr.attendance'
+    _name = 'hr.attendance'
+    _inherit = ['hr.attendance', 'mail.thread']    
     
     @api.one
     def fix_register(self):
