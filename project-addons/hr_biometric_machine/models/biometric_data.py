@@ -76,6 +76,7 @@ class BiometricData(models.Model):
 
         # Get the max time of working set up for the device
         max_time = biometric_machine.max_time
+        min_time = biometric_machine.min_time
         # Get a delta time of 1 minute
         delta_1_sec = datetime.timedelta(seconds=1)
         # Get previous attendace
@@ -86,11 +87,16 @@ class BiometricData(models.Model):
             limit=1, order='name DESC',)
         # Get date of the last user register
         if not prev_att:
-            employee_date = date
+            last_date = date
         else:
-            employee_date = datetime.datetime.strptime(
+            last_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
-        employee_date = convert_from_local_to_utc(employee_date)
+
+        # Si la diferencia con el último registro es menor que el tiempo mínimo
+        # no creo registro de asistencia
+        last_date = convert_from_local_to_utc(last_date)
+        if abs(last_date - date) < min_time:
+            return
 
         if mode == 'auto':
             action_perform = 'sign_in'
@@ -101,17 +107,17 @@ class BiometricData(models.Model):
         elif prev_att and prev_att.action == action_perform:
             sign_state = \
                 'sign_in' if prev_att.action == 'sign_out' else 'sign_out'
-            if abs(employee_date - date) >= max_time:
-                new_time = employee_date + max_time
+            if abs(last_date - date) >= max_time:
+                new_time = last_date + max_time
             else:
-                new_time = employee_date + delta_1_sec
+                new_time = last_date + delta_1_sec
             self.create_hr_attendace(employee_id, new_time, sign_state,
                                      biometric_id, state='fix')
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
         self._create_hr_attendace(employee_id, date, action_perform, state,
-                                  biometric_machine)
+                                biometric_machine)
 
     @api.model
     def _create_hr_attendace(
