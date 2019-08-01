@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-24 11:41+0000\n"
-"PO-Revision-Date: 2019-07-24 11:41+0000\n"
+"POT-Creation-Date: 2019-08-01 11:03+0000\n"
+"PO-Revision-Date: 2019-08-01 11:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -134,6 +134,11 @@ msgid "Date"
 msgstr "Fecha"
 
 #. module: hr_biometric_machine
+#: help:hr.attendance,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Fecha del último mensaje posteado en el registro."
+
+#. module: hr_biometric_machine
 #: selection:biometric.machine,interval_max:0
 #: selection:biometric.machine,interval_min:0
 msgid "Day(s)"
@@ -157,6 +162,16 @@ msgid "Fix"
 msgstr "Corrigeme"
 
 #. module: hr_biometric_machine
+#: field:hr.attendance,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: hr_biometric_machine
+#: help:hr.attendance,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: hr_biometric_machine
 #: selection:biometric.machine,interval_max:0
 #: selection:biometric.machine,interval_min:0
 msgid "Hour(s)"
@@ -174,7 +189,12 @@ msgstr "ID"
 #. module: hr_biometric_machine
 #: field:biometric.user,biometric_id:0
 msgid "Id in biometric device"
-msgstr "Id en dispositivo biomñetrico"
+msgstr "Id en dispositivo biométrico"
+
+#. module: hr_biometric_machine
+#: help:hr.attendance,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si está marcado los mensajes requerirán tu atención."
 
 #. module: hr_biometric_machine
 #: view:biometric.data.wizard:hr_biometric_machine.import_attendance_from_device
@@ -211,9 +231,19 @@ msgid "Ip address"
 msgstr "Dirección IP"
 
 #. module: hr_biometric_machine
+#: field:hr.attendance,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Es un seguidor"
+
+#. module: hr_biometric_machine
 #: sql_constraint:biometric.user:0
 msgid "It is not possible to crate more than one with the same biometric_id"
 msgstr "No es posible crear mas de uno con el mismo ID de dispositivo biométreico"
+
+#. module: hr_biometric_machine
+#: field:hr.attendance,message_last_post:0
+msgid "Last Message Date"
+msgstr "Última fecha mensaje"
 
 #. module: hr_biometric_machine
 #: field:biometric.data,write_uid:0
@@ -232,6 +262,16 @@ msgstr "Last Updated by"
 #: field:biometric.user.wizard,write_date:0
 msgid "Last Updated on"
 msgstr "Last Updated on"
+
+#. module: hr_biometric_machine
+#: field:biometric.machine,latitude:0
+msgid "Latitude"
+msgstr "Latitud"
+
+#. module: hr_biometric_machine
+#: field:biometric.machine,longitude:0
+msgid "Longitude"
+msgstr "Longitud"
 
 #. module: hr_biometric_machine
 #: selection:biometric.machine,mode:0
@@ -257,6 +297,16 @@ msgstr "Máximo tiempo permitido entre dos registros"
 #: field:biometric.machine,time_interval_max:0
 msgid "Max time"
 msgstr "Tiempo máximo"
+
+#. module: hr_biometric_machine
+#: field:hr.attendance,message_ids:0
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: hr_biometric_machine
+#: help:hr.attendance,message_ids:0
+msgid "Messages and communication history"
+msgstr "Mensajes e historial de comunicación"
 
 #. module: hr_biometric_machine
 #: field:biometric.machine,interval_min:0
@@ -287,7 +337,7 @@ msgstr "Min(s)"
 #. module: hr_biometric_machine
 #: field:biometric.machine,mode:0
 msgid "Mode"
-msgstr "Modo"
+msgstr "Mode"
 
 #. module: hr_biometric_machine
 #: field:biometric.machine,name:0
@@ -351,6 +401,11 @@ msgid "State"
 msgstr "Estado"
 
 #. module: hr_biometric_machine
+#: field:hr.attendance,message_summary:0
+msgid "Summary"
+msgstr "Resumen"
+
+#. module: hr_biometric_machine
 #: help:hr.attendance,state:0
 msgid "The user did not register an input or an output in the correct order, then the system proposed one or more regiters to fix the problem but you must review the created register due becouse of hour could be not correct"
 msgstr "El usuario no registro una entrada/salida en el orden correcto, entonces el sistema propon e uno o mas registros para arreglar el problema, pero debes revisar estos registros creado poruqe la hora puede no ser la correcta"
@@ -371,11 +426,15 @@ msgid "Timezone"
 msgstr "Zona horaria"
 
 #. module: hr_biometric_machine
-#: code:addons/hr_biometric_machine/models/biometric_machine.py:151
-#: code:addons/hr_biometric_machine/models/biometric_machine.py:156
+#: code:addons/hr_biometric_machine/models/biometric_machine.py:159
 #, python-format
 msgid "Unexpected error: {error}"
 msgstr "Error inesperado: {error}"
+
+#. module: hr_biometric_machine
+#: field:hr.attendance,message_unread:0
+msgid "Unread Messages"
+msgstr "Mensajes no leidos"
 
 #. module: hr_biometric_machine
 #: model:ir.ui.menu,name:hr_biometric_machine.menu_biometric_user_user

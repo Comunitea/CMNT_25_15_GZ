@@ -82,6 +82,8 @@ class BiometricData(models.Model):
         [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
         default='manual', required=True)
     ommit_ping = fields.Boolean('Ommit Ping')
+    latitude = fields.Float('Latitude')
+    longitude = fields.Float('Longitude')
 
     @api.model
     def get_users(self):

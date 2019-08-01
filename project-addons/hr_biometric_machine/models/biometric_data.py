@@ -110,18 +110,21 @@ class BiometricData(models.Model):
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
-        self._create_hr_attendace(employee_id, date, action_perform, state)
+        self._create_hr_attendace(employee_id, date, action_perform, state,
+                                  biometric_machine)
 
     @api.model
     def _create_hr_attendace(
-            self, employee_id, date, action_perform, state,):
+            self, employee_id, date, action_perform, state, biometric_machine):
         hr_attendance_obj = self.env['hr.attendance']
-        hr_attendance_obj.create(
-            {'employee_id': employee_id,
-             'name': date.strftime('%Y-%m-%d: %H:%M:%S'),
-             'action': action_perform,
-             'state': state, }
-        )
+        hr_attendance_obj.create({
+            'employee_id': employee_id,
+            'name': date.strftime('%Y-%m-%d: %H:%M:%S'),
+            'action': action_perform,
+            'state': state, 
+            'latitude': biometric_machine.latitude, 
+            'longitude': biometric_machine.longitude, 
+        })
 
     @classmethod
     def convert_to_hr_attendance_classmethod(
