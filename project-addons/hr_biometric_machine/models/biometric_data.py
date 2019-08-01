@@ -82,7 +82,6 @@ class BiometricData(models.Model):
         # Get previous attendace
         prev_att = hr_attendance_obj.search(
             [('employee_id', '=', employee_id),
-             ('name', '<', convert_date_to_utc(date).isoformat()),
              ('action', 'in', ('sign_in', 'sign_out'),), ],
             limit=1, order='name DESC',)
         # Get date of the last user register
@@ -91,10 +90,12 @@ class BiometricData(models.Model):
         else:
             last_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
+            last_date = convert_from_local_to_utc(last_date)
+            if date <= last_date:
+                return
 
         # Si la diferencia con el último registro es menor que el tiempo mínimo
         # no creo registro de asistencia
-        last_date = convert_from_local_to_utc(last_date)
         if abs(last_date - date) < min_time:
             return
 
@@ -111,13 +112,13 @@ class BiometricData(models.Model):
                 new_time = last_date + max_time
             else:
                 new_time = last_date + delta_1_sec
-            self.create_hr_attendace(employee_id, new_time, sign_state,
-                                     biometric_id, state='fix')
+            self._create_hr_attendace(employee_id, new_time, sign_state,
+                                      'fix', biometric_machine)
 
         # Convert date using correct timezone
         date = convert_date_to_utc(date)
         self._create_hr_attendace(employee_id, date, action_perform, state,
-                                biometric_machine)
+                                  biometric_machine)
 
     @api.model
     def _create_hr_attendace(
