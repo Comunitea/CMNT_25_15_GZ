@@ -23,7 +23,7 @@ class BiometricUser(models.Model):
     ]
 
     _sql_constraints = [
-        ('biometric_id_uniq', 'unique (biometric_id)',
+        ('biometric_id_uniq', 'unique (biometric_id, biometric_device)',
          'It is not possible to crate more than one '
          'with the same biometric_id'),
     ]
