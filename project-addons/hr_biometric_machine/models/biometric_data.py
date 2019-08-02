@@ -90,7 +90,7 @@ class BiometricData(models.Model):
         else:
             last_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
-            last_date = convert_from_local_to_utc(last_date)
+            # last_date = convert_from_local_to_utc(last_date)
             if date <= last_date:
                 return
 
@@ -116,7 +116,7 @@ class BiometricData(models.Model):
                                       'fix', biometric_machine)
 
         # Convert date using correct timezone
-        date = convert_date_to_utc(date)
+        # date = convert_date_to_utc(date)
         self._create_hr_attendace(employee_id, date, action_perform, state,
                                   biometric_machine)
 
