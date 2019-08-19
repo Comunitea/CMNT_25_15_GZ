@@ -91,7 +91,7 @@ class BiometricData(models.Model):
             last_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
             last_date = convert_from_local_to_utc(last_date)
-            if date <= last_date:
+            if prev_att and date <= last_date:
                 return
 
         # Si la diferencia con el último registro es menor que el tiempo mínimo
@@ -129,9 +129,9 @@ class BiometricData(models.Model):
             'employee_id': employee_id,
             'name': date.strftime('%Y-%m-%d: %H:%M:%S'),
             'action': action_perform,
-            'state': state, 
-            'latitude': biometric_machine.latitude, 
-            'longitude': biometric_machine.longitude, 
+            'state': state,
+            'latitude': biometric_machine.latitude,
+            'longitude': biometric_machine.longitude,
         })
 
     @classmethod
