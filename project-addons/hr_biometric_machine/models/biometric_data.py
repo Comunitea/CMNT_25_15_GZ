@@ -91,12 +91,12 @@ class BiometricData(models.Model):
             last_date = datetime.datetime.strptime(
                 prev_att.name, '%Y-%m-%d %H:%M:%S',)
             last_date = convert_from_local_to_utc(last_date)
-            if prev_att and date <= last_date:
+            if date <= last_date:
                 return
 
         # Si la diferencia con el último registro es menor que el tiempo mínimo
         # no creo registro de asistencia
-        if abs(last_date - date) < min_time:
+        if prev_att and abs(last_date - date) < min_time:
             return
 
         if mode == 'auto':
