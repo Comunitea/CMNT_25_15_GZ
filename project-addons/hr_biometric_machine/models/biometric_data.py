@@ -157,8 +157,9 @@ class BiometricData(models.Model):
             # Sorted elements using timestamp
             user_attendances.sort(key=lambda x: x.timestamp)
             user = biometric_user_obj.search([
-                    ['biometric_id', '=', int(
-                        user_attendances[0].user_id), ], ], )
+                    ('biometric_id', '=', int(
+                        user_attendances[0].user_id)),
+                    ('biometric_device', '=', biometric_machine.id)])
             for attendance in user_attendances:
                 if not attendance.action_perform:
                     continue
