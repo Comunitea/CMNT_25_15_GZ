@@ -64,7 +64,8 @@
                     <field name="name"/>
                     <field name="ip_address"/>
                     <field name="port"/>                 
-                    <field name="sequence"/>                  
+                    <field name="sequence"/>
+                    <field name="mode"/>                            
                 </search>
             </field>
         </record>

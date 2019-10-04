@@ -58,7 +58,7 @@ class BiometricData(models.Model):
     name = fields.Char('Name')
     ip_address = fields.Char('Ip address')
     password = fields.Integer('Password')
-    port = fields.Integer('Port')
+    port = fields.Integer('Port', default=4270)
     sequence = fields.Integer('Sequence')
     timezone = fields.Selection(
         _tz_get, 'Timezone', size=64,
@@ -80,7 +80,7 @@ class BiometricData(models.Model):
         'Max allowed time', help='Max allowed time between two registers')
     mode = fields.Selection(
         [('manual', 'Manual'), ('auto', 'Auto')], 'Mode', 
-        default='manual', required=True)
+        default='auto', required=True)
     ommit_ping = fields.Boolean('Ommit Ping')
 
     @api.model

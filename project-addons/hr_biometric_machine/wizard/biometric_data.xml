@@ -3,7 +3,7 @@
     <data>
 
         <record id="import_attendance_from_device" model="ir.ui.view">
-          <field name="name">Import users from device</field>
+          <field name="name">Import attendances from device</field>
           <field name="model">biometric.data.wizard</field>
           <field name="arch" type="xml">
             <form string="Import attendance from device">
@@ -24,7 +24,7 @@
         </record>
 
         <record id="action_import_attendance_from_device" model="ir.actions.act_window">
-          <field name="name">Import users from device</field>
+          <field name="name">Import attendances from device</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">biometric.data.wizard</field>
           <field name="view_type">form</field>

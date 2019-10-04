@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
-    <data>
+    <data noupdate="1">
 
         <record model="ir.cron" id="biometric_data_import_data">
            <field name="name">Import attendance from biometric device</field>
