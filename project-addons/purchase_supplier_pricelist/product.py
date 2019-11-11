@@ -43,9 +43,9 @@ class product_supplierinfo(orm.Model):
 
 
 
-class pricelist_partnerinfo(orm.Model):
+class ProductSupplierInfo(orm.Model):
 
-    _inherit = 'pricelist.partnerinfo'
+    _inherit = 'product.supplierinfo'
 
     _columns = {
         'from_date': fields.date('From date', required=True),

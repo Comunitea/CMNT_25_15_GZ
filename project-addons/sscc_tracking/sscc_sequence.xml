@@ -2,11 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="sequence_type_sscc_tracking" model="ir.sequence.type">
-            <field name="name">Tracking Packs</field>
-            <field name="code">scc.tracking.sequence</field>
-        </record>
-
         <record id="sequence_sscc_tracking" model="ir.sequence">
             <field name="name">Tracking Packs</field>
             <field name="code">scc.tracking.sequence</field>
