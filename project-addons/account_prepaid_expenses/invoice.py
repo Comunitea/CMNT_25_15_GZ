@@ -21,7 +21,7 @@
 ##############################################################################
 
 from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class account_invoice_line(models.Model):

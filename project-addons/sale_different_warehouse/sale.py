@@ -18,30 +18,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class sale_order_line(orm.Model):
+
+class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
-    _columns = {
-        'warehouse_id': fields.many2one('stock.warehouse', 'Source warehouse', readonly=True, states={'draft': [('readonly', False)]}),
-        'method': fields.selection(
-                    [('direct_delivery', 'Direct delivery')],
-                    string='Method',
-                    readonly=True,
-                    states={'draft': [('readonly', False)]}),
-    }
-    _defaults = {
-        'method': 'direct_delivery'
-    }
+
+    warehouse_id = fields.Many2one('stock.warehouse', 'Source warehouse',
+                                   readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    method = fields.Selection([('direct_delivery', 'Direct delivery')],
+                              string='Method', readonly=True,
+                              states={'draft': [('readonly', False)]},
+                              default="direct_delivery")
 
 
-class sale_order(orm.Model):
+class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        res = super(sale_order,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
+        res = super(SaleOrder,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
         if line.warehouse_id and line.method == 'direct_delivery':
             res['warehouse_id'] = line.warehouse_id.id
         return res

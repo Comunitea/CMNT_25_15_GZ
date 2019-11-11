@@ -20,19 +20,19 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class account_voucher(orm.Model):
+
+class AccountVoucher(models.Model):
 
     _inherit = "account.voucher"
 
-    _columns = {
-        'business_line_id': fields.many2one('account.business.line', 'Write-Off Business line')
-    }
+    business_line_id = fields.Many2one('account.business.line',
+                                       'Write-Off Business line')
 
     def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=None):
         if context is None: context = {}
-        move_line = super(account_voucher, self).writeoff_move_line_get(cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=context)
+        move_line = super(AccountVoucher, self).writeoff_move_line_get(cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=context)
         if move_line:
             voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
             move_line['business_line_id'] = voucher_brw.business_line_id and voucher_brw.business_line_id.id or False

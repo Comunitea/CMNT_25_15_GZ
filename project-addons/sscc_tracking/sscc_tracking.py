@@ -19,19 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm, fields
-
-class stock_packaging_type(orm.Model):
-   _name = "stock.packaging.type"
-   _description = "Packaging"
-
-   _columns = {
-    'name' : fields.char('Name', size=256, required=True, help="Name of the packaging type"),
-    'alias' : fields.char('Alias', size=3, help=" Abbreviation name of the packaging type"),
-   }
+from odoo import models, fields
 
 
-class stock_quant_package(orm.Model):
+class StockPackagingType(models.Model):
+    _name = "stock.packaging.type"
+    _description = "Packaging"
+
+    name = fields.Char('Name', required=True,
+                       help="Name of the packaging type")
+    alias = fields.Char('Alias', size=3,
+                        help=" Abbreviation name of the packaging type")
+
+
+class StockQuantPackage(models.Model):
 
     _inherit = "stock.quant.package"
 
@@ -58,17 +59,11 @@ class stock_quant_package(orm.Model):
         except Exception:
             return sequence
 
-    _columns = {
-        'packaging_type_id' : fields.many2one('stock.packaging.type','Packaging Type'),
-    }
-    _defaults = {
-        'name': make_sscc,
-    }
+    packaging_type_id = fields.Many2one('stock.packaging.type',
+                                        'Packaging Type', default=make_sscc)
 
 
-class res_company(orm.Model):
+class ResCompany(models.Model):
     _inherit = "res.company"
 
-    _columns = {
-        'aecoc_code' : fields.char('AECOC Code', size=8),
-    }
+    aecoc_code = fields.Char('AECOC Code', size=8)

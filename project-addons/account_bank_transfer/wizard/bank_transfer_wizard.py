@@ -20,26 +20,29 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields
+from odoo.addons import decimal_precision as dp
 import time
 
-class account_bank_transfer_wzd(orm.TransientModel):
+
+class AccountBankTransferWzd(models.TransientModel):
 
     _name = "account.bank.transfer.wzd"
 
-    _columns = {
-        'orig_journal_id': fields.many2one('account.journal', 'Orig. bank', required=True, domain=[('type', 'in', ['cash', 'bank'])]),
-        'dest_journal_id': fields.many2one('account.journal', 'Dest. bank', required=True, domain=[('type', 'in', ['cash', 'bank'])]),
-        'amount': fields.float('Amount to transfer', digits_compute=dp.get_precision('Account'), required=True),
-        'mid_account_id': fields.many2one('account.account', 'Intermediate account', required=True, domain=[('type', '!=', 'view')]),
-        'name': fields.char('Description', size=64, required=True),
-        'date': fields.date('Date', required=True)
-    }
-
-    _defaults = {
-        'date': lambda *a: time.strftime("%Y-%m-%d")
-    }
+    orig_journal_id = fields.Many2one('account.journal', 'Orig. bank',
+                                      required=True,
+                                      domain=[('type', 'in',
+                                               ['cash', 'bank'])])
+    dest_journal_id = fields.Many2one('account.journal', 'Dest. bank',
+                                      required=True,
+                                      domain=[('type', 'in', ['cash',
+                                                              'bank'])])
+    amount = fields.Float('Amount to transfer',
+                          digits=dp.get_precision('Account'), required=True)
+    mid_account_id = fields.Many2one('account.account', 'Intermediate account',
+                                     required=True)
+    name = fields.Char('Description', size=64, required=True)
+    date = fields.Date('Date', required=True, default=fields.Date.today)
 
     def execute_transfer(self, cr, uid, ids, context=None):
         if context is None: context = {}

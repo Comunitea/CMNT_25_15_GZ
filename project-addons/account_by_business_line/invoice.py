@@ -20,28 +20,25 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp import api
+from odoo import models, fields, api
 
 
-class account_invoice(orm.Model):
+class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
 
-    _columns = {
-        'business_line_id': fields.\
-            many2one('account.business.line', 'Business line', readonly=True,
+    business_line_id = fields.\
+            Many2one('account.business.line', 'Business line', readonly=True,
                      states={'draft': [('readonly', False)]})
-    }
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
+        res=super(AccountInvoice,self).line_get_convert(cr, uid, x, part, date, context=context)
         res['business_line_id'] = x.get('business_line_id', False)
         return res
 
     @api.model
     def _prepare_refund(self, invoice, date=None, period_id=None, description=None, journal_id=None):
-        vals = super(account_invoice, self)._prepare_refund(invoice, date=date,
+        vals = super(AccountInvoice, self)._prepare_refund(invoice, date=date,
                                                             period_id=period_id,
                                                             description=description,
                                                             journal_id=journal_id)
@@ -49,32 +46,27 @@ class account_invoice(orm.Model):
         return vals
 
 
-class account_invoice_line(orm.Model):
+class AccountInvoiceLine(models.Model):
 
     _inherit = "account.invoice.line"
 
-    _columns = {
-        'business_line_id': fields.many2one('account.business.line', 'Business line')
-    }
-
-    _defaults = {
-        'business_line_id': lambda self,cr,uid,c: c.get('business_line', False)
-    }
+    business_line_id = fields.\
+        Many2one('account.business.line', 'Business line',
+                 default=lambda s: s.env.context.get('business_line', False))
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
-        data = super(account_invoice_line, self).default_get(cr, uid, fields, context=context)
+        data = super(AccountInvoiceLine, self).default_get(cr, uid, fields, context=context)
         if context.get('business_line', False):
             data['business_line_id'] = context['business_line']
 
         return data
 
     def move_line_get_item(self, cr, uid, line, context=None):
-        res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
+        res = super(AccountInvoiceLine, self).move_line_get_item(cr, uid, line, context=context)
         if res.get('account_id'):
             need_bussines_line = self.pool.get('account.account').browse(cr, uid, res['account_id']).need_business_line
             if need_bussines_line:
                 res['business_line_id'] = line.business_line_id and line.business_line_id.id or (line.invoice_id.business_line_id and line.invoice_id.business_line_id.id or False)
 
         return res
-

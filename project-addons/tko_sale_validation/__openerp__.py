@@ -44,7 +44,7 @@ The authorization data and user are registered in database, for future check.'''
                    'sale_validation_view.xml',
                    ],
     'demo_xml': [],
-    'installable': True,
+    'installable': False, #TODO: Migrar
     'active': False,
     'certificate': '',
 }

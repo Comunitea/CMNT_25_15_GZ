@@ -19,45 +19,42 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
 
-class account_invoice(orm.Model):
+
+class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
     _order = "id desc"
 
-    def _amount_extra(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for invoice in self.browse(cr, uid, ids):
-            res[invoice.id] = {
-                'amount_gross': 0.0,
-                'amount_discounted': 0.0
-            }
+    @api.multi
+    def _amount_extra(self):
+        for invoice in self:
             val1 = val2 = 0.0
             for line in invoice.invoice_line:
                 val1 += line.price_subtotal
                 val2 += (line.price_unit * line.quantity)
 
-            res[invoice.id]['amount_gross'] = round(val1, 2)
-            res[invoice.id]['amount_discounted'] = round(val2 - val1, 2) > 0.1 and round(val2 - val1, 2) or 0.0 
+            invoice.amount_gross = round(val1, 2)
+            invoice.amount_discounted = round(val2 - val1, 2) > 0.1 and \
+                round(val2 - val1, 2) or 0.0
 
-        return res
+    amount_gross = fields.Float(compute="_amount_extra",
+                                digits=dp.get_precision('Sale Price')),
+    amount_discounted = fields.Float(compute="_amount_extra",
+                                     digits=dp.get_precision('Sale Price'),
+                                     string='Discounted')
 
-    _columns = {
-        'amount_gross': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Amount gross', multi='extra', readonly=True),
-        'amount_discounted': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Discounted', multi='extra', readonly=True),
-    }
 
-
-class account_invoice_line(orm.Model):
+class AccountInvoiceLine(models.Model):
 
     _inherit = "account.invoice.line"
     _order = "picking_id asc, sequence asc"
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
-        data = super(account_invoice_line, self).default_get(cr, uid, fields, context=context)
+        data = super(AccountInvoiceLine, self).default_get(cr, uid, fields, context=context)
         data2 = self._default_get(cr, uid, fields, context=context)
         data.update(data2)
         for f in data.keys():
@@ -91,8 +88,4 @@ class account_invoice_line(orm.Model):
 
         return data
 
-    _columns = {
-        'sequence': fields.integer('Sequence'),
-        #'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True)
-    }
-
+    sequence = fields.Integer('Sequence')

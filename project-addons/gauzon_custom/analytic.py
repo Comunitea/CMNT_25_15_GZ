@@ -19,14 +19,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
+from odoo import models
 
-class account_analytic_account(osv.osv):
+
+class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
 
-
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
-        account_data = super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+        account_data = super(AccountAnalyticAccount, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
         account_ids = [x[0] for x in account_data]
         account_childof_ids = self.search(cr, uid, [('id', 'child_of', account_ids)])
         account_childof_ids = list(set(account_childof_ids))

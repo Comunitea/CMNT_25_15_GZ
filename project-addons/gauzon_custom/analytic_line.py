@@ -20,15 +20,14 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class account_analytic_line(orm.Model):
+class AccountAnalyticLine(models.Model):
 
     _inherit = "account.analytic.line"
 
-    _columns = {
-        'account_debit': fields.related('move_id', 'debit', type="float", string="Debit", readonly=True, store=True),
-        'account_credit': fields.related('move_id', 'credit', type="float", string="Credit", readonly=True, store=True),
-    }
-
+    account_debit = fields.Float(related='move_id.debit', string="Debit",
+                                 readonly=True, store=True)
+    account_credit = fields.Float(related='move_id.credit', string="Credit",
+                                  readonly=True, store=True)

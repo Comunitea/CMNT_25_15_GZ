@@ -33,7 +33,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem action="action_bank_transfer" id="action_bank_transfer_menu"  name="Transfer between banks" parent="account.menu_finance_bank_and_cash"/>
+        <!--TODO: Migrar<menuitem action="action_bank_transfer" id="action_bank_transfer_menu"  name="Transfer between banks" parent="account.menu_finance_bank_and_cash"/>-->
 
     </data>
 </openerp>

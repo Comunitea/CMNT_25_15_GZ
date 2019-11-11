@@ -20,4 +20,5 @@
 #
 ##############################################################################
 
-import account_balance_parser
+#TODO: Migrar
+#import account_balance_parser

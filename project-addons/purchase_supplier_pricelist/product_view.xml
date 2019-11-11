@@ -22,9 +22,9 @@
                     <field name="gross_amount" on_change="on_change_price(gross_amount, discount)"/>
                     <field name="discount" on_change="on_change_price(gross_amount, discount)"/>
                 </xpath>
-                <field name="company_id" position="after">
+                <!--TODO: Migrar<field name="company_id" position="after">
                     <field name="supplier_currency_id"/>
-                </field>
+                </field>-->
             </field>
         </record>
 

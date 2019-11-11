@@ -19,38 +19,36 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
 
-class sale_order(orm.Model):
+
+class SaleOrder(models.Model):
 
     _inherit = "sale.order"
 
-    def _amount_extra(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for sale in self.browse(cr, uid, ids):
-            res[sale.id] = {
-                'amount_gross': 0.0,
-                'amount_discounted': 0.0
-            }
+    @api.multi
+    def _amount_extra(self):
+        for sale in self:
             val1 = val2 = 0.0
             for line in sale.order_line:
                 if line.state != 'cancel':
                     val1 += line.price_subtotal
                     val2 += (line.price_unit * line.product_uom_qty)
 
-            res[sale.id]['amount_gross'] = round(val1, 2)
-            res[sale.id]['amount_discounted'] = round(val2 - val1, 2) > 0.1 and round(val2 - val1, 2) or 0.0 
+            sale.amount_gross = round(val1, 2)
+            sale.amount_discounted = round(val2 - val1, 2) > 0.1 and \
+                round(val2 - val1, 2) or 0.0
 
-        return res
-
-    _columns = {
-        'amount_gross': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Amount gross', multi='extra', readonly=True),
-        'amount_discounted': fields.function(_amount_extra, method=True, digits_compute=dp.get_precision('Sale Price'), string='Discounted', multi='extra', readonly=True),
-    }
+    amount_gross = fields.\
+        Float(compute="_amount_extra", digits=dp.get_precision('Sale Price'),
+              string='Amount gross')
+    amount_discounted = fields.\
+        Float(compute="_amount_extra", digits=dp.get_precision('Sale Price'),
+              string='Discounted')
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+        vals = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         vals['sequence'] = line.sequence
         return vals
 
@@ -70,14 +68,14 @@ class sale_order(orm.Model):
         return True
 
 
-class sale_order_line(orm.Model):
+class SaleOrderLine(models.Model):
 
     _inherit = "sale.order.line"
     _order = "sequence asc"
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
-        data = super(sale_order_line, self).default_get(cr, uid, fields, context=context)
+        data = super(SaleOrderLine, self).default_get(cr, uid, fields, context=context)
         data2 = self._default_get(cr, uid, fields, context=context)
         data.update(data2)
         for f in data.keys():
@@ -114,9 +112,8 @@ class sale_order_line(orm.Model):
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         if context is None: context = {}
 
-        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
+        res = super(SaleOrderLine, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
         if isinstance(res, dict):
             res['sequence'] = line.sequence
 
         return res
-

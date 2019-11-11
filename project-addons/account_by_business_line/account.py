@@ -20,11 +20,11 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp import _, netsvc
-import openerp.addons.decimal_precision as dp
+from odoo import _, models, fields, exceptions
+from odoo.addons import decimal_precision as dp
 
-class account_account(orm.Model):
+
+class AccountAccount(models.Model):
 
     _inherit = "account.account"
 
@@ -133,12 +133,12 @@ class account_account(orm.Model):
         journal_obj = self.pool.get('account.journal')
         jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
         if not jids:
-            raise orm.except_orm(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance!"))
+            raise exceptions.UserError(_("You need an Opening journal with centralisation checked to set the initial balance!"))
 
         period_obj = self.pool.get('account.period')
         pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
         if not pids:
-            raise orm.except_orm(_('Error!'),_("No opening/closing period defined, please create one to set the initial balance!"))
+            raise exceptions.UserError(_("No opening/closing period defined, please create one to set the initial balance!"))
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
@@ -155,7 +155,7 @@ class account_account(orm.Model):
             }, context=context)
         else:
             if diff<0.0:
-                raise orm.except_orm(_('Error!'),_("Unable to adapt the initial balance (negative value)!"))
+                raise exceptions.UserError(_("Unable to adapt the initial balance (negative value)!"))
             nameinv = (name=='credit' and 'debit') or 'credit'
             move_id = move_obj.create(cr, uid, {
                 'name': _('Opening Balance'),
@@ -167,30 +167,26 @@ class account_account(orm.Model):
             }, context=context)
         return True
 
+    require_business_line = fields.Boolean('Require business line')
+    need_business_line = fields.Boolean('Need business line')
+        #TODO: Migrar
+        # ~ 'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
+        # ~ 'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
+        # ~ 'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
+        # ~ 'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
+                                           # ~ help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
+        # ~ 'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
+                                            # ~ help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
+        # ~ 'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
+                                                # ~ help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
 
 
-    _columns = {
-        'require_business_line': fields.boolean('Require business line'),
-        'need_business_line': fields.boolean('Need business line'),
-        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
-        'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
-        'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
-        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
-                                           help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
-                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
-                                                help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
-    }
-
-
-class account_move_line(orm.Model):
+class AccountMoveLine(models.Model):
 
     _inherit = "account.move.line"
 
-    _columns = {
-        'business_line_id': fields.many2one('account.business.line', 'Business line')
-    }
+    business_line_id = fields.Many2one('account.business.line',
+                                       'Business line')
 
     def _check_if_need_business_line(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):

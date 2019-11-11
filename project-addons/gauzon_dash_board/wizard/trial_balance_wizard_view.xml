@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="company_id"/>
-                    <field name="fiscalyear"/>
+                    <!--TODO: Migrar<field name="fiscalyear"/>-->
                     <separator string="Accounts to include" colspan="4"/>
                     <field name="account_list" nolabel="1" colspan="4" domain="[('company_id','=',company_id)]"/>
                     <separator string="Business lines to include" colspan="4"/>

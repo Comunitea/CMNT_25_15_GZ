@@ -20,9 +20,10 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models
 
-class purchase_order(orm.Model):
+
+class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     def onchange_partner_id(self, cr, uid, ids, partner_id):

@@ -20,25 +20,25 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields, api
 
 
-class product_template(orm.Model):
+class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    def _get_supplier_codes(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context):
-            res[product.id] = ""
+    @api.multi
+    def _get_supplier_codes(self):
+        for product in self:
+            res = ""
             if product.seller_ids:
                 for supp in product.seller_ids:
                     if supp.product_code:
-                        if not res[product.id]:
-                            res[product.id] = supp.product_code
+                        if not res:
+                            res = supp.product_code
                         else:
-                            res[product.id] += (u", " + supp.product_code)
-        return res
+                            res += (u", " + supp.product_code)
+            product.supplier_codes = res
 
     def _search_bt_supp_code(self, cr, uid, obj, name, args, context):
         if not len(args):
@@ -50,12 +50,12 @@ class product_template(orm.Model):
 
         return [('id', 'in', list(set(ids)))]
 
-    _columns = {
-        'supplier_codes': fields.function(_get_supplier_codes, method=True, string="Supplier codes", fnct_search=_search_bt_supp_code, type="text", readonly=True)
-    }
+    supplier_codes = fields.Text(compute="_get_supplier_codes",
+                                 string="Supplier codes",
+                                 search="_search_bt_supp_code")
 
 
-class product_product(orm.Model):
+class ProductProduct(models.Model):
 
     _inherit = "product.product"
 
@@ -70,9 +70,9 @@ class product_product(orm.Model):
                 ids = self.search(cr, user, [('product_tmpl_id', 'in', template_ids)])
 
         if not ids:
-            return super(product_product, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+            return super(ProductProduct, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
         else:
-            records = super(product_product, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+            records = super(ProductProduct, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
             new_ids = [x[0] for x in records]
             ids.extend(new_ids)
             ids = list(set(ids))

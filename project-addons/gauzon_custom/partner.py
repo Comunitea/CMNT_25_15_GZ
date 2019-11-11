@@ -20,15 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class res_partner(orm.Model):
+class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
-    _columns = {
-        'supplier_qualification': fields.selection([('s','[S]'),('a', '[A]'),('r','[R]')], "Qualification")
-    }
-
-
+    supplier_qualification = fields.\
+        Selection([('s', '[S]'), ('a', '[A]'), ('r', '[R]')], "Qualification")

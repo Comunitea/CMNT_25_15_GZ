@@ -20,13 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
 import time
-from openerp import _, tools
+from odoo import _, tools, models, exceptions
 from itertools import chain
 
 
-class product_pricelist(orm.Model):
+class ProductPricelist(models.Model):
 
     _inherit = "product.pricelist"
 
@@ -50,7 +49,7 @@ class product_pricelist(orm.Model):
                 version = v
                 break
         if not version:
-            raise orm.except_orm(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            raise exceptions.Warning(_("At least one pricelist has no active version !\nPlease create or activate one."))
         categ_ids = {}
         for p in products:
             categ = p.categ_id
@@ -102,7 +101,7 @@ class product_pricelist(orm.Model):
                 try:
                     qty_in_product_uom = product_uom_obj._compute_qty(
                         cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
-                except orm.except_orm:
+                except Exception:
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass
 

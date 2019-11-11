@@ -20,30 +20,34 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields, _, exceptions
 import os
-import datetime, time
+import time
 from edi_logging import logger
 from lxml import etree
-from openerp import netsvc, _
 
 log = logger("import_edi")
 
-class edi_import(orm.TransientModel):
+
+class EdiImport(models.TransientModel):
 
     _name = "edi.import"
-    _columns = {
-        'configuration': fields.many2one('edi.configuration','Configuración',required=True),
-        'downloaded_files':fields.integer('Archivos Descargados', readonly=True),
-        'pending_process':fields.integer('Ficheros pendientes de procesar',readonly=True),
-        'state': fields.selection([('start','Empezar'),('to_process','A procesar'),('processed','Procesado')],'Estado',readonly=True),
-    }
+
+    configuration = fields.Many2one('edi.configuration', 'Configuración',
+                                    required=True)
+    downloaded_files = fields.Integer('Archivos Descargados', readonly=True)
+    pending_process = fields.Integer('Ficheros pendientes de procesar',
+                                     readonly=True)
+    state = fields.Selection([('start', 'Empezar'),
+                              ('to_process', 'A procesar'),
+                              ('processed', 'Procesado')], 'Estado',
+                             readonly=True)
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(edi_import, self).default_get(cr, uid, fields, context=context)
+        res = super(EdiImport, self).default_get(cr, uid, fields, context=context)
         conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
         if not conf_ids:
-            raise orm.except_orm(_('Error'), _('No existen configuraciones EDI.'))
+            raise exceptions.UserError(_('No existen configuraciones EDI.'))
 
         res.update({'configuration': conf_ids[0],
                     'downloaded_files': 0,
@@ -102,7 +106,7 @@ class edi_import(orm.TransientModel):
     def get_partner(self,cr,uid,gln):
         ids = self.pool.get('res.partner').search(cr,uid,[('gln','=',gln)])
         if not ids:
-            raise orm.except_orm(_('Error'), _(u'No existen ningún cliente con gln %s.' % gln))
+            raise exceptions.UserError(_(u'No existen ningún cliente con gln %s.' % gln))
         partner = self.pool.get('res.partner').browse(cr,uid,ids[0])
 
         return partner
@@ -111,7 +115,7 @@ class edi_import(orm.TransientModel):
 
         ids = self.pool.get('res.partner').search(cr,uid,[('gln','=',gln)])
         if not ids:
-            raise orm.except_orm(_('Error'), _(u'No existen ninguna dirección con gln %s.' % gln))
+            raise exceptions.UserError(_(u'No existen ninguna dirección con gln %s.' % gln))
         dir_obj = self.pool.get('res.partner').browse(cr,uid,ids[0])
         return dir_obj
 
@@ -119,7 +123,7 @@ class edi_import(orm.TransientModel):
 
         ids = self.pool.get('res.partner').search(cr,uid,[('center_code','=',unor)])
         if not ids:
-            raise orm.except_orm(_('Error'), _(u'No existen ninguna dirección con UNOR %s.' % unor))
+            raise exceptions.UserError(_(u'No existen ninguna dirección con UNOR %s.' % unor))
         dir_obj = self.pool.get('res.partner').browse(cr,uid,ids[0])
         return dir_obj
 
@@ -134,7 +138,7 @@ class edi_import(orm.TransientModel):
     def create_order(self,cr,uid,cdic,root,doc):
         conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
         if not conf_ids:
-            raise orm.except_orm(_('Error'), _('No existen configuraciones EDI.'))
+            raise exceptions.UserError(_('No existen configuraciones EDI.'))
         wizard = self.pool.get('edi.configuration').browse(cr,uid,conf_ids[0])
         ref =  cdic.get('gi_cab_numped',False)!= False and cdic['gi_cab_numped'].text or False
         sale_id = []
@@ -183,8 +187,9 @@ class edi_import(orm.TransientModel):
                 self.pool.get('sale.order').write(cr, uid, [order_id], values)
                 self.pool.get('sale.order.line').unlink(cr, uid, [x.id for x in sale_obj.order_line])
                 if root.attrib['gi_cab_funcion'] == 'DEL':
-                    wf_service = netsvc.LocalService('workflow')
-                    wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
+                    #TODO: Migrar
+                    # ~ wf_service = netsvc.LocalService('workflow')
+                    # ~ wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
                     log.info(u"La venta %s ha sido cancelada." % sale_obj.name)
         else:
             doc.write({'status' : 'error',
@@ -198,17 +203,17 @@ class edi_import(orm.TransientModel):
     def get_product(self,cr,uid,ean13v):
         ids = self.pool.get('product.product').search(cr,uid,[('ean13v','=',ean13v)])
         if not ids:
-            raise orm.except_orm(_('Error'), _(u'No existen ningún producto con ean13v %s.' % ean13v))
+            raise exceptions.UserError(_(u'No existen ningún producto con ean13v %s.' % ean13v))
         product = self.pool.get('product.product').browse(cr,uid,ids[0])
 
         return product
 
     def get_product_uom(self,cr,uid,uom_code):
         if not uom_code:
-            raise orm.except_orm(_('Error'), _(u'No se estableció unidad de medida.' % uom_code))
+            raise exceptions.UserError(_(u'No se estableció unidad de medida.' % uom_code))
         ids = self.pool.get('product.uom').search(cr,uid,[('edi_code','=',uom_code)])
         if not ids:
-            raise orm.except_orm(_('Error'), _(u'No existe unidad de medida %s.' % uom_code))
+            raise exceptions.UserError(_(u'No existe unidad de medida %s.' % uom_code))
 
         return ids[0]
 
@@ -297,7 +302,7 @@ class edi_import(orm.TransientModel):
                 sale_order_id = sale_order_id[0]
                 #sale_order = self.pool.get('sale.order').browse(cr, uid, [sale_order_id])
             else:
-                raise orm.except_orm(_('Error'), _(u'No existe el pedido con referencia %s.' % num_ped))
+                raise exceptions.UserError(_(u'No existe el pedido con referencia %s.' % num_ped))
 
         package_id = False
         if sscc:
@@ -305,22 +310,21 @@ class edi_import(orm.TransientModel):
             if package_id:
                 package_id = package_id[0]
             else:
-                raise orm.except_orm(_('Error'), _(u'No existe el paquete con sscc %s.' % sscc))
+                raise exceptions.UserError(_(u'No existe el paquete con sscc %s.' % sscc))
 
 
         id_product = self.pool.get('product.product').search(cr,uid,[('ean13v','=',dc['gi_lin_ean13v'].text)])
         if id_product:
             id_product = id_product[0]
         else:
-            raise orm.except_orm(_('Error'), _(u'No existe el producto con ean13v %s.' % dc['gi_lin_ean13v'].text))
+            raise exceptions.UserError(_(u'No existe el producto con ean13v %s.' % dc['gi_lin_ean13v'].text))
 
         if id_alb:
             id_alb = self.pool.get('stock.picking').search(cr,uid,[('name','=',id_alb)])
             if id_alb:
                 id_alb = id_alb[0]
             else:
-                raise orm.except_orm(_('Error'),
-                    _(u'No existe el albaran %s' % (id_alb)))
+                raise exceptions.UserError(_(u'No existe el albaran %s' % (id_alb)))
 
 
         num_lot = dc['gi_lin_numserie'].text or False
@@ -330,7 +334,7 @@ class edi_import(orm.TransientModel):
             if id_lot:
                 id_lot = id_lot[0]
             else:
-                raise orm.except_orm(_('Error'),
+                raise exceptions.UserError(
                     _(u'No existe el lote con nombre %s para el producto con ean13v %s.' % (num_lot,dc['gi_lin_ean13v'].text)))
 
         ops_ids = self.pool.get('stock.pack.operation').search(cr, uid, [('result_package_id', '=', package_id),
@@ -348,11 +352,11 @@ class edi_import(orm.TransientModel):
         if move_id:
             move_id = self.pool.get('stock.move').browse(cr, uid, [move_id[0]])
         else:
-            raise orm.except_orm(_('Error'),
+            raise exceptions.UserError(
                 _(u'No se encontraron movimientos con las características requeridas.Es posible que el paquete, el lote o la cantidad estén mal asignados en el fichero'))
 
         if float(dc['gi_lin_cantrec'].text) >  move_id.product_qty:
-            raise orm.except_orm(_('Error'),_(u'No es posible que la cantidad recibida sea mayor que la cantidad entregada'))
+            raise exceptions.UserError(_(u'No es posible que la cantidad recibida sea mayor que la cantidad entregada'))
 
         new_acepted_qty = move_id.acepted_qty + float(dc['gi_lin_cantrec'].text)
         move_id.write({'acepted_qty': new_acepted_qty,

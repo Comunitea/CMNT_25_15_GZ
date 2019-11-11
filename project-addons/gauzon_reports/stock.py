@@ -19,32 +19,29 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import time
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import models, fields, api
 
-class stock_picking(orm.Model):
+
+class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
-    def _get_sale_notes(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for pick in self.browse(cr, uid, ids):
+    @api.multi
+    def _get_sale_notes(self):
+        for pick in self:
             sale_ids = []
             for line in pick.move_lines:
-                if line.procurement_id.sale_line_id:
-                    sale_ids.append(line.procurement_id.sale_line_id.order_id.id)
+                if line.sale_line_id:
+                    sale_ids.append(line.sale_line_id.order_id.id)
             sale_ids = list(set(sale_ids))
-            res[pick.id] = sale_ids and u"\n".join([x.note for x in self.pool.get('sale.order').browse(cr, uid, sale_ids) if x.note]) or ""
+            pick.sale_note = sale_ids and \
+                u"\n".join([x.note for x in self.env['sale.order'].
+                            browse(sale_ids) if x.note]) or ""
 
-        return res
-
-    _columns = {
-        'sale_note': fields.function(_get_sale_notes, method=True, type="text", string='Sale notes', readonly=True),
-    }
+    sale_note = fields.Text(compute="_get_sale_notes", string='Sale notes')
 
 
-class stock_move(orm.Model):
+class StockMove(models.Model):
 
     _inherit = "stock.move"
     _order = "date_expected desc, sequence asc"
@@ -54,7 +51,6 @@ class stock_move(orm.Model):
     }
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
-        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        res = super(StockMove, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         res['sequence'] = move.sequence
-        # res['picking_id'] = move.picking_id.id
         return res

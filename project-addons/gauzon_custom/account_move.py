@@ -20,9 +20,10 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from odoo import models
 
-class account_move(orm.Model):
+
+class AccountMove(models.Model):
 
     _inherit = "account.move"
 

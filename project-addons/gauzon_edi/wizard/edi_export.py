@@ -20,8 +20,7 @@
 #
 ##############################################################################
 
-from openerp import _, tools
-from openerp.osv import orm, fields
+from odoo import _, tools, models, fields, exceptions
 from edi_logging import logger
 from mako.template import Template
 from mako.lookup import TemplateLookup
@@ -29,18 +28,20 @@ import os
 import time
 log = logger("export_edi")
 
-class edi_export(orm.TransientModel):
+
+class EdiExport(models.TransientModel):
 
     _name = "edi.export"
-    _columns = {
-        'configuration': fields.many2one('edi.configuration','Configuración',required=True),
-    }
+
+    configuration = fields.Many2one('edi.configuration', 'Configuración',
+                                    required=True)
+
     def default_get(self, cr, uid, fields, context=None):
-        res = super(edi_export, self).default_get(cr, uid, fields, context=context)
+        res = super(EdiExport, self).default_get(cr, uid, fields, context=context)
 
         conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
         if not conf_ids:
-            raise orm.except_orm(_('Error'), _('No existen configuraciones EDI.'))
+            raise exceptions.UserError(_('No existen configuraciones EDI.'))
 
         res.update({'configuration': conf_ids[0]})
         return res
@@ -79,7 +80,7 @@ class edi_export(orm.TransientModel):
                 invoice_id = obj.id
                 mode = obj.gi_cab_funcion
             else:
-                raise orm.except_orm(_('Error'), _('El modelo no es ni un pedido ni un albarán ni una factura.'))
+                raise exceptions.UserError(_('El modelo no es ni un pedido ni un albarán ni una factura.'))
 
             if not self.pool.get('edi.doc').search(cr,uid,[('name','=',name)]) or context['active_model'] == u'account.invoice':
                 f = open(file_name)
@@ -105,7 +106,7 @@ class edi_export(orm.TransientModel):
                 log.info(u"Exportado %s " % file_name)
             else:
                 log.info(u"Ignorado %s, ya existe en el sistema." % file_name)
-                raise orm.except_orm(_('Error'), _('El documento ya ha sido exportado con anterioridad.'))
+                raise exceptions.UserError(_('El documento ya ha sido exportado con anterioridad.'))
         return file_id
 
     def addons_path(self,cr,uid,ids, path=False):
@@ -133,7 +134,7 @@ class edi_export(orm.TransientModel):
                 file_name = '%s%sDESADV_%s.xml' % (path,os.sep,obj.name.replace('/',''))
             elif context['active_model'] == u'account.invoice':
                 if obj.state in ('draft'):
-                    raise orm.except_orm(_('Error'), _('No se pueden exportar facturas en estado borrador'))
+                    raise exceptions.UserError(_('No se pueden exportar facturas en estado borrador'))
                 tmp_name = '/invoice_template.xml'
                 file_name = '%s%sINVOIC_%s.xml' % (path,os.sep,obj.number.replace('/',''))
 
@@ -143,7 +144,7 @@ class edi_export(orm.TransientModel):
             try:
                 f = file(file_name,'w'); f.write(doc);f.close()
             except:
-                raise orm.except_orm(_('Error'), _('No se puedo abrir el archivo %s' % file_name))
+                raise exceptions.UserError(_('No se puedo abrir el archivo %s' % file_name))
             # wizard.create_doc(obj,file_name,context=context)
             self.create_doc(cr, uid, [wizard.id], obj,file_name,context=context)
             data_pool = self.pool.get('ir.model.data')

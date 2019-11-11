@@ -4,20 +4,19 @@
 ##############################################################################
 
 from openerp import api, fields, models
-from openerp.osv import fields as oldfields, osv
 
 
-class hr_attendance(osv.osv):
+class hr_attendance(models.Model):
     _inherit = "hr.attendance"
 
-    _columns = {
-        'name': oldfields.datetime('Date', required=True, select=1, track_visibility='onchange'),
-    }
+    name = fields.Datetime('Date', required=True, index=1,
+                           track_visibility='onchange')
+
 
 class HrAttendance(models.Model):
     _name = 'hr.attendance'
-    _inherit = ['hr.attendance', 'mail.thread']    
-    
+    _inherit = ['hr.attendance', 'mail.thread']
+
     @api.one
     def fix_register(self):
         self.write({'state': 'right'})
@@ -29,4 +28,4 @@ class HrAttendance(models.Model):
         'or an output in the correct order, '
         'then the system proposed one or more regiters to fix the problem '
         'but you must review the created register due '
-        'becouse of hour could be not correct' )
+        'becouse of hour could be not correct')

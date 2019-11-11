@@ -20,15 +20,13 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class purchase_order(orm.Model):
+class PurchaseOrder(models.Model):
 
     _inherit = "purchase.order"
 
-    _columns = {
-        'global_analytic_id': fields.many2one('account.analytic.account', 'Analytic account', help="This account is entered by default for new lines")
-    }
-
-
+    global_analytic_id = fields.\
+        Many2one('account.analytic.account', 'Analytic account',
+                 help="This account is entered by default for new lines")

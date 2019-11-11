@@ -20,10 +20,10 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from odoo import models
 
 
-class purchase_order_line(orm.Model):
+class PurchaseOrderLine(models.Model):
 
     _inherit = "purchase.order.line"
 
@@ -33,7 +33,7 @@ class purchase_order_line(orm.Model):
         """
         onchange handler of product_id.
         """
-        res = super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id, partner_id, date_order=date_order,fiscal_position_id=fiscal_position_id,
+        res = super(PurchaseOrderLine, self).onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id, partner_id, date_order=date_order,fiscal_position_id=fiscal_position_id,
                                                               date_planned=date_planned,name=name,price_unit=price_unit,state=state,context=context)
         if product_id and partner_id and date_order:
             product = self.pool.get('product.product').browse(cr, uid, product_id)

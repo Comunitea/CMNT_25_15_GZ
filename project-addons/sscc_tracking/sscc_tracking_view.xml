@@ -51,10 +51,10 @@
         </record>
 
         <!-- stock.packagyng.type menu-->
-        <menuitem action="action_packaging_type" id="menu_action_packaging_type"
+        <!--TODO: Migrar<menuitem action="action_packaging_type" id="menu_action_packaging_type"
             name = "Packaging Types"
             sequence="1"
-            parent="stock.menu_traceability"/>
+            parent="stock.menu_traceability"/>-->
 
         <record model="ir.ui.view" id="view_quant_package_form_add_pack_type">
             <field name="name">stock.quant.package.form.add_pack_type</field>

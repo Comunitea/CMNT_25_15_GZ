@@ -20,11 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class res_partner(orm.Model):
+
+class ResPartner(models.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'default_incoterm_id': fields.many2one('stock.incoterms', 'Default Incoterm', help='Default Incoterm used in a Purchase Order when this partner is selected as the supplier.'),
-        }
 
+    default_incoterm_id = fields.\
+        Many2one('stock.incoterms', 'Default Incoterm',
+                 help='Default Incoterm used in a Purchase Order when this partner is selected as the supplier.')

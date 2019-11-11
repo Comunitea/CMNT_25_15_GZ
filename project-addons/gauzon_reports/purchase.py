@@ -19,16 +19,17 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class purchase_order_line(orm.Model):
+
+class PurchaseOrderLine(models.Model):
 
     _inherit = "purchase.order.line"
     _order = "sequence asc"
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
-        data = super(purchase_order_line, self).default_get(cr, uid, fields, context=context)
+        data = super(PurchaseOrderLine, self).default_get(cr, uid, fields, context=context)
         data2 = self._default_get(cr, uid, fields, context=context)
         data.update(data2)
         for f in data.keys():
@@ -62,19 +63,18 @@ class purchase_order_line(orm.Model):
 
         return data
 
-    _columns = {
-        'sequence': fields.integer('Sequence', readonly=True, states={'draft':[('readonly',False)]})
-    }
+    sequence = fields.Integer('Sequence', readonly=True,
+                              states={'draft':[('readonly',False)]})
 
 
-class purchase_order(orm.Model):
+class PurchaseOrder(models.Model):
 
     _inherit = "purchase.order"
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         if context is None: context = {}
 
-        res = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
+        res = super(PurchaseOrder, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
         res['sequence'] = order_line.sequence
 
         return res
@@ -82,7 +82,7 @@ class purchase_order(orm.Model):
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         if context is None: context = {}
 
-        res = super(purchase_order, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context)
+        res = super(PurchaseOrder, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context)
         for rec in res:
             rec['sequence'] = order_line.sequence
 
@@ -103,19 +103,19 @@ class purchase_order(orm.Model):
 
         return True
 
+#TODO: Migrar
+# ~ class purchase_line_invoice(orm.TransientModel):
 
-class purchase_line_invoice(orm.TransientModel):
+    # ~ _inherit = "purchase.order.line_invoice"
 
-    _inherit = "purchase.order.line_invoice"
+    # ~ def makeInvoices(self, cr, uid, ids, context=None):
+        # ~ res = super(purchase_line_invoice, self).makeInvoices(cr, uid, ids, context=context)
 
-    def makeInvoices(self, cr, uid, ids, context=None):
-        res = super(purchase_line_invoice, self).makeInvoices(cr, uid, ids, context=context)
+        # ~ purchase_line_ids = context.get('active_ids', [])
+        # ~ if purchase_line_ids:
+            # ~ for line in self.pool.get('purchase.order.line').browse(cr, uid, purchase_line_ids):
+                # ~ for invoice_line in line.invoice_lines:
+                    # ~ invoice_line.write({'sequence': line.sequence})
 
-        purchase_line_ids = context.get('active_ids', [])
-        if purchase_line_ids:
-            for line in self.pool.get('purchase.order.line').browse(cr, uid, purchase_line_ids):
-                for invoice_line in line.invoice_lines:
-                    invoice_line.write({'sequence': line.sequence})
-
-        return res
+        # ~ return res
 

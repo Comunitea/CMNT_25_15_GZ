@@ -20,20 +20,22 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import datetime, time
-from openerp import _
+from odoo import models, fields
 
 
-class trial_balance_wizard(orm.TransientModel):
+class TrialBalanceWizard(models.TransientModel):
 
     _name = "trial.balance.wizard"
-    _columns = {
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'account_list': fields.many2many('account.account', 'wizard_trial_balance_rel', 'wizard_id','account_id','Root accounts', required=True),
-        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal year', required=True),
-        'business_line_ids': fields.many2many('account.business.line', 'trial_balance_report_business_line_rel', 'wizard_id', 'bline_id', 'Business lines', required=True)
-    }
+
+    company_id = fields.Many2one('res.company', 'Company', required=True)
+    account_list = fields.\
+        Many2many('account.account', 'wizard_trial_balance_rel', 'wizard_id',
+                  'account_id', 'Root accounts', required=True)
+    #TODO: Migrar'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal year', required=True),
+    business_line_ids = fields.\
+        Many2many('account.business.line',
+                  'trial_balance_report_business_line_rel', 'wizard_id',
+                  'bline_id', 'Business lines', required=True)
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}

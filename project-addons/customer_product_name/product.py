@@ -20,14 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class product_product(orm.Model):
+class product_product(models.Model):
 
     _inherit = "product.product"
 
-    _columns = {
-        'customer_name_ids': fields.one2many('customer.product.name', 'product_id', 'Customer names')
-    }
-
+    customer_name_ids = fields.One2many('customer.product.name', 'product_id',
+                                        'Customer names')

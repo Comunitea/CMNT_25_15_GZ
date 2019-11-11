@@ -20,42 +20,37 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-import openerp.addons.decimal_precision as dp
-import time
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
+
+#TODO: Migrar
+# ~ class ProductSupplierinfo(models.Model):
+
+    # ~ _inherit = "product.supplierinfo"
+
+    # ~ @api.multi
+    # ~ def _get_supplier_currency(self):
+        # ~ for supp in self:
+            # ~ supp.supplier_currency_id = \
+                # ~ supp.name.property_product_pricelist_purchase and
+                # ~ supp.name.property_product_pricelist_purchase.currency_id.id or False
+
+        # ~ return res
+
+    # ~ supplier_currency_id = fields.\
+        # ~ Many2one("res.currency", compute="_get_supplier_currency",
+                 # ~ string='Currency')
 
 
-class product_supplierinfo(orm.Model):
-
-    _inherit = "product.supplierinfo"
-
-    def _get_supplier_currency(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        if context is None: context = {}
-        for supp in self.browse(cr, uid, ids, context=context):
-            res[supp.id] = supp.name.property_product_pricelist_purchase and supp.name.property_product_pricelist_purchase.currency_id.id or False
-
-        return res
-
-    _columns = {
-        'supplier_currency_id': fields.function(_get_supplier_currency, method=True, string='Currency', readonly=True, type="many2one", relation="res.currency")
-    }
-
-
-
-class ProductSupplierInfo(orm.Model):
+class ProductSupplierInfo(models.Model):
 
     _inherit = 'product.supplierinfo'
 
-    _columns = {
-        'from_date': fields.date('From date', required=True),
-        'discount': fields.float('Discount', digits=(4,2), help="About 100"),
-        'gross_amount': fields.float('Gross unit amount', digits_compute=dp.get_precision('Purchase Price')),
-    }
-
-    _defaults = {
-        'from_date': lambda *a: time.strftime("%Y-%m-%d")
-    }
+    from_date = fields.Date('From date', required=True,
+                            default=fields.Date.today)
+    discount = fields.Float('Discount', digits=(4, 2), help="About 100")
+    gross_amount = fields.Float('Gross unit amount',
+                                digits=dp.get_precision('Purchase Price'))
 
     def on_change_price(self, cr, uid, ids, gross_amount, discount):
         res = {'value': {'price': gross_amount * (1-(discount or 0.0)/100.0)}}

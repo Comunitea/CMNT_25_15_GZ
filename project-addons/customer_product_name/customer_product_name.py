@@ -20,16 +20,14 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
 
-class customer_product_name(orm.Model):
+class CustomerProductName(models.Model):
 
     _name = "customer.product.name"
 
-    _columns = {
-        'name': fields.char('Product name', required=True, size=255),
-        'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer', '=', True)]),
-        'product_id': fields.many2one('product.product', 'Product', required=True)
-    }
-
+    name = fields.Char('Product name', required=True)
+    partner_id = fields.Many2one('res.partner', 'Customer', required=True,
+                                 domain=[('customer', '=', True)])
+    product_id = fields.Many2one('product.product', 'Product', required=True)

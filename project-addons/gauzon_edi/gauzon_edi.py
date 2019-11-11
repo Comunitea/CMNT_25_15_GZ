@@ -20,53 +20,76 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields, osv
-import time
-import openerp.addons.decimal_precision as dp
-from openerp import _, netsvc, api
+from odoo import models, fields, _, api, exceptions
+from odoo.addons import decimal_precision as dp
 
-class edi_doc(orm.Model):
+
+class EdiDoc(models.Model):
     _name = "edi.doc"
     _description = "Documento EDI"
-    _columns = {
-        'name': fields.char('Referencia', size=255, required=True),
-        'file_name':fields.char('Nombre fichero', size=64),
-        'type': fields.selection([('orders','Pedido'),('ordrsp','Respuesta Pedido'),('desadv','Albarán'),('recadv','Confirmación mercancia'),('invoic','Factura')],'Tipo de documento', select=1),
-        'date': fields.datetime('Descargado el', size=255),
-        'date_process': fields.datetime('Procesado el', size=255),
-        'status': fields.selection([('draft','Sin procesar'),('imported','Importado'),
-                                    ('export','Exportado'),('error','Con incidencias')],'Estado', select=1),
-        'mode': fields.selection([('ORI','ORI'),('DEL','DEL'),('REP','REP'),('1','Aceptado'),('2','No Aceptado'),
-                                    ('3','Cambiado'),('9','Original'),('7','Duplicado'),('31','Copia'),
-                                    ('5','Remplazo')],'Modo',readonly=True,select=1,),
-        'sale_order_id': fields.many2one('sale.order','Pedido',ondelete='restrict'),
-        'picking_id' : fields.many2one('stock.picking','Albaran',ondelete='restrict'),
-        'invoice_id' : fields.many2one('account.invoice','Factura',ondelete='restrict'),
-        'response_document_id': fields.many2one('edi.doc','Documento de respuesta'),
-        'send_response': fields.char('Respuesta',size=255,select=1),
-        'send_date': fields.datetime('Fecha del ultimo envio',select=1),
-        'message': fields.text('Mensaje'),
-        'gln_e': fields.char('GLN Emisor',size=60, help="GLN del emisor del documento"),
-        'gln_v': fields.char('GLN vendedor',size=60, help="GLN del receptor del documento"),
-        'gln_c': fields.char('GLN comprador',size=60, help="GLN de la dirección de factura"),
-        'gln_r': fields.char('GLN receptor',size=60, help="GLN de la dirección de envio"),
-    }
+
+    name = fields.Char('Referencia', required=True)
+    file_name = fields.Char('Nombre fichero', size=64)
+    type = fields.Selection([('orders', 'Pedido'),
+                             ('ordrsp', 'Respuesta Pedido'),
+                             ('desadv', 'Albarán'),
+                             ('recadv', 'Confirmación mercancia'),
+                             ('invoic', 'Factura')], 'Tipo de documento',
+                            index=1)
+    date = fields.Datetime('Descargado el')
+    date_process = fields.Datetime('Procesado el')
+    status = fields.Selection([('draft', 'Sin procesar'),
+                               ('imported', 'Importado'),
+                               ('export', 'Exportado'),
+                               ('error', 'Con incidencias')], 'Estado',
+                              index=1)
+    mode = fields.Selection([('ORI', 'ORI'), ('DEL', 'DEL'), ('REP', 'REP'),
+                             ('1', 'Aceptado'), ('2', 'No Aceptado'),
+                             ('3', 'Cambiado'), ('9', 'Original'),
+                             ('7', 'Duplicado'), ('31', 'Copia'),
+                             ('5', 'Remplazo')], 'Modo', readonly=True,
+                            index=1)
+    sale_order_id = fields.Many2one('sale.order', 'Pedido',
+                                    ondelete='restrict')
+    picking_id = fields.Many2one('stock.picking', 'Albaran',
+                                 ondelete='restrict')
+    invoice_id = fields.Many2one('account.invoice', 'Factura',
+                                 ondelete='restrict')
+    response_document_id = fields.Many2one('edi.doc', 'Documento de respuesta')
+    send_response = fields.Char('Respuesta', index=1)
+    send_date = fields.Datetime('Fecha del ultimo envio', index=1)
+    message = fields.Text('Mensaje')
+    gln_e = fields.Char('GLN Emisor', size=60,
+                        help="GLN del emisor del documento")
+    gln_v = fields.Char('GLN vendedor', size=60,
+                        help="GLN del receptor del documento")
+    gln_c = fields.Char('GLN comprador', size=60,
+                        help="GLN de la dirección de factura")
+    gln_r = fields.Char('GLN receptor', size=60,
+                        help="GLN de la dirección de envio")
+
     _order = 'date desc'
 
 
-class edi_configuration(orm.Model):
+class EdiConfiguration(models.Model):
     _name = "edi.configuration"
     _description = "Configuracion EDI"
-    _columns = {
-        'name':fields.char('Nombre', size=255,required=True),
-        'salesman': fields.many2one('res.users','Comercial para los pedidos.', help="Seleccione el comercial que será asignado a todos los pedidos."),
-        'ftp_host': fields.char('Host', size=255),
-        'ftp_port': fields.char('Puerto', size=255, ),
-        'ftp_user': fields.char('Usuario', size=255),
-        'ftp_password': fields.char('Password', size=255),
-        'local_mode': fields.boolean('Modo local',help='Si es activado, el módulo no realizará conexiones al ftp. Solo trabajará con los ficheros y documentos pendientes de importación'),
-        'ftpbox_path': fields.char('Ruta ftpbox',size=255,required=True),
-    }
+
+    name = fields.Char('Nombre', required=True)
+    salesman = fields.Many2one('res.users', 'Comercial para los pedidos.',
+                               help="Seleccione el comercial que será asignado"
+                                    " a todos los pedidos.")
+    ftp_host = fields.Char('Host')
+    ftp_port = fields.Char('Puerto', size=6)
+    ftp_user = fields.Char('Usuario')
+    ftp_password = fields.Char('Password')
+    local_mode = fields.Boolean('Modo local',
+                                help="Si es activado, el módulo no realizará "
+                                     "conexiones al ftp. Solo trabajará con "
+                                     "los ficheros y documentos pendientes "
+                                     "de importación")
+    ftpbox_path = fields.Char('Ruta ftpbox', required=True)
+
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(edi_configuration, self).default_get(cr, uid, fields, context=context)
@@ -77,26 +100,27 @@ class edi_configuration(orm.Model):
 
         ids = self.pool.get('edi.configuration').search(cr, uid, [])
         if not ids:
-            raise orm.except_orm(_("No hay una configuracion EDI. "),_("Falta configuracion"))
+            raise exceptions.Warning(_("No hay una configuracion EDI. "))
         else :
-            return pool.get('edi.configuration').browse(cr,uid,ids[0])
+            return self.pool.get('edi.configuration').browse(cr,uid,ids[0])
 
 
-# -------------------------- PERSONALIZACIONES CON CAMPOS DE EDI ------------------------------------
-class sale_order(orm.Model):
+class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
-    _columns = {
-        'edi_docs': fields.one2many('edi.doc','sale_order_id','Documento EDI'),
-        'order_type': fields.selection(
-            [ ('ORI', 'ORI'),('REP', 'REP'),('DEL','DEL') ],
-            'Tipo', readonly=True),
-        'funcion_mode': fields.selection ([ ('0', 'Aceptación ORDERS'),('1', 'Rechazo ORDERS'),('2', 'Oferta alternativa'),('3', 'Valoración ORDERS')],'Funcion', copy=False),
-        'top_date':fields.date('Fecha limite'),
-        'urgent':fields.boolean('Urgente'),
-        'num_contract': fields.char('Contract Number', size=128),
-        'partner_unor_id': fields.many2one('res.partner', 'UNOR EDI')
-    }
+
+    edi_docs = fields.One2many('edi.doc', 'sale_order_id', 'Documento EDI')
+    order_type = fields.Selection([('ORI', 'ORI'), ('REP', 'REP'),
+                                   ('DEL', 'DEL')], 'Tipo', readonly=True)
+    funcion_mode = fields.Selection([('0', 'Aceptación ORDERS'),
+                                     ('1', 'Rechazo ORDERS'),
+                                     ('2', 'Oferta alternativa'),
+                                     ('3', 'Valoración ORDERS')], 'Funcion',
+                                    copy=False)
+    top_date = fields.Date('Fecha limite')
+    urgent = fields.Boolean('Urgente')
+    num_contract = fields.Char('Contract Number', size=128)
+    partner_unor_id = fields.Many2one('res.partner', 'UNOR EDI')
 
     def copy(self, cr, uid, id, default=None, context=None):
         """ sobrescribimos el copy para que no duplique los documentos"""
@@ -105,38 +129,38 @@ class sale_order(orm.Model):
         default.update({
             'edi_docs': [],
         })
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
+        return super(SaleOrder, self).copy(cr, uid, id, default, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         sale = self.pool.get('sale.order').write(cr,uid,ids,{'funcion_mode' : '1'},context=context)
-        return super(sale_order, self).action_cancel(cr, uid, ids,context=context)
+        return super(SaleOrder, self).action_cancel(cr, uid, ids,context=context)
 
     def action_ship_create(self, cr, uid, ids, *args):
         sale = self.pool.get('sale.order').write(cr,uid,ids,{'funcion_mode' : '0'})
-        return super(sale_order, self).action_ship_create(cr, uid, ids,*args)
+        return super(SaleOrder, self).action_ship_create(cr, uid, ids,*args)
 
     def _prepare_procurement_group(self, cr, uid, order, context=None):
-        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
+        res = super(SaleOrder, self)._prepare_procurement_group(cr, uid, order, context=None)
         res.update({'num_contract': order.num_contract or ''})
         res.update({'note': order.note or ''})
         return res
 
-class sale_order_line(orm.Model):
+
+class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
-    _columns = {
-        'refcli': fields.char('Ref. Cliente', size=80),
-        'refprov': fields.char('Ref. Proveedor', size=80),
-        'notes': fields.text('Notas')
-    }
+
+    refcli = fields.Char('Ref. Cliente', size=80)
+    refprov = fields.Char('Ref. Proveedor', size=80)
+    notes = fields.Text('Notas')
 
     def create(self, cr, uid, values, context=None):
         if values.get('product_id',False) and not values.get('refcli',False) and not values.get('refprov',False):
             prod = self.pool.get('product.product').browse(cr,uid,values['product_id'])
             values.update({'refcli': prod.refcli,'refprov':prod.refprov})
-        return super(sale_order_line, self).create(cr, uid, values, context=context)
+        return super(SaleOrderLine, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         for line in self.pool.get('sale.order.line').browse(cr,uid,ids):
@@ -144,18 +168,16 @@ class sale_order_line(orm.Model):
                 new_prod = self.pool.get('product.product').browse(cr,uid,values['product_id'])
                 if new_prod.id != line.product_id.id:
                     values.update({'refcli': new_prod.refcli,'refprov':new_prod.refprov})
-        return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
+        return super(SaleOrderLine, self).write(cr, uid, ids, values, context=context)
 
 
-class product_product(orm.Model):
+class ProductProduct(models.Model):
 
     _inherit = 'product.product'
-    _columns = {
 
-        'ean13v': fields.char('EAN13v', size=80),
-        'refcli': fields.char('Ref. Cliente', size=80),
-        'refprov': fields.char('Ref. Proveedor', size=80),
-    }
+    ean13v = fields.Char('EAN13v', size=80)
+    refcli = fields.Char('Ref. Cliente', size=80)
+    refprov = fields.Char('Ref. Proveedor', size=80)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -166,58 +188,71 @@ class product_product(orm.Model):
             ids.extend(self.search(cr, user, [('refprov', operator, name)]))
 
         if not ids:
-            return super(product_product, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+            return super(ProductProduct, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
         else:
-            records = super(product_product, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+            records = super(ProductProduct, self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
             new_ids = [x[0] for x in records]
             ids.extend(new_ids)
             ids = list(set(ids))
             return self.name_get(cr, user, ids, context=context)
 
-class res_partner(orm.Model):
+
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    _columns = {
-        'gln': fields.char('GLN', size=80, help="Numero de localizacion global: esta destinado a la identificacion inequivoca y no ambigua de Locaciones fisicas, legales o funcionales"),
-        'customer_reference': fields.char('Codigo de referencia', size=80, help="Es el código en que le identifica en el sistema del cliente, normalmente es el id de cliente o de id de proveedor que este le asigna."),
-        'edi_relation': fields.selection([('GC','Gran consumo'),('MC','Mercancia general')],'Tipo de relacion'),
-        'edi_operational_code': fields.char('Punto operacional', size=255),
-        'fiscal_position': fields.property(
-            relation='account.fiscal.position',
-            type='many2one',
-            string="Posicion Fiscal",
-            help="The fiscal position will determine taxes and the accounts used for the partner.",
-        ),
-        'center_code': fields.char('Id. del centro', size=80,
-                help="Codigo de centro, un identificador unico de este centro para el cliente. Este codigo es usado para el envio/recepcion de ficheros EDI, y la impresion de etiquetas."),
-    }
+    gln = fields.Char('GLN', size=80,
+                      help="Numero de localizacion global: esta destinado a "
+                           "la identificacion inequivoca y no ambigua de "
+                           "Locaciones fisicas, legales o funcionales")
+    customer_reference = fields.\
+        Char('Codigo de referencia', size=80,
+             help="Es el código en que le identifica en el sistema del "
+                  "cliente, normalmente es el id de cliente o de id de "
+                  "proveedor que este le asigna.")
+    edi_relation = fields.Selection([('GC', 'Gran consumo'),
+                                     ('MC', 'Mercancia general')],
+                                    'Tipo de relacion')
+    edi_operational_code = fields.Char('Punto operacional')
+    fiscal_position = fields.Many2one('account.fiscal.position',
+                                      "Posicion Fiscal",
+                                      company_dependant=True,
+                                      help="The fiscal position will determine"
+                                           " taxes and the accounts used for "
+                                           "the partner.")
+    center_code = fields.Char('Id. del centro', size=80,
+                              help="Codigo de centro, un identificador unico "
+                                   "de este centro para el cliente. Este "
+                                   "codigo es usado para el envio/recepcion "
+                                   "de ficheros EDI, y la impresion de "
+                                   "etiquetas.")
 
 
-class payment_mode(orm.Model):
+class PaymentMode(models.Model):
 
     _inherit = 'payment.mode'
-    _columns = {
-        'edi_code': fields.selection([('42','A una cuenta bancaria'),('14E','Giro bancario'),('10','En efectivo'),('20','Cheque'),('60','Pagaré')],'Codigo EDI', select=1)
-    }
+
+    edi_code = fields.Selection([('42', 'A una cuenta bancaria'),
+                                 ('14E', 'Giro bancario'),
+                                 ('10', 'En efectivo'), ('20', 'Cheque'),
+                                 ('60', 'Pagaré')], 'Codigo EDI', index=1)
 
 
-class product_uom(orm.Model):
+class ProductUom(models.Model):
 
     _inherit = 'product.uom'
-    _columns = {
-        'edi_code': fields.char('Codigo edi', size=64),
-    }
+
+    edi_code = fields.Char("Codigo edi", size=64)
 
 
-class stock_picking(orm.Model):
+class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
-    _columns = {
-        'num_contract': fields.char('Contract Number', size=128),
-        'note': fields.text('Notes'),
-        'edi_docs': fields.one2many('edi.doc','picking_id','Documentos EDI'),
-        'return_picking_id': fields.many2one('stock.picking','Albaran de devolucion', readonly=True),
-    }
+
+    num_contract = fields.Char('Contract Number', size=128)
+    note = fields.Text('Notes')
+    edi_docs = fields.One2many('edi.doc', 'picking_id', 'Documentos EDI')
+    return_picking_id = fields.Many2one('stock.picking',
+                                        'Albaran de devolucion', readonly=True)
 
     def copy(self, cr, uid, id, default=None, context=None):
         """ sobrescribimos el copy para que no duplique los documentos"""
@@ -228,11 +263,11 @@ class stock_picking(orm.Model):
             'return_picking_id': False
         })
 
-        return super(stock_picking, self).copy(cr, uid, id, default, context=context)
+        return super(StockPicking, self).copy(cr, uid, id, default, context=context)
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """Lanzamos excepción al crear la factura si la posición fiscal de los pedidos de las lineas son diferentes"""
-        res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type,context) #res diccionario de la forma {id_del_albaran:id_de_la_factura}
+        res = super(StockPicking,self).action_invoice_create(cr, uid, ids, journal_id, group, type,context) #res diccionario de la forma {id_del_albaran:id_de_la_factura}
         set_fp = set()
         for inv_id in res:  # nos recorremos las facturas diferentes
             inv = self.pool.get('account.invoice').browse(cr,uid,inv_id,context)
@@ -245,7 +280,8 @@ class stock_picking(orm.Model):
                             set_fp.add(move.procurement_id.sale_line_id.order_id.fiscal_position.id)
 
             if len(set_fp) > 1: #hay mas de una posición fiscal
-                raise orm.except_orm(_('Error'), _('Las posiciones fiscales de los pedidos son diferentes'))
+                raise exceptions.\
+                    UserError(_('Las posiciones fiscales de los pedidos son diferentes'))
             elif set_fp:
                 inv.write({'fiscal_position' : list(set_fp)[0] })
 
@@ -272,42 +308,33 @@ class stock_picking(orm.Model):
         return res
 
 
-class stock_move(orm.Model):
+class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    def _get_sale_line_history(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        if context is None: context = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id:
-                if move.procurement_id.sale_line_id:
-                    res[move.id] = move.procurement_id.sale_line_id.id
-                else:
-                    res[move.id] = False
+    @api.multi
+    def _get_sale_line_history(self):
+        for move in self:
+            if move.sale_line_id:
+                move.sale_line_history_id = move.sale_line_id.id
             else:
-                cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name='stock_move' and (column_name='sale_line_id' or column_name='openupgrade_legacy_8_0_sale_line_id')")
-                data = cr.fetchone()
+                self.env.cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name='stock_move' and (column_name='sale_line_id' or column_name='openupgrade_legacy_8_0_sale_line_id')")
+                data = self.env.cr.fetchone()
                 if data and data[0]:
-                    cr.execute("select %s from stock_move where id = %s" % (data[0], move.id))
-                    data2 = cr.fetchone()
+                    self.env.cr.execute("select %s from stock_move where id = %s" % (data[0], move.id))
+                    data2 = self.env.cr.fetchone()
                     if data2 and data2[0]:
-                        res[move.id] = data2[0]
-                    else:
-                        res[move.id] = False
-                else:
-                    res[move.id] = False
-        return res
+                        move.sale_line_history_id = data2[0]
 
-    _columns = {
-        'acepted_qty' : fields.float('Cantidad aceptada', digits_compute=dp.get_precision('Product UoM'),readonly=True),
-        'rejected' : fields.boolean('Rechazado'),
-        'sale_line_history_id': fields.function(_get_sale_line_history, type="many2one", relation="sale.order.line", readonly=True)
-    }
+    acepted_qty = fields.Float('Cantidad aceptada', readonly=True,
+                               digits=dp.get_precision('Product UoM'))
+    rejected = fields.Boolean('Rechazado')
+    sale_line_history_id = fields.\
+        Many2one("sale.order.line", compute="_get_sale_line_history")
 
     _order = 'date desc'
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
-        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        res = super(StockMove, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         # Actualizamos la cantidad si el movimiento no es de devolución.
         res.update({'quantity': (move.acepted_qty or move.product_qty),
                     'sale_line_id': move.sale_line_history_id and move.sale_line_history_id.id or False})
@@ -317,38 +344,36 @@ class stock_move(orm.Model):
         return res
 
     def _prepare_picking_assign(self, cr, uid, move, context=None):
-        values = super(stock_move, self)._prepare_picking_assign(cr, uid, move, context=context)
+        values = super(StockMove, self)._prepare_picking_assign(cr, uid, move, context=context)
         values['num_contract'] = move.group_id and move.group_id.num_contract or ''
         values['note'] = move.group_id and move.group_id.note or ''
 
         return values
 
-class procurement_group(osv.osv):
+class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
-    _columns = {
-        'num_contract': fields.char('Contract Number', size=128),
-        'note': fields.text('Notes'),
-    }
 
-class account_invoice(orm.Model):
+    num_contract = fields.Char('Contract Number', size=128)
+    note = fields.Text('Notes')
+
+
+class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    _columns = {
-        'num_contract': fields.char('Contract Number', size=128),
-        'note': fields.text('Notes'),
-        'edi_docs': fields.one2many('edi.doc','invoice_id','Documentos EDI'),
-        'gi_cab_nodo': fields.selection ([ ('380', 'Comercial'),('381', 'Nota de crédito'),('383', 'Nota de débito')],'Nodo'),
-        'gi_cab_funcion': fields.selection ([ ('9', 'Original'),('7', 'Duplicado'),('31', 'Copia'),('5', 'Remplazo')],'Funcion'),
-    }
-
-    _defaults = {
-        'gi_cab_nodo': '380',
-        'gi_cab_funcion': '9',
-    }
+    num_contract = fields.Char('Contract Number', size=128)
+    note = fields.Text('Notes')
+    edi_docs = fields.One2many('edi.doc', 'invoice_id', 'Documentos EDI')
+    gi_cab_nodo = fields.Selection([('380', 'Comercial'),
+                                    ('381', 'Nota de crédito'),
+                                    ('383', 'Nota de débito')], 'Nodo',
+                                   default='380')
+    gi_cab_funcion = fields.Selection([('9', 'Original'), ('7', 'Duplicado'),
+                                       ('31', 'Copia'), ('5', 'Remplazo')],
+                                      'Funcion', default='9')
 
     @api.model
     def _prepare_refund(self, invoice, date=None, period_id=None, description=None, journal_id=None):
-        vals = super(account_invoice, self)._prepare_refund(invoice, date=date,
+        vals = super(AccountInvoice, self)._prepare_refund(invoice, date=date,
                                                             period_id=period_id,
                                                             description=description,
                                                             journal_id=journal_id)
@@ -356,50 +381,51 @@ class account_invoice(orm.Model):
         vals["note"] = invoice.note
         return vals
 
+#TODO: Migrar
+# ~ class AccountInvoiceLine(models.Model):
 
-class account_invoice_line(orm.Model):
+    # ~ _inherit = "account.invoice.line"
 
-    _inherit = "account.invoice.line"
+    # ~ _columns = {
+        # ~ 'sale_line_id' : fields.many2one('sale.order.line','Sale line', readonly=True),
+    # ~ }
 
-    _columns = {
-        'sale_line_id' : fields.many2one('sale.order.line','Sale line', readonly=True),
-    }
+#TODO: Migrar
+# ~ class stock_return_picking(models.TransientModel):
+    # ~ _inherit = 'stock.return.picking'
 
-class stock_return_picking(orm.TransientModel):
-    _inherit = 'stock.return.picking'
+    # ~ def default_get(self, cr, uid, fields, context=None):
+        # ~ """ Precargamos el campo cantidad con la diferencia entre la cantidad, y la cantidad
+        # ~ aceptada del movimiento"""
+        # ~ if context is None:
+            # ~ context = {}
 
-    def default_get(self, cr, uid, fields, context=None):
-        """ Precargamos el campo cantidad con la diferencia entre la cantidad, y la cantidad
-        aceptada del movimiento"""
-        if context is None:
-            context = {}
+        # ~ result1 = []
+        # ~ res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
+        # ~ record_id = context and context.get('active_id', False) or False
+        # ~ pick_obj = self.pool.get('stock.picking')
+        # ~ pick = pick_obj.browse(cr, uid, record_id, context=context)
 
-        result1 = []
-        res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
-        record_id = context and context.get('active_id', False) or False
-        pick_obj = self.pool.get('stock.picking')
-        pick = pick_obj.browse(cr, uid, record_id, context=context)
+        # ~ if pick:
+            # ~ for line in pick.move_lines:
+                # ~ qty = line.product_qty - line.acepted_qty ##el return history k?? qty = line.product_qty - return_history[line.id]
+                # ~ if qty > 0:
+                    # ~ result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+            # ~ if 'product_return_moves' in fields:
+                # ~ res.update({'product_return_moves': result1})
 
-        if pick:
-            for line in pick.move_lines:
-                qty = line.product_qty - line.acepted_qty ##el return history k?? qty = line.product_qty - return_history[line.id]
-                if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
-            if 'product_return_moves' in fields:
-                res.update({'product_return_moves': result1})
+        # ~ return res
 
-        return res
+    # ~ def create_returns(self, cr, uid, ids, context=None):
+        # ~ """ Escribimos el albaran de devolución relacionado al albarán original"""
+        # ~ res = super(stock_return_picking,self).create_returns(cr,uid,ids,context)
 
-    def create_returns(self, cr, uid, ids, context=None):
-        """ Escribimos el albaran de devolución relacionado al albarán original"""
-        res = super(stock_return_picking,self).create_returns(cr,uid,ids,context)
+        # ~ record_id = context and context.get('active_id', False) or False
+        # ~ pick = self.pool.get('stock.picking').browse(cr, uid, record_id, context=context)
 
-        record_id = context and context.get('active_id', False) or False
-        pick = self.pool.get('stock.picking').browse(cr, uid, record_id, context=context)
+        # ~ if pick:
+            # ~ return_pick_id = self.pool.get('stock.picking').search(cr,uid,[('name','like',"%"+pick.name+"-return")],context=context)
+            # ~ if return_pick_id:
+                # ~ pick.write({'return_picking_id':return_pick_id[0]})
 
-        if pick:
-            return_pick_id = self.pool.get('stock.picking').search(cr,uid,[('name','like',"%"+pick.name+"-return")],context=context)
-            if return_pick_id:
-                pick.write({'return_picking_id':return_pick_id[0]})
-
-        return res
+        # ~ return res

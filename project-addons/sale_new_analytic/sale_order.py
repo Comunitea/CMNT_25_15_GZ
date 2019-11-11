@@ -20,21 +20,18 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class sale_order(orm.Model):
+
+class SaleOrder(models.Model):
 
     _inherit = "sale.order"
-    _columns = {
-        'unrevisioned_name': fields.char('Order Reference',
-                                        copy=False,
-                                        readonly=True)
-    }
 
-        # return super(sale_order, self).copy(cr, uid, defaults)
+    unrevisioned_name = fields.Char('Order Reference', copy=False,
+                                    readonly=True)
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
-        res = super(sale_order, self).onchange_warehouse_id(cr, uid, ids,
+        res = super(SaleOrder, self).onchange_warehouse_id(cr, uid, ids,
                                                             warehouse_id,
                                                             context=context)
         if warehouse_id:
@@ -55,11 +52,11 @@ class sale_order(orm.Model):
             if context.get('new_sale_revision'):
                 default.update({'unrevisioned_name':sale.unrevisioned_name
                                  })
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
+        return super(SaleOrder, self).copy(cr, uid, id, default, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
 
-        if super(sale_order, self).action_wait(cr, uid, ids, context=context):
+        if super(SaleOrder, self).action_wait(cr, uid, ids, context=context):
             sale_obj =self.browse (cr, uid, ids, context=context)
             for sale in sale_obj:
                 if sale.project_id and sale.project_id.name != sale.name and sale.project_id.name != sale.unrevisioned_name:

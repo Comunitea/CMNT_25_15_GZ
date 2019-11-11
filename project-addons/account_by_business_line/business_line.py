@@ -20,15 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from odoo import models, fields
 
-class account_business_line(orm.Model):
+
+class AccountBusinessLine(models.Model):
 
     _name = "account.business.line"
 
-    _columns = {
-        'name': fields.char('Name', size=128, required=True),
-        'description': fields.text('Description')
-    }
-
-
+    name = fields.Char('Name', size=128, required=True)
+    description = fields.Text('Description')
