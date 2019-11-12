@@ -20,4 +20,4 @@
 #
 ##############################################################################
 
-import wizard_account_balance_report
+from . import wizard_account_balance_report

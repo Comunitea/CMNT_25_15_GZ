@@ -34,7 +34,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_business_line" name="Business line" parent="account.menu_configuration_misc" action="act_business_line"/>
+    <!--TODO: Migrar<menuitem id="menu_business_line" name="Business line" parent="account.menu_configuration_misc" action="act_business_line"/>-->
 
 </data>
 </openerp>

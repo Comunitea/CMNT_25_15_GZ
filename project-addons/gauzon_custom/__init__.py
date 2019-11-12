@@ -20,12 +20,12 @@
 #
 ##############################################################################
 
-import account_move
-import analytic_line
-import product
-import partner
-import purchase
-import sale
-import invoice
-import stock
-import analytic
+from . import account_move
+from . import analytic_line
+from . import product
+from . import partner
+from . import purchase
+from . import sale
+from . import invoice
+from . import stock
+from . import analytic

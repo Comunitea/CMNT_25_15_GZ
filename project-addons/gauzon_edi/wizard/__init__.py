@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import edi_import
-import edi_export
+from . import edi_import
+from . import edi_export

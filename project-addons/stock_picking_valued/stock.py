@@ -48,8 +48,8 @@ class stock_picking(models.Model):
     @api.depends('move_lines', 'partner_id',
                  'move_lines.purchase_line_id.price_unit',
                  'move_lines.purchase_line_id.discount',
-                 'move_lines.procurement_id.sale_line_id.price_unit',
-                 'move_lines.procurement_id.sale_line_id.discount',
+                 'move_lines.sale_line_id.price_unit',
+                 'move_lines.sale_line_id.discount',
                  'move_lines.product_uom_qty')
     def _amount_all(self):
         for picking in self:
@@ -61,8 +61,8 @@ class stock_picking(models.Model):
                 or False
             for line in picking.move_lines:
                 price_unit = 0.0
-                if line.procurement_id and line.procurement_id.sale_line_id:
-                    oline = line.procurement_id.sale_line_id
+                if line.sale_line_id:
+                    oline = line.sale_line_id
                     otaxes = oline.tax_id
                 elif line.purchase_line_id:
                     oline = line.purchase_line_id
@@ -122,17 +122,17 @@ class stock_move(models.Model):
         store=True)
 
     @api.multi
-    @api.depends('product_id', 'product_qty', 'procurement_id.sale_line_id',
+    @api.depends('product_id', 'product_qty', 'sale_line_id',
                  'purchase_line_id', 'purchase_line_id.price_unit',
                  'purchase_line_id.discount',
-                 'procurement_id.sale_line_id.price_unit',
-                 'procurement_id.sale_line_id.discount')
+                 'sale_line_id.price_unit',
+                 'sale_line_id.discount')
     def _get_subtotal(self):
         for move in self:
             price_unit = 0
-            if move.procurement_id.sale_line_id:
-                price_unit = (move.procurement_id.sale_line_id.price_unit *
-                              (1-(move.procurement_id.sale_line_id.discount or
+            if move.sale_line_id:
+                price_unit = (move.sale_line_id.price_unit *
+                              (1-(move.sale_line_id.discount or
                                   0.0)/100.0))
             elif move.purchase_line_id:
                 price_unit = (move.purchase_line_id.price_unit *

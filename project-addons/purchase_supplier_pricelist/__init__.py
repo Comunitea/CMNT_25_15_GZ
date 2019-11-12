@@ -20,6 +20,6 @@
 #
 ##############################################################################
 
-import product
-import pricelist
-import purchase
+from . import product
+from . import pricelist
+from . import purchase

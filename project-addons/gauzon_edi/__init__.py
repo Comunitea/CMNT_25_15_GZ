@@ -20,5 +20,5 @@
 #
 ##############################################################################
 
-import gauzon_edi
-import wizard
+from . import gauzon_edi
+from . import wizard

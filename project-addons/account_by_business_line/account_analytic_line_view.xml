@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record id="view_account_analytic_line_form_add_business_line" model="ir.ui.view">
+        <!--TODO: Migrar<record id="view_account_analytic_line_form_add_business_line" model="ir.ui.view">
             <field name="name">account.analytic.line.form.dd_business_line</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
@@ -33,7 +33,7 @@
                     <filter string="Busines line" context="{'group_by':'business_line_id'}" name="group_business_line"/>
                 </filter>
             </field>
-        </record>
+        </record>-->
 
     </data>
 </openerp>

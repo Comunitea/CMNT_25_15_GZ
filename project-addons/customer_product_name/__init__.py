@@ -20,6 +20,6 @@
 #
 ##############################################################################
 
-import customer_product_name
-import product
-import sale
+from . import customer_product_name
+from . import product
+from . import sale

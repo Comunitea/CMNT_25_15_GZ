@@ -21,6 +21,6 @@
 #
 ##############################################################################
 
-import sale_validation_installer
-import sale_validation
-import cancel_sale_order
+from . import sale_validation_installer
+from . import sale_validation
+from . import cancel_sale_order

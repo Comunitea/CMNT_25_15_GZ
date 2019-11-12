@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record model="ir.ui.view" id="view_vendor_payment_form_add_business_line">
+        <!--TODO: Migrar<record model="ir.ui.view" id="view_vendor_payment_form_add_business_line">
             <field name="name">account.voucher.payment.form.add_business_line</field>
             <field name="model">account.voucher</field>
             <field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
@@ -24,7 +24,7 @@
                     <field name="business_line_id"/>
                 </field>
             </field>
-        </record>
+        </record>-->
 
     </data>
 </openerp>

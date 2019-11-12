@@ -19,5 +19,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import wizard
-import parser_trial_balance
+from . import wizard
+from . import parser_trial_balance

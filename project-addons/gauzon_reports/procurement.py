@@ -21,17 +21,17 @@
 
 from openerp import models, fields
 
+#TODO: Migrar
+# ~ class ProcurementOrder(models.Model):
 
-class ProcurementOrder(models.Model):
+    # ~ _inherit = "procurement.order"
 
-    _inherit = "procurement.order"
+    # ~ sequence = fields.Integer('Sequence')
 
-    sequence = fields.Integer('Sequence')
-
-    def _run_move_create(self, cr, uid, procurement, context=None):
-        vals = super(ProcurementOrder, self)._run_move_create(cr, uid,
-                                                              procurement,
-                                                              context=context)
-        if procurement.sequence:
-            vals['sequence'] = procurement.sequence
-        return vals
+    # ~ def _run_move_create(self, cr, uid, procurement, context=None):
+        # ~ vals = super(ProcurementOrder, self)._run_move_create(cr, uid,
+                                                              # ~ procurement,
+                                                              # ~ context=context)
+        # ~ if procurement.sequence:
+            # ~ vals['sequence'] = procurement.sequence
+        # ~ return vals

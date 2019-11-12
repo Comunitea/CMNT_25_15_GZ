@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
     def _get_picking_ids(self):
         line_ids = [x.id for x in self.order_line]
         moves = self.env['stock.move'].\
-            search([('procurement_id.sale_line_id', 'in', line_ids)])
+            search([('sale_line_id', 'in', line_ids)])
         picking_ids = [x.picking_id.id for x in moves if x.picking_id]
         self.picking_ids = list(set(picking_ids))
 

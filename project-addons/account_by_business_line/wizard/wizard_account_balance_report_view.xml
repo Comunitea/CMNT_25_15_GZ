@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-     <record id="account_trial_balance_view_webkit_add_business_line" model="ir.ui.view">
+     <!--TODO: Migrar<record id="account_trial_balance_view_webkit_add_business_line" model="ir.ui.view">
         <field name="name">Trial Balance</field>
         <field name="model">trial.balance.webkit</field>
         <field name="inherit_id" ref="account_financial_report_webkit.account_trial_balance_view_webkit"/>
@@ -13,7 +13,7 @@
                 </page>
             </page>
         </field>
-    </record>
+    </record>-->
 
 </data>
 </openerp>

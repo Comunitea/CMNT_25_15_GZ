@@ -25,7 +25,7 @@
         """,
     "version" : "1.0",
     "author" : "Pexego",
-    "depends" : ["base", "sale_stock", "procurement"],
+    "depends" : ["base", "sale_stock"],
     "category" : "Sales Management",
     "init_xml" : [],
     "data" : ["sale_view.xml"],

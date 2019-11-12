@@ -20,10 +20,10 @@
 #
 ##############################################################################
 
-import business_line
-import account
-import invoice
-import account_voucher
-import wizard
-import report
-import account_analytic_line
+from . import business_line
+from . import account
+from . import invoice
+from . import account_voucher
+from . import wizard
+from . import report
+from . import account_analytic_line
