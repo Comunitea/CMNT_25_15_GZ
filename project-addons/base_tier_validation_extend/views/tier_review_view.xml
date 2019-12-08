@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tier_review_view_tree_extend" model="ir.ui.view">
+        <field name="name">tier.review.tree.extend</field>
+        <field name="model">tier.review</field>
+        <field name="inherit_id" ref="base_tier_validation.tier_review_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="reviewed_date" position="after">
+                <field name="comment"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

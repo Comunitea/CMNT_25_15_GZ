@@ -20,4 +20,33 @@
 #
 ##############################################################################
 
-from . import models
+from odoo import _, models, fields, exceptions, api
+
+
+class AccountAccount(models.Model):
+
+    _inherit = "account.account"
+
+    require_business_line = fields.Boolean('Require business line')
+    need_business_line = fields.Boolean('Need business line')
+
+
+class AccountMoveLine(models.Model):
+
+    _inherit = "account.move.line"
+
+    @api.constrains('analytic_tag_ids', 'account_id')
+    def _check_if_need_business_line(self):
+        for line in self:
+            if line.account_id.require_business_line and \
+                    not line.analytic_tag_ids.filtered('is_business_line'):
+                return exceptions.\
+                    ValidationError(_('This account move line needs a business'
+                                      ' line to create.'))
+
+
+class AccountAnalyticTag(models.Model):
+
+    _inherit = "account.analytic.tag"
+
+    is_business_line = fields.Boolean("Is business line")

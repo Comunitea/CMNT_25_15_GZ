@@ -19,5 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+{
+    'name': 'Accounting by line of business',
+    'version': '11.0.0.0.1',
+    'category': 'Tools',
+    'description': """
+        Permite filtrar la contabilidad por linea de negocio
 
-from . import models
+        update account_account set require_business_line = true where code like '7%' and type != 'view';
+        update account_account set require_business_line = true where code like '6%' and type != 'view';
+        """,
+    'author': 'Comunitea Servicios Tecnológicos',
+    'website': 'https://www.comunitea.com',
+    'depends': ['base', 'analytic_tag_dimension'],
+    'data': ['views/account_view.xml',
+             'views/account_invoice_view.xml',
+             'views/assets_backend.xml',
+             'data/account_by_business_line_data.xml'],
+    'qweb': ['static/src/xml/account_reconciliation.xml'],
+    'installable': True,
+}
