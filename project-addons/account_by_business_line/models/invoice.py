@@ -39,7 +39,8 @@ class AccountInvoice(models.Model):
         for line_dict in lines:
             line = line_obj.browse(line_dict['invl_id'])
             if not line.analytic_tag_ids.filtered('is_business_line') and \
-                    line.account_id.need_business_line:
+                    line.account_id.need_business_line and \
+                    line.invoice_id.main_analytic_tag_id:
                 line_dict['analytic_tag_ids'] = \
                     [(6, 0, [line.invoice_id.main_analytic_tag_id.id])]
         return lines
