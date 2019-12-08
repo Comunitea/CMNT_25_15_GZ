@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="product_normal_form_view_add_customer_names" model="ir.ui.view">
             <field name="name">product.normal.form_add_customer_names</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Procurements" position="after">
+                <page name="inventory" position="after">
                     <page string="Customers">
                         <field colspan="4" name="customer_name_ids" nolabel="1">
                             <tree editable="top">
@@ -16,8 +14,10 @@
                                 <field name="name"/>
                             </tree>
                             <form>
-                                <field name="partner_id"/>
-                                <field name="name"/>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="name"/>
+                                </group>
                             </form>
                         </field>
                     </page>
@@ -25,5 +25,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L. (httpw://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,11 @@
 from odoo import models, fields
 
 
-class product_product(models.Model):
+class CustomerProductName(models.Model):
 
-    _inherit = "product.product"
+    _name = "customer.product.name"
 
-    customer_name_ids = fields.One2many('customer.product.name', 'product_id',
-                                        'Customer names')
+    name = fields.Char('Product name', required=True)
+    partner_id = fields.Many2one('res.partner', 'Customer', required=True,
+                                 domain=[('customer', '=', True)])
+    product_id = fields.Many2one('product.product', 'Product', required=True)

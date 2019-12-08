@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Customer product name',
-    'version': '0.1',
-    'category': 'Purchases',
-    'description': """Permite poner en productos un nombre distinto por clientes y luego lo recupera en las ventas""",
-    'author': 'Pexego Sistemas Informáticos',
-    'website': 'https://www.pexego.es',
-    'depends': ['base', 'product', 'sale'],
-    'init_xml': [],
-    'data': ['product_view.xml',
-                   'security/ir.model.access.csv'],
-    'demo_xml': [],
-    'installable': True,
-    'certificate': '',
-}
+
+from odoo import models, fields
+
+
+class ProductProduct(models.Model):
+
+    _inherit = "product.product"
+
+    customer_name_ids = fields.One2many('customer.product.name', 'product_id',
+                                        'Customer names')

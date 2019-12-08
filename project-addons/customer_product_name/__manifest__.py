@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from odoo import models, fields
-
-
-class CustomerProductName(models.Model):
-
-    _name = "customer.product.name"
-
-    name = fields.Char('Product name', required=True)
-    partner_id = fields.Many2one('res.partner', 'Customer', required=True,
-                                 domain=[('customer', '=', True)])
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+{
+    'name': 'Customer product name',
+    'version': '11.0.0.0.1',
+    'category': 'Purchases',
+    'description': """Permite poner en productos un nombre distinto por
+                   clientes y luego lo recupera en las ventas""",
+    'author': 'Comunitea',
+    'website': 'https://www.comunitea.com',
+    'depends': ['product', 'sale'],
+    'data': ['views/product_view.xml',
+             'security/ir.model.access.csv'],
+    'installable': True,
+}
