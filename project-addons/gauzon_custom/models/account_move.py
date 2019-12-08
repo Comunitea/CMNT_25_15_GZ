@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Comunitea Servicios Informáticos All Rights Reserved
-#    $Carlos Lombardía Rodríguez$
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
+#    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models
+
+from odoo import models, api
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class AccountMove(models.Model):
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
-        account_data = super(AccountAnalyticAccount, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
-        account_ids = [x[0] for x in account_data]
-        account_childof_ids = self.search(cr, uid, [('id', 'child_of', account_ids)])
-        account_childof_ids = list(set(account_childof_ids))
-        return self.name_get(cr, uid, account_childof_ids, context=context)
+    _inherit = "account.move"
+
+    @api.multi
+    def propagate_reference(self):
+        for move in self:
+            move.line_ids.write({'ref': move.ref})
+        return True

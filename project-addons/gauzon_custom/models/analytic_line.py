@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L (https://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,17 +20,14 @@
 #
 ##############################################################################
 
-from odoo import models
+from odoo import models, fields
 
 
-class AccountMove(models.Model):
+class AccountAnalyticLine(models.Model):
 
-    _inherit = "account.move"
+    _inherit = "account.analytic.line"
 
-    def propagate_reference(self, cr, uid, ids, context=None):
-        if context is None: context = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            self.pool.get('account.move.line').write(cr, uid, [x.id for x in move.line_id], {'ref': move.ref}, context=context)
-
-        return True
-
+    account_debit = fields.Monetary(related='move_id.debit', string="Debit",
+                                    readonly=True, store=True)
+    account_credit = fields.Monetary(related='move_id.credit', string="Credit",
+                                     readonly=True, store=True)

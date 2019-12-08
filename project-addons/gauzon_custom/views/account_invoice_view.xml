@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_tree_add_ref" model="ir.ui.view">
+        <field name="name">account.invoice.tree_add_ref</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="reference" position="replace">
+                <field name="reference"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

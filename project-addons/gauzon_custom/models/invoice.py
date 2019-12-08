@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2015 Comunitea All Rights Reserved
@@ -19,15 +18,12 @@
 #
 ##############################################################################
 
-{
-    'name': "Edit purchase price",
-    'version': '1.0',
-    'category': 'Purchases',
-    'description': """Edit purchase price""",
-    'author': 'Comunitea',
-    'website': 'www.comunitea.com',
-    "depends": ['purchase'],
-    "data": [],
-    "installable": True
-}
+from odoo import models, fields
 
+
+class AccountInvoice(models.Model):
+
+    _inherit = "account.invoice"
+
+    name = fields.Char(size=64)
+    origin = fields.Char(size=64)

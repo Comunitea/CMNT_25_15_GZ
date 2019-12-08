@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_partner_form_add_qualification" model="ir.ui.view">
             <field name="name">res.partner.form.add_qualification</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                     <field name="supplier_qualification" attrs="{'invisible': [('supplier', '=', False)]}"/>
@@ -18,13 +16,12 @@
             <field name="name">res.partner.select.add_qualification</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <field name="category_id" position="after">
                     <field name="supplier_qualification"/>
                 </field>
-                <filter string="Salesperson" position="after">
-                    <filter string="Qualification" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'supplier_qualification'}" />
+                <filter name="salesperson" position="after">
+                    <filter string="Qualification" domain="[]" context="{'group_by' : 'supplier_qualification'}" />
                 </filter>
             </field>
         </record>
@@ -33,7 +30,6 @@
             <field name="name">res.partner.tree.add_qualification</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_tree"/>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                     <field name="supplier_qualification" invisible="1"/>
@@ -41,5 +37,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

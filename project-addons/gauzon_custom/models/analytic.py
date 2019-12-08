@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
-#    $Omar Castiñeira Saavedra$
+#    Comunitea Servicios Informáticos All Rights Reserved
+#    $Carlos Lombardía Rodríguez$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from odoo import models, api
 
-from odoo import models, fields
 
+class AccountAnalyticAccount(models.Model):
+    _inherit = 'account.analytic.account'
 
-class AccountAnalyticLine(models.Model):
-
-    _inherit = "account.analytic.line"
-
-    account_debit = fields.Float(related='move_id.debit', string="Debit",
-                                 readonly=True, store=True)
-    account_credit = fields.Float(related='move_id.credit', string="Credit",
-                                  readonly=True, store=True)
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        account_data = super().name_search(name, args=args, operator=operator,
+                                           limit=limit)
+        account_ids = [x[0] for x in account_data]
+        account_childof_ids = self.search([('id', 'child_of', account_ids)])
+        return account_childof_ids.name_get()

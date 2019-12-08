@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,23 @@
 #
 ##############################################################################
 
-from odoo import models, fields
+from odoo import api, models, fields
 
 
-class ResPartner(models.Model):
+class PurchaseOrder(models.Model):
 
-    _inherit = "res.partner"
+    _inherit = "purchase.order"
 
-    supplier_qualification = fields.\
-        Selection([('s', '[S]'), ('a', '[A]'), ('r', '[R]')], "Qualification")
+    global_analytic_id = fields.\
+        Many2one('account.analytic.account', 'Analytic account',
+                 help="This account is entered by default for new lines")
+    carrier_id = fields.Many2one("delivery.carrier", "Delivery Method")
+
+    @api.onchange('partner_id', 'company_id')
+    def onchange_partner_id(self):
+        res = super().onchange_partner_id()
+        if not self.partner_id:
+            self.carrier_id = False
+        else:
+            self.carrier_id = self.partner_id.property_delivery_carrier_id.id
+        return res

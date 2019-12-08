@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 Comunitea All Rights Reserved
-#    $Omar Castiñeira Saavedra <omar@comunitea.com>$
+#    Copyright (C) 2004-TODAY
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
+#    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published
-#    by the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,5 +20,12 @@
 #
 ##############################################################################
 
-from . import stock
-from . import purchase
+from odoo import models, fields
+
+
+class ResPartner(models.Model):
+
+    _inherit = "res.partner"
+
+    supplier_qualification = fields.\
+        Selection([('s', '[S]'), ('a', '[A]'), ('r', '[R]')], "Qualification")

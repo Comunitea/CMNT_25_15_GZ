@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#        Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
-#        $Javier Colmenero Fernández$
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
+#    $Javier Colmenero Fernández$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,29 +21,25 @@
 ##############################################################################
 {
     'name': 'Gauzon Custom',
-    'version': '0.1',
+    'version': '11.0.0.0.1',
     'category': 'general',
     'description': """
         Personalizaciones para gauzón
     """,
-    'author': 'Pexego Sistemas Informáticos',
-    'website': 'https://www.pexego.es',
-    'depends': ['base', 'product', 'sale_stock', 'account', 'purchase', 'analytic',
-                'purchase_discount', 'stock_packaging_usability', 'stock_packaging_usability',
-                'stock_transfer_split_multi'],
-    'init_xml': [],
+    'author': 'Comunitea',
+    'website': 'https://www.comunitea.com',
+    'depends': ['product', 'sale_stock', 'account', 'analytic',
+                'purchase_discount', 'sale_disable_inventory_check',
+                'delivery', 'stock_picking_invoice_link',
+                'account_analytic_parent'],
     'data': [
-        'account_invoice_view.xml',
-        'account_move_view.xml',
-        'account_tax_code_view.xml',
-        'analytic_line_view.xml',
-        'product_view.xml',
-        'partner_view.xml',
-        'purchase_view.xml',
-        'sale_view.xml',
-        'stock_view.xml'
+        'views/account_invoice_view.xml',
+        'views/account_move_view.xml',
+        'views/analytic_line_view.xml',
+        'views/product_view.xml',
+        'views/partner_view.xml',
+        'views/purchase_view.xml',
+        'views/stock_view.xml'
     ],
-    'demo_xml': [],
     'installable': True,
-    'certificate': '',
 }
