@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,13 +21,13 @@
 
 {
     "name": "Personalización de Factura-e (FACe)",
-    "version": "8.0.1.0.0",
+    "version": "11.0.0.0.1",
     "author": "Comunitea",
     "category": "Accounting & Finance",
     "website": "www.comunitea.com",
     "license": "AGPL-3",
-    "depends": ["base", "l10n_es_facturae", "gauzon_reports",
-                "gauzon_edi"],
-    "data": [],
+    "depends": ["l10n_es_facturae", "gauzon_reports",
+                "gauzon_edi", "stock_picking_invoice_link"],
+    "data": ['views/report_facturae.xml'],
     "installable": True,
 }

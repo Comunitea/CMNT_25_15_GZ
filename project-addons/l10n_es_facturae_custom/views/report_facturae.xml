@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="template_facturae_edi" inherit_id="l10n_es_facturae.template_facturae">
+        <xpath expr="//ReceiverContractReference" position="attributes">
+            <attribute name="t-if">line.invoice_id.num_contract</attribute>
+            <attribute name="t-esc">line.invoice_id.num_contract</attribute>
+        </xpath>
+        <xpath expr="//ReceiverTransactionReference" position="attributes">
+            <attribute name="t-if">line.invoice_id.num_contract</attribute>
+            <attribute name="t-esc">line.invoice_id.num_contract</attribute>
+        </xpath>
+        <xpath expr="//DeliveryNotesReferences" position="attributes">
+            <attribute name="t-if">line.move_line_ids</attribute>
+        </xpath>
+        <xpath expr="//DeliveryNotesReferences" position="inside">
+            <DeliveryNote>
+                <DeliveryNoteNumber t-esc="line.move_line_ids[0].picking_id.name"/>
+                <DeliveryNoteDate t-esc="line.move_line_ids[0].picking_id.date[:10]"/>
+            </DeliveryNote>
+        </xpath>
+        <xpath expr="//InvoiceAdditionalInformation" position="attributes">
+            <attribute name="t-esc">invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note') and ('\n'.join([x.name + ': ' + x.note for x in invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note')]) + '\n' + invoice.comment) or invoice.comment</attribute>
+        </xpath>
+    </template>
+
+    <template id="entity_commercial" inherit_id="l10n_es_facturae.entity">
+        <xpath expr="//t[@t-set='buyer_type']" position="attributes">
+            <attribute name="t-value">'J' if partner.commercial_partner_id.vat and partner.commercial_partner_id.is_company else 'F'</attribute>
+        </xpath>
+        <xpath expr="//LegalEntity/CorporateName" position="before">
+            <t t-set="partner" t-value="partner.commercial_partner_id"/>
+        </xpath>
+    </template>
+
+    <template id="administrative_center_fix" inherit_id="l10n_es_facturae.administrative_center">
+        <xpath expr="//Name" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//FirstSurname" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+</odoo>

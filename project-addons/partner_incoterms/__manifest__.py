@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,13 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from odoo import models, fields
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    default_incoterm_id = fields.\
-        Many2one('stock.incoterms', 'Default Incoterm',
-                 help='Default Incoterm used in a Purchase Order when this partner is selected as the supplier.')
+{
+    'name': 'Partner Incoterms',
+    'version': '11.0.0.0.1',
+    'author': 'credativ Ltd',
+    'website': 'http://credativ.co.uk',
+    'depends': [
+        'purchase',
+    ],
+    'category': 'Generic Modules/Purchase',
+    'description': '''
+Adds a default purchase Incoterm to the partner object which will be copied
+onto the Purchase Order incoterm as default
+''',
+    'data': [
+        'views/partner_view.xml',
+    ],
+    'installable': True
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

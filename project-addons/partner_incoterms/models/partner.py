@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -20,18 +19,13 @@
 #
 ##############################################################################
 
-from odoo import models
+from odoo import models, fields
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id):
-        res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
-        if partner_id:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            if partner.default_incoterm_id:
-                res['value']['incoterm_id'] = partner.default_incoterm_id.id
-        return res
-
-
+    default_incoterm_id = fields.\
+        Many2one('stock.incoterms', 'Default Incoterm',
+                 help='Default Incoterm used in a Purchase Order when this '
+                      'partner is selected as the supplier.')

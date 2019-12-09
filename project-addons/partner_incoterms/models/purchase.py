@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,23 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name' : 'Partner Incoterms',
-    'version' : '1.0.0.0',
-    'author' : 'credativ Ltd',
-    'website' : 'http://credativ.co.uk',
-    'depends' : [
-        'base',
-        'purchase',
-    ],
-    'category' : 'Generic Modules/Purchase',
-    'description': '''
-Adds a default purchase Incoterm to the partner object which will be copied onto the Purchase Order incoterm as default
-''',
-    'data' : [
-        'partner_view.xml',
-    ],
-    'active': False,
-    'installable': True
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+from odoo import models, api
+
+
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+
+    @api.onchange('partner_id', 'company_id')
+    def onchange_partner_id(self):
+        res = super().onchange_partner_id()
+        if self.partner_id:
+            if self.partner_id.default_incoterm_id:
+                self.incoterm_id = \
+                    self.partner_id.default_incoterm_id.id
+        return res
