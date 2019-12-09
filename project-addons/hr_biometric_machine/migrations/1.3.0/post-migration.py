@@ -1,7 +1,9 @@
 """
+
 Revision ID: hr_biometric_machine_1.2.2
 Revises:
 Create Date: 2017-02-14
+
 """
 from openupgradelib import openupgrade as tools
 
@@ -18,7 +20,7 @@ def migrate(cr, installed_version):
     cr.execute(query_update)
     query_update = """
         update hr_attendance set state = 'right'
-        where {new_column} = False or  {new_column} is Null
+        where {new_column} = False or  {new_column} is Null 
     """.format(new_column=new_column)
     cr.execute(query_update)
     # Drop new_column

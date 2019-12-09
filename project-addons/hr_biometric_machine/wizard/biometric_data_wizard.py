@@ -10,7 +10,7 @@ from openerp import api, fields, models
 class BiometricDataWizard(models.TransientModel):
     _name = 'biometric.data.wizard'
 
-
+  
     @api.model
     def default_get(self, fields):
         res = super(BiometricDataWizard, self).default_get(fields)

@@ -1,7 +1,9 @@
 """
+
 Revision ID: hr_biometric_machine_1.2.2
 Revises:
 Create Date: 2017-02-14
+
 """
 from openupgradelib import openupgrade as tools
 from openerp import SUPERUSER_ID
