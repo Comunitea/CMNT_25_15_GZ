@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_order_form_add_seq_lines" model="ir.ui.view">
+        <field name="name">sale.order.form.editable_order_lines</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="order_line" position="attributes">
+                <attribute name="context">{'lines': order_line}</attribute>
+            </field>
+            <field name="pricelist_id" position="after">
+                <button
+                    name="action_numbering"
+                    string="Numbering"
+                    type="object"
+                    colspan="1"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>

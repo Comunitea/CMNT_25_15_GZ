@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2011 Pexego Sistemas Informáticos. All Rights Reserved
+#    Copyright (C) 2004-2011 Comunitea Servicios Tecnológicos S.L.
+#    All Rights Reserved
 #    $Javier Colmenero Fernández$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,4 @@
 #
 ##############################################################################
 
-from . import report_custom
-from . import sale
-from . import invoice
-from . import stock
-from . import purchase
-from . import procurement
+from . import models

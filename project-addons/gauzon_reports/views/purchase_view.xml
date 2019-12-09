@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_form_add_seq" model="ir.ui.view">
+        <field name="name">purchase.order.form.add.seq</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="gauzon_custom.purchase_order_form_add_tree_discount"/>
+        <field name="arch" type="xml">
+            <field name="order_line" position="attributes">
+                <attribute name="context">{'default_account_analytic_id': global_analytic_id, 'default_company_id': company_id, 'lines': order_line}</attribute>
+            </field>
+            <field name="company_id" position="after">
+                <button
+                    name="action_numbering"
+                    string="Numbering"
+                    type="object"
+                    colspan="1"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>

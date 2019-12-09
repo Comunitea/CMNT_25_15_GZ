@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="gauzon_report_picking_list" model="ir.actions.report.xml">
+            <field name="string">Albarán sin valorar</field>
+            <field name="auto">True</field>
+            <field name="model">stock.picking</field>
+            <field name="jasper_model_id" ref="model_stock_picking"/>
+            <field name="name">Albarán sin valorar</field>
+            <field name="report_name">not.valued.picking</field>
+            <field name="rml">gauzon_reports/reports/picking.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/picking.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_report_picking_list_values" model="ir.values">
+            <field name="name">Albarán sin valorar</field>
+            <field name="model">stock.picking</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(gauzon_report_picking_list)" />
+        </record>
+
+        <record id="gauzon_valued_picking" model="ir.actions.report.xml">
+            <field name="string">Albarán valorado</field>
+            <field name="auto">True</field>
+            <field name="model">stock.picking</field>
+            <field name="jasper_model_id" ref="model_stock_picking"/>
+            <field name="name">Albarán valorado</field>
+            <field name="report_name">valued.picking</field>
+            <field name="rml">gauzon_reports/reports/valued_picking.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/valued_picking.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_valued_picking_values" model="ir.values">
+            <field name="name">Albarán valorado</field>
+            <field name="model">stock.picking</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(gauzon_valued_picking)" />
+        </record>
+
+
+        <record id="gauzon_customs_valued_picking" model="ir.actions.report.xml">
+            <field name="string">Albarán valorado aduanas</field>
+            <field name="auto">True</field>
+            <field name="model">stock.picking</field>
+            <field name="jasper_model_id" ref="model_stock_picking"/>
+            <field name="name">Albarán valorado aduanas</field>
+            <field name="report_name">customs.valued.picking</field>
+            <field name="rml">gauzon_reports/reports/customs_valued_picking.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/customs_valued_picking.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_customs_valued_picking_values" model="ir.values">
+            <field name="name">Albarán valorado aduanas</field>
+            <field name="model">stock.picking</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(gauzon_customs_valued_picking)" />
+        </record>
+
+        <record id="report_sale_order_jasper" model="ir.actions.report.xml">
+            <field name="string">Oferta</field>
+            <field name="auto">True</field>
+            <field name="model">sale.order</field>
+            <field name="jasper_model_id" ref="model_sale_order"/>
+            <field name="name">Oferta</field>
+            <field name="report_name">sale.order.offer</field>
+            <field name="rml">gauzon_reports/reports/sale_order_offer.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/sale_order_offer.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="report_sale_order_values" model="ir.values">
+            <field name="name">Oferta</field>
+            <field name="model">sale.order</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(report_sale_order_jasper)" />
+        </record>
+
+        <record id="report_purchase_order_jasper" model="ir.actions.report.xml">
+            <field name="string">Pedido de compra Jasper</field>
+            <field name="auto">True</field>
+            <field name="model">purchase.order</field>
+            <field name="jasper_model_id" ref="model_purchase_order"/>
+            <field name="name">Pedido de compra</field>
+            <field name="report_name">purchase.order</field>
+            <field name="rml">gauzon_reports/reports/purchase_order.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/purchase_order.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="report_purchase_order_values" model="ir.values">
+            <field name="name">Pedido de compra</field>
+            <field name="model">purchase.order</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(report_purchase_order_jasper)" />
+        </record>
+
+        <record id="report_purchase_order_en" model="ir.actions.report.xml">
+            <field name="string">Pedido de compra - Inglés</field>
+            <field name="auto">True</field>
+            <field name="model">purchase.order</field>
+            <field name="jasper_model_id" ref="model_purchase_order"/>
+            <field name="name">Pedido de compra - Inglés</field>
+            <field name="report_name">purchase.order.en</field>
+            <field name="rml">gauzon_reports/reports/purchase_order_en.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/purchase_order_en.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="report_purchase_order_en_values" model="ir.values">
+            <field name="name">Pedido de compra - Inglés</field>
+            <field name="model">purchase.order</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' + str(report_purchase_order_en)" />
+        </record>
+
+        <record id="gauzon_invoice_action" model="ir.actions.report.xml">
+            <field name="string">Factura normal</field>
+            <field name="auto">True</field>
+            <field name="model">account.invoice</field>
+            <field name="jasper_model_id" ref="model_account_invoice"/>
+            <field name="name">Factura normal</field>
+            <field name="report_name">account.invoice</field>
+            <field name="rml">gauzon_reports/reports/invoice.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/invoice.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_invoice_values" model="ir.values">
+            <field name="name">Factura normal</field>
+            <field name="model">account.invoice</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' +str(gauzon_invoice_action)" />
+        </record>
+
+        <record id="gauzon_invoice_sinnalb_action" model="ir.actions.report.xml">
+            <field name="string">Factura sin N.Alb</field>
+            <field name="auto">True</field>
+            <field name="model">account.invoice</field>
+            <field name="jasper_model_id" ref="model_account_invoice"/>
+            <field name="name">Factura sin N.Alb</field>
+            <field name="report_name">account.invoice.sinnalb</field>
+            <field name="rml">gauzon_reports/reports/invoice_sinnalb.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/invoice_sinnalb.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_invoice_sinnalb_values" model="ir.values">
+            <field name="name">Factura sin N.Alb</field>
+            <field name="model">account.invoice</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' +str(gauzon_invoice_sinnalb_action)" />
+        </record>
+
+        <record id="gauzon_invoice_secat_action" model="ir.actions.report.xml">
+            <field name="string">Factura SECATAE</field>
+            <field name="auto">True</field>
+            <field name="model">account.invoice</field>
+            <field name="jasper_model_id" ref="model_account_invoice"/>
+            <field name="name">Factura SECATAE</field>
+            <field name="report_name">account.invoice.secat</field>
+            <field name="rml">gauzon_reports/reports/invoice_secat.jrxml</field>
+            <field name="report_rml">gauzon_reports/reports/invoice_secat.jrxml</field>
+            <field name="menu">True</field>
+            <field name="header">False</field>
+            <field name="jasper_report">True</field>
+            <field name="jasper_output">pdf</field>
+        </record>
+        <record id="gauzon_invoice_secat_values" model="ir.values">
+            <field name="name">Factura SECATAE</field>
+            <field name="model">account.invoice</field>
+            <field name="key2" eval="'client_print_multi'" />
+            <field name="value_unpickle" eval="'ir.actions.report.xml, ' +str(gauzon_invoice_secat_action)" />
+        </record>
+
+    </data>
+</openerp>
