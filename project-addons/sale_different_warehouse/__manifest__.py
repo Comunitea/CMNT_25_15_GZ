@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2012 Pexego Sistemas Informáticos All Rights Reserved
-#    $Marta Vázquez Rodríguez$ <marta@pexego.es>
+#    Copyright (C) 2004-2012 Comunitea Servicios Tecnológicos S.L.
+#    All Rights Reserved
+#    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -19,17 +19,15 @@
 #
 ##############################################################################
 {
-    "name" : "Sale different warehouse",
+    "name": "Sale different warehouse",
     "description": """
-       Allows you to have a warehouse for each sale line and create pickings for each different warehouse.
+       Allows you to have a warehouse for each sale line and create pickings
+       for each different warehouse.
         """,
-    "version" : "1.0",
-    "author" : "Pexego",
-    "depends" : ["base", "sale_stock"],
-    "category" : "Sales Management",
-    "init_xml" : [],
-    "data" : ["sale_view.xml"],
-    'demo_xml': [],
+    "version": "11.0.0.0.0",
+    "author": "Comunitea",
+    "depends": ["sale_stock"],
+    "category": "Sales Management",
+    "data": ["views/sale_view.xml"],
     'installable': True,
-    'active': False,
 }

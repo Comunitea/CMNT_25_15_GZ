@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2012 Pexego Sistemas Informáticos All Rights Reserved
-#    $Marta Vázquez Rodríguez$ <marta@pexego.es>
+#    Copyright (C) 2004-2012 Comunitea Servicios Tecnológicos S.L.
+#    All Rights Reserved
+#    $Omar Castiñeira Saavedra$ <omar@comuitea.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class SaleOrderLine(models.Model):
@@ -28,19 +28,11 @@ class SaleOrderLine(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Source warehouse',
                                    readonly=True,
                                    states={'draft': [('readonly', False)]})
-    method = fields.Selection([('direct_delivery', 'Direct delivery')],
-                              string='Method', readonly=True,
-                              states={'draft': [('readonly', False)]},
-                              default="direct_delivery")
 
+    @api.multi
+    def _prepare_procurement_values(self, group_id=False):
+        values = super()._prepare_procurement_values(group_id=group_id)
+        if self.warehouse_id:
+            values['warehouse_id'] = self.warehouse_id
 
-class SaleOrder(models.Model):
-
-    _inherit = 'sale.order'
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        res = super(SaleOrder,self)._prepare_order_line_procurement(cr, uid, order, line, group_id, context=context)
-        if line.warehouse_id and line.method == 'direct_delivery':
-            res['warehouse_id'] = line.warehouse_id.id
-        return res
-
+        return values
