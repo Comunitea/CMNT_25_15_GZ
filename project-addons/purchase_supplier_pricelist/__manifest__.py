@@ -19,5 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from . import models
+{
+    'name': 'Purchase supplier pricelist',
+    'version': '11.0.0.0.1',
+    'category': 'Purchases',
+    'description': """Permite calcular el precio de las linea de precios de
+productos por bruto - descuento, también permite decidir en que divisa esta
+ese precio.""",
+    'author': 'Comunitea',
+    'website': 'https://www.comunitea.com',
+    'depends': ['product', 'purchase', 'purchase_discount'],
+    'data': ['views/product_view.xml'],
+    'installable': True,
+}

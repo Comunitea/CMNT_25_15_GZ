@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#    Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
 #    $Omar Castiñeira Saavedra$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,19 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Purchase supplier pricelist',
-    'version': '0.1',
-    'category': 'Purchases',
-    'description': """Permite calcular el precio de las linea de precios de
-productos por bruto - descuento, también permite decidir en que divisa esta
-ese precio.""",
-    'author': 'Pexego Sistemas Informáticos',
-    'website': 'https://www.pexego.es',
-    'depends': ['base', 'product', 'purchase', 'purchase_discount'],
-    'init_xml': [],
-    'data': ['product_view.xml'],
-    'demo_xml': [],
-    'installable': True,
-    'certificate': '',
-}
+
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
+
+
+class ProductSupplierInfo(models.Model):
+
+    _inherit = 'product.supplierinfo'
+
+    date_start = fields.Date(default=fields.Date.today)
+    discount = fields.Float('Discount', digits=(4, 2), help="About 100")
+    gross_amount = fields.Float('Gross unit amount',
+                                digits=dp.get_precision('Product Price'))
+
+    @api.onchange('gross_amount', 'discount')
+    def on_change_price(self):
+        self.price = self.gross_amount * (1 - (self.discount or 0.0) / 100.0)
