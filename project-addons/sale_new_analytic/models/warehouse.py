@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2015 Comunitea Servicios Tecnológicos. All Rights Reserved
 #    $Omar Castiñeira Saavedra$
-#
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,7 +18,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from odoo import models, fields
 
 
 class StockWarehouse(models.Model):

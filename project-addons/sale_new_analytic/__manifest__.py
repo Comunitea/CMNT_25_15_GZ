@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#        Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
+#        Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
 #        $Javier Colmenero Fernández$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,17 +19,15 @@
 #
 ##############################################################################
 {
-    'name': 'Gauzon Custom',
-    'version': '0.1',
-    'category': 'general',
+    'name': 'New analytic account on sale',
+    'version': '11.0.0.0.1',
+    'category': 'Sales',
     'description': """
        Genera una nueva cuenta analítica por cada venta confirmada
     """,
-    'author': 'Pexego Sistemas Informáticos',
-    'website': 'https://www.pexego.es',
-    'depends': ['base', 'analytic', 'sale_stock', 'sale_order_revision'],
-    'data': ["warehouse_view.xml"],
-    'demo_xml': [],
+    'author': 'Comunitea',
+    'website': 'https://www.comunitea.com',
+    'depends': ['analytic', 'sale_stock', 'sale_order_revision'],
+    'data': ["views/warehouse_view.xml"],
     'installable': True,
-    'certificate': '',
 }
