@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
+
         <!-- stock.packagyng.type form view-->
         <record model="ir.ui.view" id="stock_packaging_type_form_view">
             <field name="name">stock_packaging_type_form_view</field>
             <field name="model">stock.packaging.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Packaging Types">
                     <group colspan="4" col="2">
@@ -20,11 +19,10 @@
         <record model="ir.ui.view" id="stock_packaging_type_tree_view">
             <field name="name">stock_packaging_type_tree_view</field>
             <field name="model">stock.packaging.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock Packaging Types">
-                        <field name="name"/>
-                        <field name="alias"/>
+                    <field name="name"/>
+                    <field name="alias"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +30,6 @@
         <record model="ir.ui.view" id="stock_packaging_type_search_view">
             <field name="name">stock_packaging_type_search_view</field>
             <field name="model">stock.packaging.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Inventory">
                     <field name="name"/>
@@ -51,17 +48,17 @@
         </record>
 
         <!-- stock.packagyng.type menu-->
-        <!--TODO: Migrar<menuitem action="action_packaging_type" id="menu_action_packaging_type"
+        <menuitem action="action_packaging_type" id="menu_action_packaging_type"
             name = "Packaging Types"
             sequence="1"
-            parent="stock.menu_traceability"/>-->
+            parent="stock.menu_stock_inventory_control"/>
 
         <record model="ir.ui.view" id="view_quant_package_form_add_pack_type">
             <field name="name">stock.quant.package.form.add_pack_type</field>
             <field name="model">stock.quant.package</field>
             <field name="inherit_id" ref="stock.view_quant_package_form"/>
             <field name="arch" type="xml">
-                <field name="packaging_id" position="after">
+                <field name="location_id" position="after">
                     <field name="packaging_type_id"/>
                 </field>
             </field>
@@ -72,12 +69,11 @@
             <field name="name">view.company.form.add.aecoc</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="parent_id" position="after">
                     <field name="aecoc_code"/>
                 </field>
             </field>
         </record>
-    </data>
-</openerp>
+
+</odoo>

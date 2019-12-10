@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2004-2011 Pexego Sistemas Informáticos. All Rights Reserved
+#    Copyright (C) 2004-2011 Comunitea Servicios Tecnológicos S.L.
+#    All Rights Reserved
 #    $Javier Colmenero Fernández$
-#
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class StockPackagingType(models.Model):
@@ -36,31 +35,36 @@ class StockQuantPackage(models.Model):
 
     _inherit = "stock.quant.package"
 
-    def checksum(self,sscc):
+    @api.model
+    def checksum(self, sscc):
         """Devuelve el sscc pasado mas un dígito calculado"""
         iSum = 0
-        for i in xrange(len(sscc)-1,-1,-2):
+        for i in xrange(len(sscc) - 1, -1, -2):
             iSum += int(sscc[i])
         iSum *= 3
-        for i in xrange(len(sscc)-2,-1,-2):
+        for i in xrange(len(sscc) - 2, -1, -2):
             iSum += int(sscc[i])
 
         iCheckSum = (10 - (iSum % 10)) % 10
 
-        return "%s%s" % (sscc, iCheckSum)
+        return "{}{}".format(sscc, iCheckSum)
 
-    def make_sscc(self, cr, uid, context=None):
-        """Método con el que se calcula el sscc a partir del 1+ aecoc + una sequencia de 9 caracteres + 1 digito checksum
+    @api.model
+    def make_sscc(self):
+        """Método con el que se calcula el sscc a partir del 1+ aecoc +
+        una sequencia de 9 caracteres + 1 digito checksum
         para escribir en el name del paquete"""
-        sequence = self.pool.get('ir.sequence').get(cr, uid, 'scc.tracking.sequence') #sequencia definida en sscc_sequence.tracking
-        aecoc = self.pool.get('res.users').browse(cr,uid,uid).company_id.aecoc_code
+        sequence = self.env['ir.sequence'].\
+            next_by_code('scc.tracking.sequence')
+        aecoc = self.env.user.company_id.aecoc_code
         try:
-            return str(self.checksum("1" + aecoc + sequence ))
+            return self.checksum("1" + aecoc + sequence)
         except Exception:
-            return sequence
+            pass
 
     packaging_type_id = fields.Many2one('stock.packaging.type',
-                                        'Packaging Type', default=make_sscc)
+                                        'Packaging Type')
+    name = fields.Char(default=make_sscc)
 
 
 class ResCompany(models.Model):
