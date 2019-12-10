@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
-#        Pexego Sistemas Informáticos (http://www.pexego.es) All Rights Reserved
-#        $Javier Colmenero Fernández$
+#    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
+#    All Rights Reserved
+#    $Javier Colmenero Fernández$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,7 +21,7 @@
 ##############################################################################
 {
     'name': 'EDI',
-    'version': '0.1',
+    'version': '11.0.0.0.1',
     'category': 'Tools',
     'description': """
         Importar/Exportar archivos EDI (Ventas, Albaranes y facturas)
@@ -35,18 +35,17 @@
         Es necesario que asigne los valores correctos a los campos GLN para que el modulo funcione correctamente.
 
     """,
-    'author': 'Pexego Sistemas Informáticos',
-    'website': 'https://www.pexego.es',
-    'depends': ['base', 'account', 'sale', 'account_payment_mode', 'account_payment_sale', 'sale_order_revision', 'gauzon_custom'],
-    'init_xml': [],
+    'author': 'Comunitea',
+    'website': 'https://www.comunitea.com',
+    'depends': ['account', 'sale', 'account_payment_mode',
+                'account_payment_sale', 'sale_order_revision',
+                'gauzon_custom', 'stock_picking_show_return',
+                'sale_order_invoicing_grouping_criteria'],
     'data': [
         'security/ir.model.access.csv',
-        'gauzon_edi_view.xml',
-        'gauzon_edi_data.xml',
+        'views/gauzon_edi_view.xml',
         'wizard/edi_import_view.xml',
         'wizard/edi_export_view.xml',
     ],
-    'demo_xml': [],
     'installable': True,
-    'certificate': '',
 }

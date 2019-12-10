@@ -18,53 +18,53 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+#TODO: Migrar
+# ~ from openerp.report import report_sxw
+# ~ from openerp.report.report_sxw import rml_parse
+# ~ import calendar
+# ~ import itertools
 
-from openerp.report import report_sxw
-from openerp.report.report_sxw import rml_parse
-import calendar
-import itertools
+# ~ class Parser(report_sxw.rml_parse):
+    # ~ """Parser"""
+    # ~ def __init__(self, cr, uid, name, context):
+        # ~ super(Parser, self).__init__(cr,uid,name,context)
+        # ~ self.localcontext.update({
+            # ~ 'get_accounts': self._get_acocunts,
+            # ~ 'get_balance_by_month' : self._get_balance_by_month,
+            # ~ 'get_balance_last_year': self._get_balance_last_year
+            # ~ })
 
-class Parser(report_sxw.rml_parse):
-    """Parser"""
-    def __init__(self, cr, uid, name, context):
-        super(Parser, self).__init__(cr,uid,name,context)
-        self.localcontext.update({
-            'get_accounts': self._get_acocunts,
-            'get_balance_by_month' : self._get_balance_by_month,
-            'get_balance_last_year': self._get_balance_last_year
-            })
+    # ~ def _get_balance_last_year(self, account_data):
+        # ~ fiscalyear = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, self.localcontext['data']['form']['fiscalyear'][0])
+        # ~ year = int(fiscalyear.code)
+        # ~ last_fiscalyear_ids = self.pool.get('account.fiscalyear').search(self.cr, self.uid, [('code', '=', str(year-1))])
+        # ~ if last_fiscalyear_ids:
+            # ~ account = self.pool.get('account.account').browse(self.cr, self.uid, account_data[0].id, {'fiscalyear': last_fiscalyear_ids[0],
+                                             # ~ 'business_lines': [account_data[1].id]})
+            # ~ return account.balance
+        # ~ else:
+            # ~ return 0.0
 
-    def _get_balance_last_year(self, account_data):
-        fiscalyear = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, self.localcontext['data']['form']['fiscalyear'][0])
-        year = int(fiscalyear.code)
-        last_fiscalyear_ids = self.pool.get('account.fiscalyear').search(self.cr, self.uid, [('code', '=', str(year-1))])
-        if last_fiscalyear_ids:
-            account = self.pool.get('account.account').browse(self.cr, self.uid, account_data[0].id, {'fiscalyear': last_fiscalyear_ids[0],
-                                             'business_lines': [account_data[1].id]})
-            return account.balance
-        else:
-            return 0.0
+    # ~ def _get_acocunts(self):
+        # ~ wiz_account_ids = self.localcontext['data']['form']['account_list']
+        # ~ account_ids = self.pool.get('account.account').search(self.cr,self.uid,[('id', 'child_of', wiz_account_ids), ('level', '=', 3)])
+        # ~ account_ids = self.pool.get('account.account').browse(self.cr, self.uid, account_ids)
 
-    def _get_acocunts(self):
-        wiz_account_ids = self.localcontext['data']['form']['account_list']
-        account_ids = self.pool.get('account.account').search(self.cr,self.uid,[('id', 'child_of', wiz_account_ids), ('level', '=', 3)])
-        account_ids = self.pool.get('account.account').browse(self.cr, self.uid, account_ids)
+        # ~ wiz_bline_ids = self.localcontext['data']['form']['business_line_ids']
+        # ~ bline_ids = self.pool.get('account.business.line').browse(self.cr, self.uid, wiz_bline_ids)
 
-        wiz_bline_ids = self.localcontext['data']['form']['business_line_ids']
-        bline_ids = self.pool.get('account.business.line').browse(self.cr, self.uid, wiz_bline_ids)
+        # ~ return [x for x in itertools.product(account_ids, bline_ids)]
 
-        return [x for x in itertools.product(account_ids, bline_ids)]
+    # ~ def _get_balance_by_month(self, month, account_data):
+        # ~ fiscalyear = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, self.localcontext['data']['form']['fiscalyear'][0])
+        # ~ year = int(fiscalyear.code)
+        # ~ x, last_day = calendar.monthrange(year, month)
 
-    def _get_balance_by_month(self, month, account_data):
-        fiscalyear = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, self.localcontext['data']['form']['fiscalyear'][0])
-        year = int(fiscalyear.code)
-        x, last_day = calendar.monthrange(year, month)
-
-        account = self.pool.get('account.account').browse(self.cr, self.uid, account_data[0].id, {'fiscalyear': fiscalyear.id,
-                                                                                        'date_from': str(year) + "-01-01",
-                                                                                         'date_to': str(year) + "-" + str(month).zfill(2) + "-" + str(last_day),
-                                                                                         'business_lines': [account_data[1].id]})
-        return account.balance
+        # ~ account = self.pool.get('account.account').browse(self.cr, self.uid, account_data[0].id, {'fiscalyear': fiscalyear.id,
+                                                                                        # ~ 'date_from': str(year) + "-01-01",
+                                                                                         # ~ 'date_to': str(year) + "-" + str(month).zfill(2) + "-" + str(last_day),
+                                                                                         # ~ 'business_lines': [account_data[1].id]})
+        # ~ return account.balance
 
 
 

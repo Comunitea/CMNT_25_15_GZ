@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Documento EDI-->
         <record model="ir.ui.view" id="edi_doc_form">
             <field name="name">edi.doc.form</field>
             <field name="model">edi.doc</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Documento EDI">
                 <notebook>
@@ -64,7 +62,6 @@
         <record model="ir.ui.view" id="edi_doc_tree">
             <field name="name">edi.doc.tree</field>
             <field name="model">edi.doc</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Documentos EDI">
                     <field name="date"/>
@@ -89,7 +86,6 @@
         <record model="ir.ui.view" id="edi_configuration_form">
             <field name="name">edi.configuration.form</field>
             <field name="model">edi.configuration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configuracion EDI">
                     <group>
@@ -111,7 +107,6 @@
         <record model="ir.ui.view" id="edi_configuration_tree">
             <field name="name">edi.configuration.tree</field>
             <field name="model">edi.configuration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Configuracion EDI">
                     <field name="name"/>
@@ -133,8 +128,7 @@
         <record model="ir.ui.view" id="view_edi_sale_order_form" >
             <field name="name">edi.sale_order</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale_stock.view_order_form_inherit" />
-            <field name="type">form</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock" />
             <field name="arch" type="xml">
                 <field name="partner_shipping_id" position="after">
                     <field name="partner_unor_id" readonly="1"/>
@@ -149,7 +143,7 @@
                         </group>
                     </page>
                 </notebook>
-                 <field name="warehouse_id" position="after">
+                 <field name="incoterm" position="before">
                     <field name="top_date"/>
                      <field name="num_contract"/>
                 </field>
@@ -165,9 +159,8 @@
             <field name="name">edi.product.product</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="ean13" position="after">
+                <field name="barcode" position="after">
                     <field name="ean13v"/>
                 </field>
                  <field name="default_code" position="after">
@@ -177,26 +170,24 @@
             </field>
         </record>
           <!-- INHERITED product.product tree -->
-        <!--<record model="ir.ui.view" id="view_edi_product_tree" >
+        <record model="ir.ui.view" id="view_edi_product_tree" >
             <field name="name">view.edi.product.tree</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view" />
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <field name="variants" position="replace">
+                <field name="attribute_value_ids" position="replace">
                     <field name="refcli"/>
                     <field name="refprov"/>
                 </field>
                 <field name="default_code" position="replace">
                 </field>
             </field>
-        </record>-->
+        </record>
           <!-- INHERITED product.product search -->
         <record model="ir.ui.view" id="view_edi_product_search" >
             <field name="name">view.edi.product.search</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_search_form_view" />
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <field name="categ_id" position="after">
                     <field name="refcli"/>
@@ -205,12 +196,13 @@
             </field>
         </record>
         <!-- INHERITED res.partner -->
+
         <record model="ir.ui.view" id="view_edi_res_partner_form" >
             <field name="name">edi.res.partner</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
             <field name="arch" type="xml">
+                <field name="property_account_position_id" position="replace"/>
                 <field name="category_id" position="after">
                     <group colspan="4" col="4">
                         <field name="gln"/>
@@ -218,7 +210,7 @@
                         <field name="customer_reference"/>
                         <field name="edi_relation"/>
                         <field name="center_code" string="UNOR"/>
-                        <field name="fiscal_position" attrs="{'invisible': [('is_company','=',True)]}"/>
+                        <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </field>
             </field>
@@ -227,12 +219,11 @@
         <!-- INHERITED payment.type -->
         <record model="ir.ui.view" id="view_edi_payment_type_form" >
             <field name="name">edi.payment.type</field>
-            <field name="model">payment.mode</field>
-            <field name="inherit_id" ref="account_payment.view_payment_mode_form" />
-            <field name="type">form</field>
+            <field name="model">account.payment.mode</field>
+            <field name="inherit_id" ref="account_payment_mode.account_payment_mode_form" />
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="edi_code" select="1"/>
+                    <field name="edi_code"/>
                 </field>
             </field>
         </record>
@@ -242,10 +233,9 @@
             <field name="name">edi.product.uom</field>
             <field name="model">product.uom</field>
             <field name="inherit_id" ref="product.product_uom_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="active" position="after">
-                    <field name="edi_code" select="1"/>
+                    <field name="edi_code"/>
                 </field>
             </field>
         </record>
@@ -255,20 +245,15 @@
             <field name="name">view.edi.stock.picking.add.contract.form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="backorder_id" position="after">
                     <field name="num_contract"/>
-                    <field name="return_picking_id"/>
                 </field>
                 <notebook position="inside" >
                     <page string="EDI">
                         <field name="edi_docs" select="1" readonly="1" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
-                 <button name="%(stock.act_stock_return_picking)d" position="replace">
-                      <button name="%(stock.act_stock_return_picking)d" string="Return Products" attrs="{'invisible' : [ '|',('return_picking_id','!=',False),('state','!=', 'done') ]}" type="action" icon="gtk-execute"/>
-                 </button>
             </field>
         </record>
 
@@ -280,7 +265,7 @@
                 <field name="product_uom_qty" position="after">
                     <field name="acepted_qty"/>
                 </field>
-                <field name="product_packaging" position="after">
+                <field name="move_dest_ids" position="after">
                     <newline/>
                     <separator string="Notas" colspan="4"/>
                     <field name="note" colspan="4" nolabel="1"/>
@@ -304,9 +289,8 @@
             <field name="name">view.edi.account.invoice.add.contract.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="origin" position="after">
+                <field name="move_id" position="after">
                     <field name="num_contract"/>
                 </field>
                 <notebook position="inside" >
@@ -339,6 +323,5 @@
             <menuitem id="menu_edi_configuration" parent="menu_edi" name="Configuracion EDI" action="act_edi_configuration" sequence="1"/>
             <menuitem id="menu_edi_doc" parent="menu_edi" name="Documentos" action="act_edi_doc" sequence="1"/>
 
-    </data>
-</openerp>
+</odoo>
 

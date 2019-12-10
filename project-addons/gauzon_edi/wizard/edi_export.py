@@ -21,7 +21,7 @@
 ##############################################################################
 
 from odoo import _, tools, models, fields, exceptions
-from edi_logging import logger
+from .edi_logging import logger
 from mako.template import Template
 from mako.lookup import TemplateLookup
 import os

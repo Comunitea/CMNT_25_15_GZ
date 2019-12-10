@@ -23,7 +23,7 @@
 from odoo import models, fields, _, exceptions
 import os
 import time
-from edi_logging import logger
+from .edi_logging import logger
 from lxml import etree
 
 log = logger("import_edi")
@@ -83,9 +83,9 @@ class EdiImport(models.TransientModel):
                     f.close()
                     files_downloaded += 1
                     log.info(u"Importado %s " % name)
-                    print u"Importado %s " % name
+                    print("Importado {} ".format(name))
                 else:
-                    print "ignortado"
+                    print("Ignorado")
                     log.info(u"Ignorado %s, ya existe en el sistema." % name)
 
             doc_ids = self.pool.get('edi.doc').search(cr,uid,[('status','in',['draft','error'])])

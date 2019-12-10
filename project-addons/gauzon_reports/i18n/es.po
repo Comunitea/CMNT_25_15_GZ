@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * gauzon_reports
+#       * gauzon_reports
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-02 09:34+0000\n"
-"PO-Revision-Date: 2014-05-02 09:34+0000\n"
+"POT-Creation-Date: 2019-12-09 12:54+0000\n"
+"PO-Revision-Date: 2019-12-09 12:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,135 +16,22 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: gauzon_reports
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "¡La referencia de la compra debe ser única por compañía!"
+#: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_amount_gross
+#: model:ir.model.fields,field_description:gauzon_reports.field_sale_order_amount_gross
+#: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_amount_gross
+msgid "Amount gross"
+msgstr "Importe bruto"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "Línea pedido de compra"
-
-#. module: gauzon_reports
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Debe asignar un lote de producción para este producto"
-
-#. module: gauzon_reports
-#: field:account.invoice,expiration_dates_str:0
-msgid "Expiration dates"
-msgstr "Fechas vencimiento"
-
-#. module: gauzon_reports
-#: field:payment.mode,no_print:0
-msgid "Not print"
-msgstr "No imprimir"
-
-#. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order_line_invoice
-msgid "Purchase Order Line Make Invoice"
-msgstr "Línea pedido de compra realiza factura"
-
-#. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: gauzon_reports
-#: model:ir.actions.report.xml,name:gauzon_reports.gauzon_customs_valued_picking
-msgid "Albarán valorado aduanas"
-msgstr "Albarán valorado aduanas"
-
-#. module: gauzon_reports
-#: model:ir.actions.report.xml,name:gauzon_reports.gauzon_valued_picking
-msgid "Albarán valorado"
-msgstr "Albarán valorado"
-
-#. module: gauzon_reports
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Está intentando asignar un lote que no es del mismo producto"
-
-#. module: gauzon_reports
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "No puede mover productos desde o hacia una ubicación de tipo vista."
-
-#. module: gauzon_reports
-#: field:stock.move,taxes_str:0
-msgid "Tax line"
-msgstr "Lineas impuestos"
-
-#. module: gauzon_reports
-#: field:stock.picking,sale_note:0
-msgid "Sale notes"
-msgstr "Notas ventas"
-
-#. module: gauzon_reports
-#: field:account.invoice.line,picking_id:0
-msgid "Picking"
-msgstr "Albarñn"
-
-#. module: gauzon_reports
-#: field:account.invoice,amount_discounted:0
-#: field:sale.order,amount_discounted:0
+#: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_amount_discounted
+#: model:ir.model.fields,field_description:gauzon_reports.field_sale_order_amount_discounted
 msgid "Discounted"
 msgstr "Descontado"
 
 #. module: gauzon_reports
-#: field:purchase.order.line,taxes_str:0
-#: field:sale.order.line,taxes_str:0
-msgid "Taxes"
-msgstr "Impuestos"
-
-#. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order
-msgid "Purchase Order"
-msgstr "Pedido de compra"
-
-#. module: gauzon_reports
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "¡La referencia debe ser única por compañía!"
-
-#. module: gauzon_reports
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "¡El número de factura debe ser único por compañía!"
-
-#. module: gauzon_reports
-#: constraint:account.invoice:0
-msgid "Invoice date is previous to an existing invoice."
-msgstr "La fecha de la factura es anterior a una factura existente."
-
-#. module: gauzon_reports
-#: field:account.invoice.line,sequence:0
-#: field:purchase.order.line,sequence:0
-#: field:stock.move,sequence:0
-msgid "Sequence"
-msgstr "Secuencia"
-
-#. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_stock_move
-msgid "Stock Move"
-msgstr "Movimiento stock"
-
-#. module: gauzon_reports
-#: view:sale.order:0
-#: view:purchase.order:0
-msgid "Numbering"
-msgstr "Numerar"
-
-#. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Línea de factura"
-
-#. module: gauzon_reports
-#: model:ir.actions.report.xml,name:gauzon_reports.gauzon_invoice
-msgid "Factura"
-msgstr "Factura"
+#: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_amount_discounted
+msgid "Disounted amount"
+msgstr "Importe descontado"
 
 #. module: gauzon_reports
 #: model:ir.model,name:gauzon_reports.model_account_invoice
@@ -152,18 +39,72 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: gauzon_reports
-#: field:account.invoice,amount_gross:0
-#: field:sale.order,amount_gross:0
-msgid "Amount gross"
-msgstr "Importe bruto"
+#: model:ir.model,name:gauzon_reports.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Línea de factura"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_sale_order
-msgid "Sales Order"
-msgstr "Pedido de venta"
+#: model:ir.model.fields,field_description:gauzon_reports.field_account_payment_mode_no_print
+msgid "Not print"
+msgstr "No imprimir"
+
+#. module: gauzon_reports
+#: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_note
+msgid "Notes"
+msgstr "Notas"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.purchase_order_form_add_seq
+#: model:ir.ui.view,arch_db:gauzon_reports.view_order_form_add_seq_lines
+msgid "Numbering"
+msgstr "Numerar"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_stock_partial_picking
+msgid "Partial Picking Processing Wizard"
+msgstr "Asistente para el procesamiento de un envío parcial"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_account_payment_mode
+msgid "Payment Modes"
+msgstr "Modos de pago"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_procurement_order
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Regla de abastecimiento"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_purchase_order
+msgid "Purchase Order"
+msgstr "Pedido de compra"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea pedido de compra"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_purchase_order_line_invoice
+msgid "Purchase Order Line Make Invoice"
+msgstr "Línea pedido de compra realiza factura"
+
+#. module: gauzon_reports
+#: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_sale_note
+msgid "Sale notes"
+msgstr "Notas ventas"
 
 #. module: gauzon_reports
 #: model:ir.model,name:gauzon_reports.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Línea pedido de venta"
 
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
