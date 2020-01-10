@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="report_saleorder_document_custom" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='doc']" position="after">
+            <t t-set="title">
+                <strong t-if="not env.context.get('proforma', False) and not is_pro_forma" style="font-size: 150%;">OFFER</strong>
+                <strong t-if="env.context.get('proforma', False) or is_pro_forma" style="font-size: 130%;">PRO-FORMA INVOICE</strong><br/>
+                <span style="font-size: 130%;">Nº: <span t-field="doc.name"/></span>
+            </t>
+            <t t-set="left_box">
+                Customer:<br/>
+                <div t-field="doc.partner_id.commercial_partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                <span t-if="doc.partner_id.commercial_partner_id.phone">Tel: <span t-field="doc.partner_id.commercial_partner_id.phone"/><br/></span>
+                <span t-if="doc.partner_id.commercial_partner_id.fax">Fax: <span t-field="doc.partner_id.commercial_partner_id.fax"/></span>
+            </t>
+            <t t-set="right_box">
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Date:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.date_order" t-field-options="{'format': 'dd/MM/y'}"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="doc.client_order_ref">
+                    <div class="col-xs-3">
+                      Your ref.:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.client_order_ref"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="doc.carrier_id">
+                    <div class="col-xs-3">
+                      Shipping mode:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.carrier_id"/>
+                    </div>
+                </div>
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Currency:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.pricelist_id.currency_id"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="doc.payment_mode_id or doc.payment_term_id">
+                    <div class="col-xs-3">
+                      Payment mode:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.payment_mode_id"/> <span t-field="doc.payment_term_id"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='doc.partner_shipping_id == doc.partner_invoice_id
+                             and doc.partner_invoice_id != doc.partner_id
+                             or doc.partner_shipping_id != doc.partner_invoice_id']/../.." position="replace"/>
+        <xpath expr="//h2" position="replace"/>
+        <xpath expr="//div[@id='informations']" position="replace"/>
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="line_no" t-value="1"/>
+            <p t-if="not env.context.get('proforma', False) and not is_pro_forma"><strong>Our dear sirs:</strong><br/>We acknowledge receipt of your offer request and thanking you for your attention, we submit this quotation for your consideration:</p>
+        </xpath>
+        <xpath expr="//t[@t-as='l']/tr" position="after">
+            <t t-if="l.notes">
+                <tr>
+                    <td colspan="99" style="border: 0px; padding-left: 40px; font-size: 80%;">
+                        <i><span t-field="l.notes"/></i>
+                    </td>
+                </tr>
+            </t>
+            <t t-set="line_no" t-value="line_no + 1"/>
+        </xpath>
+        <xpath expr="//span[@t-field='l.name']/.." position="before">
+            <td><span t-esc="line_no" class="text-center"/></td>
+            <td><span t-field="l.product_id.default_code"/></td>
+        </xpath>
+        <xpath expr="//t[@t-as='page']//th" position="before">
+            <th>Pos.</th>
+            <th>Code</th>
+        </xpath>
+        <xpath expr="//span[@t-field='l.name']" position="replace">
+            <span t-raw="l.product_id.default_code and l.name.replace('[' + l.product_id.default_code + ']', '').replace('\n', '&lt;br&gt;') or l.name.replace('\n', '&lt;br&gt;')"/>
+        </xpath>
+        <xpath expr="//span[contains(@t-esc, 'l.tax_id')]/.." position="attributes">
+            <attribute name="t-esc">', '.join(map(lambda x: (x.name), l.tax_id))</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='l.product_uom']" position="attributes">
+            <attribute name="t-field">l.product_uom.edi_code</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='doc.amount_untaxed']/../.." position="before">
+            <tr class="border-black" style="border-bottom:1px solid #dddddd;" t-if="display_discount">
+                <td>Gross amount:</td>
+                <td class="text-right">
+                    <span t-field="doc.amount_gross"
+                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                </td>
+            </tr>
+            <tr t-if="display_discount">
+                <td>Discounted:</td>
+                <td class="text-right">
+                    <span t-field="doc.amount_discounted"
+                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//p[@t-field='doc.note']" position="before">
+            <p t-if="doc.note">Notes:</p>
+        </xpath>
+        <xpath expr="//p[@t-field='doc.note']" position="attributes">
+            <attribute name="style">font-size: 80%;</attribute>
+        </xpath>
+        <xpath expr="//p[@t-if='doc.payment_term_id.note']" position="replace"/>
+        <xpath expr="//p[@id='fiscal_position_remark']" position="after">
+            <div style="page-break-inside: avoid;">
+                <div class="row" style="min-height: 80px; font-size: 80%;">
+                    <div class="col-xs-4">Commercial Responsible:</div>
+                    <div class="col-xs-4">Department Manager:</div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_sale_payment_mode_replacce" inherit_id="account_payment_sale.report_sale_payment_mode">
+        <xpath expr="//p[@t-if='doc.payment_mode_id.note']" position="replace"/>
+    </template>
+
+</odoo>

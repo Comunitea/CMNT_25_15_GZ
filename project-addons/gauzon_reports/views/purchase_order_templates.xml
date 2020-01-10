@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="report_purchaseorder_document_custom" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//t[@t-set='o']" position="after">
+            <t t-set="title">
+                <br/><strong>ORDER Nº: <span t-field="o.name"/></strong>
+            </t>
+            <t t-set="left_box">
+                Supp.:<br/>
+                <div t-field="o.partner_id.commercial_partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                <span t-if="o.partner_id.commercial_partner_id.phone">Tel: <span t-field="o.partner_id.commercial_partner_id.phone"/><br/></span>
+                <span t-if="o.partner_id.commercial_partner_id.fax">Fax: <span t-field="o.partner_id.commercial_partner_id.fax"/></span>
+            </t>
+            <t t-set="right_box">
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Date:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.date_order" t-field-options="{'format': 'dd/MM/y'}"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.carrier_id">
+                    <div class="col-xs-3">
+                      Freight:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.carrier_id"/>
+                    </div>
+                </div>
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Currency:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.currency_id"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.payment_mode_id or o.payment_term_id">
+                    <div class="col-xs-3">
+                      Payment:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.payment_mode_id"/> <span t-field="o.payment_term_id"/>
+                    </div>
+                </div>
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Delivery time:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.date_planned" t-field-options="{'format': 'dd/MM/y'}"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.partner_ref">
+                    <div class="col-xs-3">
+                      Reference:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.partner_ref"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@t-if='o.dest_address_id']/../.." position="replace"/>
+        <xpath expr="//h2" position="replace"/>
+        <xpath expr="//h2" position="replace"/>
+        <xpath expr="//div[@t-if='o.name']/.." position="replace"/>
+        <xpath expr="//th[hasclass('text-center')]" position="replace"/>
+        <xpath expr="//td[hasclass('text-center')]" position="replace"/>
+        <xpath expr="//span[@t-field='line.product_uom.name']" position="attributes">
+            <attribute name="t-field">line.product_uom.edi_code</attribute>
+        </xpath>
+        <xpath expr="//thead/.." position="before">
+            <t t-set="line_no" t-value="1"/>
+            <p t-if="not env.context.get('proforma', False) and not is_pro_forma"><strong>Dear Sirs:</strong><br/>We are pleased to send you our purchase order for following materials:</p>
+        </xpath>
+        <xpath expr="//tr[@t-foreach='o.order_line']" position="inside">
+            <t t-set="line_no" t-value="line_no + 1"/>
+        </xpath>
+        <xpath expr="//span[@t-field='line.name']/.." position="before">
+            <td><span t-esc="line_no" class="text-center"/></td>
+            <td><span t-field="line.product_id.default_code"/></td>
+        </xpath>
+        <xpath expr="//thead//th" position="before">
+            <th>Pos.</th>
+            <th>Code</th>
+        </xpath>
+        <xpath expr="//p[@t-field='o.notes']" position="after">
+            <div class="col-xs-4" style="border: 1px solid black; padding: 4px" t-if="o.picking_type_id.warehouse_id.partner_id">
+                <span>SHIP TO:</span><br/>
+                <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                    t-options='{"widget": "contact", "fields": ["name", "address", "name"], "no_marker": True}'/>
+            </div>
+            <div class="clearfix"/><br/>
+             <div class="col-xs-12" style="border: 1px solid black; padding: 4px; page-break-inside: avoid;">
+                <span>GENERAL CONDITIONS:</span><br/>
+                <span>1) THE MATERIAL SHOULD COME CORRECTLY PACKED AND IDENTIFIED.</span><br/>
+                <span>2) PLEASE ADAPT YOUR EXPIRATIONS ON DAYS 10 AND 20 OF EACH MONTH, IN ORDER TO AVOID RETURNS.</span><br/>
+                <span>3) NO PARTIAL BILLING OF THE ORDER WILL BE ADMITTED. EACH INVOICE SHOULD CONTAIN A SINGLE ORDER OUR.</span><br/>
+                <span>4) THE PAYMENT METHOD WILL NOT BE EXECUTED WHILE IT IS NOT IN OUR POWER THE REQUIRED DOCUMENTS.</span><br/><br/>
+                <div class="container" style="min-height: 60px;">
+                    <div class="col-xs-4">
+                        <span>Sales department:</span>
+                    </div>
+                    <div class="col-xs-4">
+                        <span>Purchase manager:</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

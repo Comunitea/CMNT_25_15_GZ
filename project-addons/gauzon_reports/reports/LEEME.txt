@@ -1,8 +1,0 @@
-Si se utiliza iReport, iReport se debe de poner en modo compatibilidad JasperReports 4.0.2
-Tools > Options > iReport  > General > Compability
-
-Para actualizar o crear un xml con datos y campos:
-- Configuracion > Personalizacion > Jasper Reports > Crear plantilla de datos
-- Elegir el modelo
-- Profundidad: 4
-- Pulsar "Create"

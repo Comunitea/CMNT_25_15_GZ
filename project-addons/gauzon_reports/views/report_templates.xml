@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="external_layout_standard_custom" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[hasclass('header')]" position="replace">
+            <div class="header" style="font-size: 11px;">
+                <div class="pull-right">
+                    <div t-if="company.email" class="text-center"><strong>Email: <span t-field="o.company_id.email"/></strong></div>
+                    <div t-if="company.website" class="text-center"><strong>Web: <span t-field="o.company_id.website"/></strong></div>
+                    <t t-if="title">
+                        <br/>
+                        <div style="border: 1px solid black; padding: 8px; min-height: 60px; min-width: 250px;" class="text-center">
+                            <t t-raw="title"/>
+                        </div>
+                    </t>
+                </div>
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="pull-left" style="max-height: 80px;"/>
+                <div class="pull-left company_address">
+                    <div>
+                        <strong style="font-size: 150%;" t-field="company.partner_id.name"/><br/>
+                        <strong><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-esc="company.vat.replace(' ','\N{NO-BREAK SPACE}')"/></strong>
+                    </div>
+                    <span t-field="company.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                    Tel: <span t-field="company.phone"/> Fax: <span t-field="company.partner_id.fax"/>
+                </div>
+                <div class="clearfix"/>
+                <t t-if="left_box or right_box">
+                    <br/>
+                    <div style="border: 1px solid black; min-height: 130px;">
+                        <div class="col-xs-6" style="border-right: 1px solid black; padding: 4px; min-height: 130px;">
+                            <t t-raw="left_box"/>
+                        </div>
+                        <div class="col-xs-6" style="padding: 4px;">
+                            <t t-raw="right_box"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_report_layout_standard')]" position="attributes">
+            <attribute name="style">font-size: 11px;</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('footer')]" position="attributes">
+            <attribute name="style">font-size: 11px;</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('footer')]//ul" position="replace"/>
+        <xpath expr="//div[hasclass('footer')]/div" position="attributes">
+            <attribute name="style">border-top: 0px;</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('footer')]/div" position="before">
+             <div>
+                <div class="col-xs-6 text-center">
+                    <img src="/gauzon_reports/static/src/img/ISO9001-ISO14001-OSHAS18001_cmyk.png" style="max-height: 60px;"/>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <img src="/gauzon_reports/static/src/img/logo_ISO27001_cmyk.png" style="max-height: 60px;"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//span[@t-field='company.report_footer']" position="attributes">
+            <attribute name="style">font-size: 80%;</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='company.report_footer']" position="after">
+            <br/><span t-field="company.lopd_text" style="font-size: 50%;"/>
+        </xpath>
+    </template>
+
+    <record id="base.paperformat_euro" model="report.paperformat">
+        <field name="margin_top">65</field>
+        <field name="margin_bottom">26</field>
+        <field name="header_spacing">60</field>
+    </record>
+
+</odoo>

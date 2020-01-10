@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="account_invoice_report_due_list.report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@t-if='o.fiscal_position_id.note']" position="before">
+            <div class="row" style="page-break-inside: avoid;">
+                <div class="col-xs-6">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date Due</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.get_multi_due_list()" t-as="due_tuple">
+                                <td>
+                                    <span t-esc="due_tuple[0]" t-esc-options="{'widget': 'date'}"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="due_tuple[1]"
+                                          t-esc-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_document_custom" inherit_id="account_invoice_report_grouped_by_picking.report_invoice_document">
+        <xpath expr="//t[@t-set='o']" position="after">
+            <t t-set="title">
+                <strong t-if="o.type in ('in_invoice', 'out_invoice')" style="font-size: 200%;">INVOICE</strong>
+                <strong t-if="o.type in ('in_refund', 'out_refund')" style="font-size: 160%;">REFUND INVOICE</strong>
+            </t>
+            <t t-set="left_box">
+                Customer:<br/><br/>
+                <div t-field="o.partner_id.commercial_partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                <span t-if="o.partner_id.commercial_partner_id.vat"><span t-field="o.partner_id.commercial_partner_id.vat"/></span>
+            </t>
+            <t t-set="right_box">
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Date:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.date_invoice"/>
+                    </div>
+                </div>
+                <div class="row mt2">
+                    <div class="col-xs-3">
+                      Invoice no.:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.number"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.num_contract">
+                    <div class="col-xs-3">
+                      Your ref.:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.num_contract"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.currency_id">
+                    <div class="col-xs-3">
+                      Currency:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.currency_id"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="o.payment_term_id or o.payment_mode_id">
+                    <div class="col-xs-3">
+                      Payment Mode:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.payment_mode_id"/> <span t-field="o.payment_term_id"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='invoice_address']/.." position="replace"/>
+        <xpath expr="//h2" position="replace"/>
+        <xpath expr="//div[@t-if='o.name']/.." position="replace"/>
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="line_no" t-value="1"/>
+        </xpath>
+        <xpath expr="//tr[@t-foreach='lines_grouped']" position="inside">
+            <t t-set="line_no" t-value="line_no + 1"/>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']//th" position="before">
+            <th>Pos.</th>
+            <th>Código</th>
+        </xpath>
+        <xpath expr="//span[@t-field='l.name']/.." position="replace">
+            <td><span t-esc="line_no" class="text-center"/></td>
+            <td><span t-field="l.product_id.default_code"/></td>
+            <td><span t-if="secatae and l.product_id.refcli">NOC: <span t-field="l.product_id.refcli"/><br/></span>
+                <span t-if="secatae and l.product_id.refprov">BloqueIdent: <span t-field="l.product_id.refprov"/><br/></span>
+                <span t-if="l.product_id.default_code" t-raw="l.name.replace('[' + l.product_id.default_code + ']', '').replace('\n', '&lt;br&gt;')"/>
+                <span t-if="not l.product_id.default_code" t-field="l.name"/></td>
+        </xpath>
+        <xpath expr="//span[@t-field='l.uom_id']" position="attributes">
+            <attribute name="t-field">l.uom_id.edi_code</attribute>
+        </xpath>
+        <xpath expr="//tr[@t-foreach='range(max(5-len(o.invoice_line_ids),0))']" position="replace"/>
+        <xpath expr="//p[@t-if='o.payment_term_id']" position="replace"/>
+        <xpath expr="//span[@t-field='o.amount_untaxed']/../.." position="before">
+            <tr class="border-black" style="border-bottom:1px solid #dddddd;" t-if="display_discount">
+                <td>Gross amount:</td>
+                <td class="text-right">
+                    <span t-field="o.amount_gross"
+                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </td>
+            </tr>
+            <tr t-if="display_discount">
+                <td>Discounted:</td>
+                <td class="text-right">
+                    <span t-field="o.amount_discounted"
+                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_layouted_custom" inherit_id="account_invoice_report_grouped_by_picking.report_invoice_layouted">
+        <xpath expr="//tr[@t-if='picking and picking != next_picking[0]']/td" position="before">
+            <td t-if="picking.num_contract" colspan="3"><span t-field="picking.num_contract"></span></td>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_document_secatae">
+        <t t-call="web.html_container">
+            <t t-set="secatae" t-value="True"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

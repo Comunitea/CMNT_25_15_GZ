@@ -6,14 +6,67 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-09 12:54+0000\n"
-"PO-Revision-Date: 2019-12-09 12:54+0000\n"
+"POT-Creation-Date: 2020-01-10 10:14+0000\n"
+"PO-Revision-Date: 2020-01-10 10:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "<span>GENERAL CONDITIONS:</span><br/>\n"
+"                <span>1) THE MATERIAL SHOULD COME CORRECTLY PACKED AND IDENTIFIED.</span><br/>\n"
+"                <span>2) PLEASE ADAPT YOUR EXPIRATIONS ON DAYS 10 AND 20 OF EACH MONTH, IN ORDER TO AVOID RETURNS.</span><br/>\n"
+"                <span>3) NO PARTIAL BILLING OF THE ORDER WILL BE ADMITTED. EACH INVOICE SHOULD CONTAIN A SINGLE ORDER OUR.</span><br/>\n"
+"                <span>4) THE PAYMENT METHOD WILL NOT BE EXECUTED WHILE IT IS NOT IN OUR POWER THE REQUIRED DOCUMENTS.</span><br/><br/>"
+msgstr "<span>CONDICIONES GENERALES:</span><br/>\n"
+"                <span>1) EL MATERIAL DEBERÁ DE VENIR CORRECTAMENTE EMBALADO E IDENTIFICADO.</span><br/>\n"
+"                <span>2) ROGAMOS ADAPTEN SUS VENCIMIENTOS A LOS DÍAS 10 Y 20 DE CADA MES, A FIN DE EVITAR DEVOLUCIONES.</span><br/>\n"
+"                <span>3) NO SE ADMITIRÁ FACTURACIÓN PARCIAL DEL PEDIDO. CADA FACTURA DEBERÁ CONTENER UN ÚNICO PEDIDO NUESTRO.</span><br/>\n"
+"                <span>4) NO SE EJECUTARÁ LA FORMA DE PAGO MIENTRAS NO OBREN EN NUESTRO PODER LOS DOCUMENTOS EXIGIDOS.</span><br/><br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "<span>Notes:</span><br/>"
+msgstr "<span>Observaciones:</span><br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "<span>Purchase manager:</span>"
+msgstr "<span>Responsable de Compra:</span>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "<span>SHIP TO:</span><br/>"
+msgstr "<span>ENVIAR A:</span><br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "<span>Sales department:</span>"
+msgstr "<span>Comercial Responsable:</span>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "<strong>Dear Sirs:</strong><br/>We are pleased to send you our purchase order for following materials:"
+msgstr "<strong>Muy Sres. nuestros:</strong><br/>Tenemos el gusto de pasarles nuestro pedido de la referencia para los siguientes materiales:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.valued_report_picking_custom
+msgid "<strong>Discounted:</strong>"
+msgstr "<strong>Descontado:</strong>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.valued_report_picking_custom
+msgid "<strong>Gross Amount:</strong>"
+msgstr "<strong>Importe bruto:</strong>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "<strong>Our dear sirs:</strong><br/>We acknowledge receipt of your offer request and thanking you for your attention, we submit this quotation for your consideration:"
+msgstr "<strong>Muy Sres. nuestros:</strong><br/>Acusamos recibo de su petición de oferta y agradeciendo su atención, sometemos a su consideración este presupuesto:"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_amount_gross
@@ -23,10 +76,84 @@ msgid "Amount gross"
 msgstr "Importe bruto"
 
 #. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "BloqueIdent:"
+msgstr "BloqueIdent:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Code"
+msgstr "Código"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Commercial Responsible:"
+msgstr "Comercial Responsable:"
+
+#. module: gauzon_reports
+#: model:ir.model,name:gauzon_reports.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Currency:"
+msgstr "Moneda:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Customer:<br/>"
+msgstr "Cliente:<br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "Customer:<br/><br/>"
+msgstr "Cliente:<br/><br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "Código"
+msgstr "Código"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Date:"
+msgstr "Fecha:"
+
+#. module: gauzon_reports
+#: model:ir.actions.report,name:gauzon_reports.action_report_delivery_document_customs
+msgid "Delivery note for customs"
+msgstr "Vale de entrega aduanas"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "Delivery time:"
+msgstr "Fecha límite:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Department Manager:"
+msgstr "Jefe de departamento:"
+
+#. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_amount_discounted
 #: model:ir.model.fields,field_description:gauzon_reports.field_sale_order_amount_discounted
 msgid "Discounted"
 msgstr "Descontado"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Discounted:"
+msgstr "Descontado:"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_amount_discounted
@@ -34,14 +161,58 @@ msgid "Disounted amount"
 msgstr "Importe descontado"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_account_invoice
-msgid "Invoice"
-msgstr "Factura"
+#: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
+msgid "Email:"
+msgstr "Email:"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Línea de factura"
+#: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Fax:"
+msgstr "Fax:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "Freight:"
+msgstr "Forma de envío:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Gross amount:"
+msgstr "Total lineas:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "INVOICE"
+msgstr "FACTURA"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "INVOICE FOR CUSTOMS PURPOSE ONLY"
+msgstr "INVOICE FOR CUSTOMS PURPOSE ONLY"
+
+#. module: gauzon_reports
+#: model:ir.actions.report,name:gauzon_reports.action_report_invoice_document_secatae
+msgid "Invoice Secatae"
+msgstr "Factura Secatae"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "Invoice no.:"
+msgstr "Nº factura:"
+
+#. module: gauzon_reports
+#: model:ir.model.fields,field_description:gauzon_reports.field_res_company_lopd_text
+msgid "LOPD Text"
+msgstr "Texto LOPD"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "NOC:"
+msgstr "NOC:"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_account_payment_mode_no_print
@@ -54,45 +225,79 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Notes:"
+msgstr "Observaciones:"
+
+#. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.purchase_order_form_add_seq
 #: model:ir.ui.view,arch_db:gauzon_reports.view_order_form_add_seq_lines
 msgid "Numbering"
 msgstr "Numerar"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_stock_partial_picking
-msgid "Partial Picking Processing Wizard"
-msgstr "Asistente para el procesamiento de un envío parcial"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Nº:"
+msgstr "Nº:"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_account_payment_mode
-msgid "Payment Modes"
-msgstr "Modos de pago"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "OFFER"
+msgstr "OFERTA"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_procurement_order
-msgid "Procurement"
-msgstr "Abastecimiento"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "ORDER Nº:"
+msgstr "PEDIDO Nº:"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Regla de abastecimiento"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "Observations:"
+msgstr "Observaciones:"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order
-msgid "Purchase Order"
-msgstr "Pedido de compra"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "PICKING / RECEIPT PICKING"
+msgstr "ALBARAN / ACTA DE RECEPCION"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "Línea pedido de compra"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "PRO-FORMA INVOICE"
+msgstr "FACTURA PROFORMA"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_purchase_order_line_invoice
-msgid "Purchase Order Line Make Invoice"
-msgstr "Línea pedido de compra realiza factura"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "Payment Mode:"
+msgstr "Forma de pago:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Payment mode:"
+msgstr "Forma de pago:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "Payment:"
+msgstr "Forma de pago:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Pos."
+msgstr "Pos."
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "REFUND INVOICE"
+msgstr "FACTURA RECTIFICATIVA"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "Reference:"
+msgstr "Referencia:"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_sale_note
@@ -100,11 +305,34 @@ msgid "Sale notes"
 msgstr "Notas ventas"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Línea pedido de venta"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Shipping mode:"
+msgstr "Forma de envío:"
 
 #. module: gauzon_reports
-#: model:ir.model,name:gauzon_reports.model_stock_move
-msgid "Stock Move"
-msgstr "Movimiento de existencias"
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+msgid "Supp.:<br/>"
+msgstr "Prov.:<br/>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Tel:"
+msgstr "Tel.:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
+msgid "Web:"
+msgstr "Web:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "Your Ref.:"
+msgstr "Su ref.:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "Your ref.:"
+msgstr "Su ref.:"

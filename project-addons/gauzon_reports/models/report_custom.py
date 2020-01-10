@@ -27,3 +27,10 @@ class AccountPaymentMode(models.Model):
     _inherit = "account.payment.mode"
 
     no_print = fields.Boolean("Not print")
+
+
+class ResCompany(models.Model):
+
+    _inherit = "res.company"
+
+    lopd_text = fields.Text("LOPD Text")

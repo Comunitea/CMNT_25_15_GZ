@@ -34,9 +34,8 @@ class AccountInvoice(models.Model):
                 val1 += line.price_subtotal
                 val2 += (line.price_unit * line.quantity)
 
-            invoice.amount_gross = round(val1, 2)
-            invoice.amount_discounted = round(val2 - val1, 2) > 0.1 and \
-                round(val2 - val1, 2) or 0.0
+            invoice.amount_gross = round(val2, 2)
+            invoice.amount_discounted = round(val2 - val1, 2)
 
     amount_gross = fields.Monetary(compute="_amount_extra",
                                    string='Amount gross')
