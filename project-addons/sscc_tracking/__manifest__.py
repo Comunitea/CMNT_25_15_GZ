@@ -14,7 +14,7 @@
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
-    'depends': ['stock', 'stock_pack_operation_auto_fill'],
+    'depends': ['stock'],
     'data': [
         'views/sscc_tracking_view.xml',
         'data/sscc_sequence.xml',
