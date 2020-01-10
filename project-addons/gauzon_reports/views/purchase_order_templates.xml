@@ -19,7 +19,7 @@
                       Date:
                     </div>
                     <div class="col-xs-9">
-                      <span t-field="o.date_order" t-field-options="{'format': 'dd/MM/y'}"/>
+                      <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
                     </div>
                 </div>
                 <div class="row mt2" t-if="o.carrier_id">
@@ -51,7 +51,7 @@
                       Delivery time:
                     </div>
                     <div class="col-xs-9">
-                      <span t-field="o.date_planned" t-field-options="{'format': 'dd/MM/y'}"/>
+                      <span t-field="o.date_planned" t-options="{'widget': 'date'}"/>
                     </div>
                 </div>
                 <div class="row mt2" t-if="o.partner_ref">

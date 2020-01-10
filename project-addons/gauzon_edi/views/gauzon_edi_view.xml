@@ -143,9 +143,13 @@
                         </group>
                     </page>
                 </notebook>
+                <field name="client_order_ref" position="replace"/>
+                <field name="pricelist_id" position="after">
+                    <field name="client_order_ref"/>
+                    <field name="num_contract"/>
+                </field>
                  <field name="incoterm" position="before">
                     <field name="top_date"/>
-                     <field name="num_contract"/>
                 </field>
                 <xpath expr="//field[@name='order_line']/form/field[@name='name']" position="after">
                     <label for="notes"/>

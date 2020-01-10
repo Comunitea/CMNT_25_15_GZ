@@ -49,7 +49,7 @@
                       Date:
                     </div>
                     <div class="col-xs-9">
-                      <span t-field="o.scheduled_date" t-field-options="{'format': 'dd/MM/y'}"/>
+                      <span t-field="o.scheduled_date" t-options="{'widget': 'date'}"/>
                     </div>
                 </div>
                 <div class="row mt2" t-if="o.num_contract">

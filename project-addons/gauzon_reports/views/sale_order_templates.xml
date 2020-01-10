@@ -21,7 +21,7 @@
                       Date:
                     </div>
                     <div class="col-xs-9">
-                      <span t-field="doc.date_order" t-field-options="{'format': 'dd/MM/y'}"/>
+                      <span t-field="doc.date_order" t-options="{'widget': 'date'}"/>
                     </div>
                 </div>
                 <div class="row mt2" t-if="doc.client_order_ref">
@@ -54,6 +54,14 @@
                     </div>
                     <div class="col-xs-9">
                       <span t-field="doc.payment_mode_id"/> <span t-field="doc.payment_term_id"/>
+                    </div>
+                </div>
+                <div class="row mt2" t-if="doc.num_contract">
+                    <div class="col-xs-3">
+                      Reference:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="doc.num_contract"/>
                     </div>
                 </div>
             </t>
