@@ -40,3 +40,10 @@ class PurchaseOrder(models.Model):
         else:
             self.carrier_id = self.partner_id.property_delivery_carrier_id.id
         return res
+
+
+class PurchaseOrderLine(models.Model):
+
+    _inherit = "purchase.order.line"
+
+    sequence2 = fields.Integer(related="sequence", store=True, readonly=True)
