@@ -11,12 +11,30 @@
     />
 
     <report
+        id="action_report_delivery_document_only_done"
+        string="Delivery note only done"
+        model="stock.picking"
+        report_type="qweb-pdf"
+        file="gauzon_reports.report_delivery_document_only_done"
+        name="gauzon_reports.report_delivery_document_only_done"
+    />
+
+    <report
         id="action_report_invoice_document_secatae"
         string="Invoice Secatae"
         model="account.invoice"
         report_type="qweb-pdf"
         file="gauzon_reports.report_invoice_document_secatae"
         name="gauzon_reports.report_invoice_document_secatae"
+    />
+
+    <report
+        id="action_report_invoice_document_no_pick"
+        string="Invoice without picking"
+        model="account.invoice"
+        report_type="qweb-pdf"
+        file="gauzon_reports.report_invoice_document_not_pick"
+        name="gauzon_reports.report_invoice_document_not_pick"
     />
 
 </odoo>

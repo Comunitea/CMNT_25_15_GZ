@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-10 10:14+0000\n"
-"PO-Revision-Date: 2020-01-10 10:14+0000\n"
+"POT-Creation-Date: 2020-01-16 14:14+0000\n"
+"PO-Revision-Date: 2020-01-16 14:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,6 +67,11 @@ msgstr "<strong>Importe bruto:</strong>"
 #: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
 msgid "<strong>Our dear sirs:</strong><br/>We acknowledge receipt of your offer request and thanking you for your attention, we submit this quotation for your consideration:"
 msgstr "<strong>Muy Sres. nuestros:</strong><br/>Acusamos recibo de su petición de oferta y agradeciendo su atención, sometemos a su consideración este presupuesto:"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "<strong>Pos.</strong>"
+msgstr "<strong>Pos.</strong>"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_account_invoice_amount_gross
@@ -134,6 +139,11 @@ msgid "Delivery note for customs"
 msgstr "Vale de entrega aduanas"
 
 #. module: gauzon_reports
+#: model:ir.actions.report,name:gauzon_reports.action_report_delivery_document_only_done
+msgid "Delivery note only done"
+msgstr "Vale de entrega (hecho)"
+
+#. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
 msgid "Delivery time:"
 msgstr "Fecha límite:"
@@ -163,7 +173,7 @@ msgstr "Importe descontado"
 #. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
 msgid "Email:"
-msgstr "Email:"
+msgstr "Correo electrónico:"
 
 #. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.external_layout_standard_custom
@@ -203,6 +213,11 @@ msgstr "Factura Secatae"
 #: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
 msgid "Invoice no.:"
 msgstr "Nº factura:"
+
+#. module: gauzon_reports
+#: model:ir.actions.report,name:gauzon_reports.action_report_invoice_document_no_pick
+msgid "Invoice without picking"
+msgstr "Factura sin albaranes"
 
 #. module: gauzon_reports
 #: model:ir.model.fields,field_description:gauzon_reports.field_res_company_lopd_text
@@ -256,6 +271,11 @@ msgid "Observations:"
 msgstr "Observaciones:"
 
 #. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
+msgid "P. Alb."
+msgstr "P. Alb."
+
+#. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
 msgid "PICKING / RECEIPT PICKING"
 msgstr "ALBARAN / ACTA DE RECEPCION"
@@ -284,7 +304,6 @@ msgstr "Forma de pago:"
 #: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
 #: model:ir.ui.view,arch_db:gauzon_reports.report_invoice_document_custom
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
-#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
 msgid "Pos."
 msgstr "Pos."
 
@@ -296,13 +315,14 @@ msgstr "FACTURA RECTIFICATIVA"
 #. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
 msgid "Reference:"
 msgstr "Referencia:"
 
 #. module: gauzon_reports
-#: model:ir.model.fields,field_description:gauzon_reports.field_stock_picking_sale_note
-msgid "Sale notes"
-msgstr "Notas ventas"
+#: model:ir.model.fields,field_description:gauzon_reports.field_stock_move_line_sequence
+msgid "Sequence"
+msgstr "Secuencia"
 
 #. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom

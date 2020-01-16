@@ -27,11 +27,10 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     @api.multi
-    def _get_sale_notes(self):
-        for pick in self:
-            sales = pick.move_lines.mapped('sale_line_id.order_id')
-            pick.sale_note = sales and \
-                "\n".join([x.note for x in sales if x.note]) or ""
+    def _get_picking_valued(self):
+        for picking in self:
+            if picking.state == 'done':
+                picking.valued = picking.partner_id.valued_picking
 
     @api.multi
     def _amount_all(self):
@@ -52,9 +51,23 @@ class StockPicking(models.Model):
             picking.amount_discounted = round_curr(amount_gross) - \
                 picking.amount_untaxed
 
-    sale_note = fields.Text(compute="_get_sale_notes", string='Sale notes')
     amount_gross = fields.Monetary('Amount gross', compute='_amount_all',
                                    compute_sudo=True)
     amount_discounted = fields.Monetary('Disounted amount',
                                         compute='_amount_all',
                                         compute_sudo=True)
+    valued = fields.Boolean(compute='_get_picking_valued', related=None)
+
+
+class StockMove(models.Model):
+    _inherit = "stock.move"
+
+    name = fields.Text()
+
+
+class StockMoveLine(models.Model):
+    _inherit = "stock.move.line"
+    _order = "sequence, result_package_id desc, id"
+
+    sequence = fields.Integer("Sequence", related="move_id.sequence",
+                              store=True, readoly=True)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="report_saleorder_document_custom" inherit_id="sale.report_saleorder_document">
+    <template id="report_saleorder_document_custom" inherit_id="sale_order_line_sequence.report_saleorder_document_sequence">
         <xpath expr="//t[@t-set='doc']" position="after">
             <t t-set="title">
                 <strong t-if="not env.context.get('proforma', False) and not is_pro_forma" style="font-size: 150%;">OFFER</strong>
@@ -72,7 +72,6 @@
         <xpath expr="//h2" position="replace"/>
         <xpath expr="//div[@id='informations']" position="replace"/>
         <xpath expr="//t[@t-set='display_discount']" position="after">
-            <t t-set="line_no" t-value="1"/>
             <p t-if="not env.context.get('proforma', False) and not is_pro_forma"><strong>Our dear sirs:</strong><br/>We acknowledge receipt of your offer request and thanking you for your attention, we submit this quotation for your consideration:</p>
         </xpath>
         <xpath expr="//t[@t-as='l']/tr" position="after">
@@ -83,14 +82,14 @@
                     </td>
                 </tr>
             </t>
-            <t t-set="line_no" t-value="line_no + 1"/>
         </xpath>
         <xpath expr="//span[@t-field='l.name']/.." position="before">
-            <td><span t-esc="line_no" class="text-center"/></td>
             <td><span t-field="l.product_id.default_code"/></td>
         </xpath>
-        <xpath expr="//t[@t-as='page']//th" position="before">
-            <th>Pos.</th>
+        <xpath expr="//t[@t-as='page']//th" position="replace">
+            <th><strong>Pos.</strong></th>
+        </xpath>
+        <xpath expr="//t[@t-as='page']//th[2]" position="before">
             <th>Code</th>
         </xpath>
         <xpath expr="//span[@t-field='l.name']" position="replace">

@@ -51,7 +51,7 @@
                     type="object"
                     icon="fa-cart-arrow-down"
                     context="{'model_dest': 'stock.move', 'field': 'reserved_availability'}"
-                    attrs="{'invisible': ['|', ('reserved_availability', '=', 0),('state', 'in', ('assigned', 'done'))]}"
+                    attrs="{'invisible': ['|', ('reserved_availability', '=', 0),('state', 'not in', ('assigned', 'partially_available'))]}"
                     options="{&quot;warn&quot;: true}"/>
 
             </xpath>

@@ -30,5 +30,5 @@ class AccountMove(models.Model):
     @api.multi
     def propagate_reference(self):
         for move in self:
-            move.line_ids.write({'ref': move.ref})
+            move.line_ids.write({'name': move.ref})
         return True

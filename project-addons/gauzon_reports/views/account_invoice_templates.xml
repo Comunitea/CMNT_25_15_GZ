@@ -29,6 +29,9 @@
         </xpath>
     </template>
 
+    <template id="account_invoice_line_sequence.report_invoice_sequence_qweb" inherit_id="account.report_invoice_document">
+    </template>
+
     <template id="report_invoice_document_custom" inherit_id="account_invoice_report_grouped_by_picking.report_invoice_document">
         <xpath expr="//t[@t-set='o']" position="after">
             <t t-set="title">
@@ -84,21 +87,20 @@
                 </div>
             </t>
         </xpath>
+        <xpath expr="//t[@t-set='picking']" position="attributes">
+            <attribute name="t-value">not nopick and lines_group['picking'] or False</attribute>
+        </xpath>
         <xpath expr="//div[@name='invoice_address']/.." position="replace"/>
         <xpath expr="//h2" position="replace"/>
         <xpath expr="//div[@t-if='o.name']/.." position="replace"/>
-        <xpath expr="//t[@t-set='display_discount']" position="after">
-            <t t-set="line_no" t-value="1"/>
-        </xpath>
-        <xpath expr="//tr[@t-foreach='lines_grouped']" position="inside">
-            <t t-set="line_no" t-value="line_no + 1"/>
-        </xpath>
         <xpath expr="//table[@name='invoice_line_table']//th" position="before">
             <th>Pos.</th>
+            <th t-if="not nopick">P. Alb.</th>
             <th>Código</th>
         </xpath>
         <xpath expr="//span[@t-field='l.name']/.." position="replace">
-            <td><span t-esc="line_no" class="text-center"/></td>
+            <td><span t-field="l.sequence" class="text-center"/></td>
+            <td t-if="not nopick"><span t-esc="l.sale_line_ids and l.sale_line_ids[0].sequence or ''" class="text-center"/></td>
             <td><span t-field="l.product_id.default_code"/></td>
             <td><span t-if="secatae and l.product_id.refcli">NOC: <span t-field="l.product_id.refcli"/><br/></span>
                 <span t-if="secatae and l.product_id.refprov">BloqueIdent: <span t-field="l.product_id.refprov"/><br/></span>
@@ -137,6 +139,15 @@
     <template id="report_invoice_document_secatae">
         <t t-call="web.html_container">
             <t t-set="secatae" t-value="True"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_invoice_document_not_pick">
+        <t t-call="web.html_container">
+            <t t-set="nopick" t-value="True"/>
             <t t-foreach="docs" t-as="o">
                 <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
             </t>

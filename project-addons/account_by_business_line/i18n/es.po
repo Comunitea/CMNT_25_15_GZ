@@ -41,12 +41,12 @@ msgstr "Etiquetas analíticas"
 #: code:addons/account_by_business_line/static/src/xml/account_reconciliation.xml:8
 #, python-format
 msgid "Business Line"
-msgstr "Linea de negocio"
+msgstr "Etiqueta analítica"
 
 #. module: account_by_business_line
 #: model:ir.model.fields,field_description:account_by_business_line.field_account_invoice_main_analytic_tag_id
 msgid "Business line"
-msgstr "Linea de negocio"
+msgstr "Etiqueta analítica"
 
 #. module: account_by_business_line
 #: model:ir.model,name:account_by_business_line.model_account_invoice
