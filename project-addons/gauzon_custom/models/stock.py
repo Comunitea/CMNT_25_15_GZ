@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions, _
 from odoo.addons import decimal_precision as dp
 
 
@@ -72,6 +72,23 @@ class StockPicking(models.Model):
         digits=dp.get_precision('Product Unit of Measure'))
     product_ids_count = fields.Integer('# Products',
                                        compute='_count_product_ids')
+    forced = fields.Boolean("Picking forced", compute="_get_forced")
+
+    @api.multi
+    def _get_forced(self):
+        for pick in self:
+            pick.forced = any(x.reserved_availability < x.quantity_done
+                              for x in pick.move_lines)
+
+    @api.multi
+    def button_validate(self):
+        self.ensure_one()
+        if self.forced and not self.\
+                user_has_groups('gauzon_custom.group_force_availability'):
+            raise exceptions.UserError(_('Cannot validate a forced picking, '
+                                         'please contact to profile with '
+                                         'access rights.'))
+        return super().button_validate()
 
     @api.multi
     def _count_product_ids(self):

@@ -33,6 +33,7 @@
                 'delivery', 'stock_picking_invoice_link',
                 'account_analytic_parent'],
     'data': [
+        'data/gauzon_custom_data.xml',
         'views/account_invoice_view.xml',
         'views/account_move_view.xml',
         'views/analytic_line_view.xml',

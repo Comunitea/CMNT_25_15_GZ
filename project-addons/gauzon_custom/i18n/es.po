@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-16 17:09+0000\n"
-"PO-Revision-Date: 2020-01-16 17:09+0000\n"
+"POT-Creation-Date: 2020-01-28 12:03+0000\n"
+"PO-Revision-Date: 2020-01-28 12:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,9 +31,20 @@ msgid "All assigned"
 msgstr "Todo asignado"
 
 #. module: gauzon_custom
+#: model:res.groups,name:gauzon_custom.group_force_availability
+msgid "Allow force availability"
+msgstr "Permitir forzar disponibilidad"
+
+#. module: gauzon_custom
 #: model:ir.model.fields,field_description:gauzon_custom.field_purchase_order_global_analytic_id
 msgid "Analytic account"
 msgstr "Cuenta analítica"
+
+#. module: gauzon_custom
+#: code:addons/gauzon_custom/models/stock.py:88
+#, python-format
+msgid "Cannot validate a forced picking, please contact to profile with access rights."
+msgstr "No puede validar un albarán forzado, por favor, contacte con un perfil con permisos de acceso."
 
 #. module: gauzon_custom
 #: model:ir.model.fields,field_description:gauzon_custom.field_account_analytic_line_account_credit
@@ -71,6 +82,11 @@ msgstr "Operación de empaquetado"
 #: model:ir.ui.view,arch_db:gauzon_custom.view_picking_internal_search_inherit_add_gb_partner
 msgid "Partner"
 msgstr "Empresa"
+
+#. module: gauzon_custom
+#: model:ir.model.fields,field_description:gauzon_custom.field_stock_picking_forced
+msgid "Picking forced"
+msgstr "Albarán forzado"
 
 #. module: gauzon_custom
 #: model:ir.model,name:gauzon_custom.model_stock_transfer_details_items

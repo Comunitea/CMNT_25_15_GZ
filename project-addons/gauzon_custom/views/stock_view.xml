@@ -19,11 +19,11 @@
             <field name="move_lines" position="after">
                 <div>
                     <group class="oe_left">
-                        <field name="all_assigned" class ="oe_inline" />
-                        <field name="product_uom_qty" class ="oe_inline" />
-                        <field name="reserved_availability" class ="oe_inline" />
-                        <field name="quantity_done" class ="oe_inline" />
-
+                        <field name="all_assigned" class="oe_inline"/>
+                        <field name="forced" class="oe_inline" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                        <field name="product_uom_qty" class="oe_inline"/>
+                        <field name="reserved_availability" class="oe_inline"/>
+                        <field name="quantity_done" class="oe_inline"/>
                     </group>
                 </div>
             </field>
