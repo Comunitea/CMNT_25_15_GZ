@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-16 14:14+0000\n"
-"PO-Revision-Date: 2020-01-16 14:14+0000\n"
+"POT-Creation-Date: 2020-01-29 09:47+0000\n"
+"PO-Revision-Date: 2020-01-29 09:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgid "<span>Notes:</span><br/>"
 msgstr "<span>Observaciones:</span><br/>"
 
 #. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_delivery_document_custom
+msgid "<span>PENDING TO CONFIRM - NOT VALID FOR SUPPLY</span>"
+msgstr "<span>PENDIENTE DE CONFIRMAR - NO VÁLIDO PARA SUMINISTRO</span>"
+
+#. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
 msgid "<span>Purchase manager:</span>"
 msgstr "<span>Responsable de Compra:</span>"
@@ -47,6 +52,11 @@ msgstr "<span>ENVIAR A:</span><br/>"
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
 msgid "<span>Sales department:</span>"
 msgstr "<span>Comercial Responsable:</span>"
+
+#. module: gauzon_reports
+#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+msgid "<span>THIS DOCUMENT IS NOT A FIRM ORDER</span>"
+msgstr "<span>ESTE DOCUMENTO NO ES UN PEDIDO EN FIRME</span>"
 
 #. module: gauzon_reports
 #: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom

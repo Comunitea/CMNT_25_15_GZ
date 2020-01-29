@@ -85,6 +85,9 @@
                     </div>
                 </div>
             </t>
+            <div class="watermark" style="position:absolute;opacity:0.25;font-size:7em;width:100%;text-align:center;z-index:1000;" t-if="o.state != 'done'">
+                <span>PENDING TO CONFIRM - NOT VALID FOR SUPPLY</span>
+            </div>
         </xpath>
         <xpath expr="//div[@name='customer_address']" position="replace"/>
         <xpath expr="//h2" position="replace"/>
