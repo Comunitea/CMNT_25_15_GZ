@@ -212,6 +212,15 @@ class ProductProduct(models.Model):
             return recs.name_get()
 
 
+class ProductTemplate(models.Model):
+
+    _inherit = "product.template"
+
+    refcli = fields.Char('Ref. Cliente', related="product_variant_ids.refcli")
+    refprov = fields.Char('Ref. Proveedor',
+                          related="product_variant_ids.refprov")
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 

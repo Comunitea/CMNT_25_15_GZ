@@ -123,6 +123,28 @@
             <field name="domain"></field>
         </record>
 
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                    <attribute name="filter_domain">['|','|','|','|','|',('default_code','ilike',self),('name','ilike',self),('barcode','ilike',self),('refprov','ilike',self),('refcli','ilike',self),('supplier_codes','ilike',self)]</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_search_form_view" model="ir.ui.view">
+            <field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_tmpl_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
 <!-- ************************* HERENCIAS *********************** -->
         <!-- INHERITED sale.orders -->
         <record model="ir.ui.view" id="view_edi_sale_order_form" >

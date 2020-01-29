@@ -51,30 +51,3 @@ class ProductTemplate(models.Model):
     supplier_codes = fields.Text(compute="_get_supplier_codes",
                                  string="Supplier codes",
                                  search="_search_bt_supp_code")
-
-
-class ProductProduct(models.Model):
-
-    _inherit = "product.product"
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        if not args:
-            args = []
-        recs = self.browse()
-        if name:
-            supps = self.env['product.supplierinfo'].\
-                search([('product_code', operator, name)])
-            if supps:
-                recs = supps.mapped('product_tmpl_id.product_variant_ids')
-
-        if not recs:
-            return super().name_search(name, args=args, operator=operator,
-                                       limit=limit)
-        else:
-            records = super().name_search(name, args=args, operator=operator,
-                                          limit=limit)
-            records = [x[0] for x in records]
-            records = self.browse(records)
-            recs += records
-            return recs.name_get()
