@@ -36,6 +36,7 @@
                         </div>
                     </div>
                 </t>
+                <t t-if="watermark" t-raw="watermark"/>
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_report_layout_standard')]" position="attributes">

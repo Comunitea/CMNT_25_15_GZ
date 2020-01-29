@@ -65,9 +65,11 @@
                     </div>
                 </div>
             </t>
-            <div class="watermark" style="position:absolute;opacity:0.25;font-size:7em;width:100%;text-align:center;z-index:1000;" t-if="doc.state in ('draft', 'cancel', 'sent')">
-                <span>THIS DOCUMENT IS NOT A FIRM ORDER</span>
-            </div>
+            <t t-set="watermark">
+                <div class="watermark" style="width: 100%; position:fixed;opacity:0.25;top:500px;font-size:7em;text-align:center;z-index:1000;" t-if="doc.state in ('draft', 'cancel', 'sent')">
+                    <span>THIS DOCUMENT IS NOT A FIRM ORDER</span>
+                </div>
+            </t>
         </xpath>
         <xpath expr="//t[@t-if='doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id
