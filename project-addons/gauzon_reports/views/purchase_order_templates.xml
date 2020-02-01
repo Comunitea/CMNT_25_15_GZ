@@ -63,6 +63,11 @@
                     </div>
                 </div>
             </t>
+            <t t-set="watermark">
+                <div class="watermark" style="width: 100%; position:fixed;opacity:0.25;top:500px;font-size:7em;text-align:center;z-index:1000;" t-if="o.state in ('draft', 'cancel', 'sent', 'to approve')">
+                    <span>THIS DOCUMENT IS NOT A FIRM ORDER</span>
+                </div>
+            </t>
         </xpath>
         <xpath expr="//div[@t-if='o.dest_address_id']/../.." position="replace"/>
         <xpath expr="//h2" position="replace"/>

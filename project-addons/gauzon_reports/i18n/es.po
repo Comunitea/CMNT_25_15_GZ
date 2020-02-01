@@ -54,7 +54,7 @@ msgid "<span>Sales department:</span>"
 msgstr "<span>Comercial Responsable:</span>"
 
 #. module: gauzon_reports
-#: model:ir.ui.view,arch_db:gauzon_reports.report_saleorder_document_custom
+#: model:ir.ui.view,arch_db:gauzon_reports.report_purchaseorder_document_custom
 msgid "<span>THIS DOCUMENT IS NOT A FIRM ORDER</span>"
 msgstr "<span>ESTE DOCUMENTO NO ES UN PEDIDO EN FIRME</span>"
 
