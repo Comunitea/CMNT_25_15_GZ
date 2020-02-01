@@ -27,20 +27,18 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     @api.multi
-    def action_numbering(self):
-        for purchase in self:
-            cont = 1
-            order_lines = self.env['purchase.order.line'].\
-                search([('order_id', '=', purchase.id)], order="id asc")
-            for line in order_lines:
-                line.write({'sequence': cont})
-                moves = self.env['stock.move'].\
-                    search([('purchase_line_id', '=', line.id)])
-                if moves:
-                    moves.write({'sequence': cont})
-                cont += 1
-
-        return True
+    def _create_picking(self):
+        res = super()._create_picking()
+        for order in self:
+            if any([ptype in ['product', 'consu'] for ptype in
+                    order.order_line.mapped('product_id.type')]):
+                picking = order.picking_ids.filtered(
+                    lambda x: x.state not in ('done', 'cancel'))[0]
+                for move in picking.move_lines:
+                    if move.purchase_line_id:
+                        move.write({'sequence':
+                                    move.purchase_line_id.sequence})
+        return res
 
 
 class PurchaseOrderLine(models.Model):

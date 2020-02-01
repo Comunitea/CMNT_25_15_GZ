@@ -43,21 +43,6 @@ class SaleOrder(models.Model):
     amount_discounted = fields.\
         Monetary(compute="_amount_extra", string='Discounted')
 
-    @api.multi
-    def action_numbering(self):
-        for sale in self:
-            cont = 1
-            order_lines = self.env['sale.order.line'].\
-                search([('order_id', '=', sale.id)], order="id asc")
-            for line in order_lines:
-                line.write({'sequence': cont})
-                moves = self.env['stock.move'].\
-                    search([('sale_line_id', '=', line.id)])
-                if moves:
-                    moves.write({'sequence': cont})
-                cont += 1
-        return True
-
 
 class SaleOrderLine(models.Model):
 

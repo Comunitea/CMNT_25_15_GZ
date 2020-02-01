@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="report_purchaseorder_document_custom" inherit_id="purchase.report_purchaseorder_document">
+    <template id="report_purchaseorder_document_custom" inherit_id="purchase_order_line_sequence.report_purchaseorder_document_sequence">
         <xpath expr="//t[@t-set='o']" position="after">
             <t t-set="title">
                 <br/><strong>ORDER Nº: <span t-field="o.name"/></strong>
@@ -79,19 +79,14 @@
             <attribute name="t-field">line.product_uom.edi_code</attribute>
         </xpath>
         <xpath expr="//thead/.." position="before">
-            <t t-set="line_no" t-value="1"/>
-            <p t-if="not env.context.get('proforma', False) and not is_pro_forma"><strong>Dear Sirs:</strong><br/>We are pleased to send you our purchase order for following materials:</p>
+            <p><strong>Dear Sirs:</strong><br/>We are pleased to send you our purchase order for following materials:</p>
         </xpath>
-        <xpath expr="//tr[@t-foreach='o.order_line']" position="inside">
-            <t t-set="line_no" t-value="line_no + 1"/>
-        </xpath>
-        <xpath expr="//span[@t-field='line.name']/.." position="before">
-            <td><span t-esc="line_no" class="text-center"/></td>
+        <xpath expr="//span[@t-field='line.sequence2']/.." position="after">
             <td><span t-field="line.product_id.default_code"/></td>
         </xpath>
-        <xpath expr="//thead//th" position="before">
-            <th>Pos.</th>
-            <th>Code</th>
+        <xpath expr="//thead//th" position="replace">
+            <th><strong>Pos.</strong></th>
+            <th><strong>Code</strong></th>
         </xpath>
         <xpath expr="//p[@t-field='o.notes']" position="after">
             <div class="col-xs-4" style="border: 1px solid black; padding: 4px" t-if="o.picking_type_id.warehouse_id.partner_id">
