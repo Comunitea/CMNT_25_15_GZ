@@ -60,6 +60,14 @@
                       <span t-field="o.num_contract"/>
                     </div>
                 </div>
+                <div class="row mt2" t-if="o.origin">
+                    <div class="col-xs-3">
+                      Origin:
+                    </div>
+                    <div class="col-xs-9">
+                      <span t-field="o.origin"/>
+                    </div>
+                </div>
                 <div class="row mt2" t-if="o.carrier_id">
                     <div class="col-xs-3">
                       Freight:
