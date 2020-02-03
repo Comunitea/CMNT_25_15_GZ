@@ -24,6 +24,7 @@ from odoo import models, fields
 class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
+    _order = 'id desc'
 
     name = fields.Char(size=64)
     origin = fields.Char(size=64)

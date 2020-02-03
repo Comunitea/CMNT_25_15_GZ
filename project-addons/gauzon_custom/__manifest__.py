@@ -31,7 +31,7 @@
     'depends': ['product', 'sale_stock', 'account', 'analytic',
                 'purchase_discount', 'sale_disable_inventory_check',
                 'delivery', 'stock_picking_invoice_link',
-                'account_analytic_parent'],
+                'account_analytic_parent', 'purchase_order_line_sequence'],
     'data': [
         'data/gauzon_custom_data.xml',
         'views/account_invoice_view.xml',
