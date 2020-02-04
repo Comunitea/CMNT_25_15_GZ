@@ -12,4 +12,19 @@
         </field>
     </record>
 
+    <record id="view_product_product_purchase_buttons_from" model="ir.ui.view">
+        <field name="name">product.product.purchase.button.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+        <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+               <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
+                   type="action" icon="fa-shopping-cart">
+                   <field string="Purchases" name="purchase_count" widget="statinfo"/>
+               </button>
+            </button>
+        </field>
+    </record>
+
 </odoo>

@@ -205,8 +205,6 @@
                     <field name="refcli"/>
                     <field name="refprov"/>
                 </field>
-                <field name="default_code" position="replace">
-                </field>
             </field>
         </record>
           <!-- INHERITED product.product search -->
