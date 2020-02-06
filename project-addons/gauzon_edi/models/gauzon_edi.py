@@ -123,8 +123,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        self.write({'funcion_mode': '0'})
         super()._action_confirm()
+        self.write({'funcion_mode': '0'})
 
     @api.multi
     def _prepare_invoice(self):
