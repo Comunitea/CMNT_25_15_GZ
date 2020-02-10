@@ -46,3 +46,12 @@ class AccountInvoice(models.Model):
         res = super()._prepare_invoice_line_from_po_line(line)
         res['sequence'] = line.sequence
         return res
+
+
+class AcountInvoiceLine(models.Model):
+
+    _inherit = "account.invoice.line"
+
+    sale_line_sequence = fields.Integer("So seq.",
+                                        related="sale_line_ids.sequence",
+                                        readonly=True)

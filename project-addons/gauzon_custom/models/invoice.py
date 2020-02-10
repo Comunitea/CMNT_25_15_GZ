@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class AccountInvoice(models.Model):
@@ -28,3 +28,10 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(size=64)
     origin = fields.Char(size=64)
+
+    @api.multi
+    def write(self, vals):
+        if 'date' in vals and not vals['date'] \
+                and vals.get('state') == 'draft':
+            del vals['date']
+        return super().write(vals)
