@@ -9,6 +9,9 @@
             <field name="reference" position="replace">
                 <field name="reference"/>
             </field>
+            <field name="amount_total_signed" position="before">
+                <field name="amount_untaxed_signed" string="Untaxed" sum="Untaxed Total"/>
+            </field>
         </field>
     </record>
 
@@ -19,6 +22,9 @@
         <field name="arch" type="xml">
             <field name="date_invoice" position="after">
                 <field name="date"/>
+            </field>
+            <field name="amount_total_signed" position="before">
+                <field name="amount_untaxed_signed" string="Untaxed" sum="Untaxed Total"/>
             </field>
         </field>
     </record>
