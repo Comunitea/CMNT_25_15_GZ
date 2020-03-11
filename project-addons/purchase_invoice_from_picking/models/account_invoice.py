@@ -63,7 +63,7 @@ class AccountInvoice(models.Model):
 
         new_line = self.env['account.invoice.line'].new(vals)
 
-        self.invoice_line_ids += new_line
+        self.invoice_line_ids |= new_line
         return new_line
 
     def _prepare_supplier_invoice_lines_from_receipt(self):

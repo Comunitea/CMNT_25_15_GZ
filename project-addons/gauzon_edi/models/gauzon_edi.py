@@ -198,7 +198,7 @@ class ProductProduct(models.Model):
         recs = self.browse()
         if name:
             recs = self.search([('refcli', operator, name)])
-            recs += self.search([('refprov', operator, name)])
+            recs |= self.search([('refprov', operator, name)])
 
         if not recs:
             return super().name_search(name, args=args, operator=operator,
@@ -208,7 +208,7 @@ class ProductProduct(models.Model):
                                           limit=limit)
             records = [x[0] for x in records]
             records = self.browse(records)
-            recs += records
+            recs |= records
             return recs.name_get()
 
 
