@@ -18,7 +18,8 @@
 #
 ##############################################################################
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class AccountInvoice(models.Model):
@@ -28,6 +29,26 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(size=64)
     origin = fields.Char(size=64)
+
+    @api.multi
+    def _check_duplicate_supplier_reference(self):
+        for invoice in self:
+            if invoice.type in ('in_invoice', 'in_refund') \
+                    and invoice.reference:
+                domain = [('type', '=', invoice.type),
+                          ('reference', '=', invoice.reference),
+                          ('company_id', '=', invoice.company_id.id),
+                          ('commercial_partner_id', '=',
+                           invoice.commercial_partner_id.id),
+                          ('id', '!=', invoice.id)]
+                if self.date_invoice:
+                    year = self.date_invoice[:4]
+                    domain.extend([('date_invoice', '>=', year + '-01-01'),
+                                   ('date_invoice', '<=', year + '-12-31')])
+                if self.search(domain):
+                    raise UserError(_("Duplicated vendor reference detected. "
+                                      "You probably encoded twice the same "
+                                      "vendor bill/credit note."))
 
     @api.multi
     def write(self, vals):
