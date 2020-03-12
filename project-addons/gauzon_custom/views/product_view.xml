@@ -35,4 +35,8 @@
         </field>
     </record>
 
+    <menuitem id="mrp.menu_mrp_product_form"
+            action="product.product_normal_action"
+            parent="mrp.menu_mrp_bom"/>
+
 </odoo>

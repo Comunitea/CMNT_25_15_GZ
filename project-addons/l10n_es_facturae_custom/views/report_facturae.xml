@@ -20,7 +20,10 @@
             </DeliveryNote>
         </xpath>
         <xpath expr="//InvoiceAdditionalInformation" position="attributes">
-            <attribute name="t-esc">invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note') and ('\n'.join([x.name + ': ' + x.note for x in invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note')]) + '\n' + invoice.comment) or invoice.comment</attribute>
+            <attribute name="t-esc">(invoice.fiscal_position_id.note and invoice.fiscal_position_id.note + '\n' or '') + (invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note') and ('\n'.join([x.name + ': ' + x.note for x in invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note')])) or '') + (invoice.comment or '')</attribute>
+        </xpath>
+        <xpath expr="//AdditionalData" position="attributes">
+            <attribute name="t-if">invoice.fiscal_position_id.note or invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note') or invoice.comment</attribute>
         </xpath>
     </template>
 

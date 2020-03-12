@@ -40,3 +40,9 @@ class PurchaseOrder(models.Model):
         else:
             self.carrier_id = self.partner_id.property_delivery_carrier_id.id
         return res
+
+    @api.multi
+    def action_view_invoice(self):
+        res = super().action_view_invoice()
+        del res['context']['default_reference']
+        return res

@@ -35,3 +35,16 @@ class AccountInvoice(models.Model):
                 and vals.get('state') == 'draft':
             del vals['date']
         return super().write(vals)
+
+    @api.onchange('purchase_id')
+    def purchase_order_change(self):
+        has_value = False
+        if self.purchase_id and self.reference:
+            old_ref = self.reference
+            has_value = True
+        res = super().purchase_order_change()
+        if has_value:
+            self.reference = old_ref
+        else:
+            self.reference = False
+        return res
