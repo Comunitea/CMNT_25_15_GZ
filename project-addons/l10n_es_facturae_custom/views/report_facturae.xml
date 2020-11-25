@@ -37,6 +37,12 @@
                 <EquivalentInEuros t-esc="'%.2f' % (line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount'] * euro_rate / currency_rate)"/>
             </TaxAmount>
         </xpath>
+        <xpath expr="//t[@t-value='amount_tax + tax_line.amount']" position="attributes">
+            <attribute name="t-value">amount_tax + tax_line.amount_total</attribute>
+        </xpath>
+        <xpath expr="//t[@t-value='amount_tax_withheld - tax_line.amount']" position="attributes">
+            <attribute name="t-value">amount_tax_withheld - tax_line.amount_total</attribute>
+        </xpath>
     </template>
 
     <template id="entity_commercial" inherit_id="l10n_es_facturae.entity">
