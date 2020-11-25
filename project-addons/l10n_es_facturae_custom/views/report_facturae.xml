@@ -43,6 +43,18 @@
         <xpath expr="//t[@t-value='amount_tax_withheld - tax_line.amount']" position="attributes">
             <attribute name="t-value">amount_tax_withheld - tax_line.amount_total</attribute>
         </xpath>
+        <xpath expr="//Invoice/TaxesOutputs//TaxAmount/TotalAmount" position="attributes">
+            <attribute name="t-esc">'%.2f' % tax_line.amount_total</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesOutputs//TaxAmount/EquivalentInEuros" position="attributes">
+            <attribute name="t-esc">'%.2f' % (tax_line.amount_total * euro_rate / currency_rate)</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesWithheld//TaxAmount/TotalAmount" position="attributes">
+            <attribute name="t-esc">'%.2f' % (-tax_line.amount_total)</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesWithheld//TaxAmount/EquivalentInEuros" position="attributes">
+            <attribute name="t-esc">'%.2f' % (-tax_line.amount_total * euro_rate / currency_rate)</attribute>
+        </xpath>
     </template>
 
     <template id="entity_commercial" inherit_id="l10n_es_facturae.entity">
