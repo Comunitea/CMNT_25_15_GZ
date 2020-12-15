@@ -31,6 +31,9 @@
                 <EquivalentInEuros t-esc="'%.2f' % (-line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount'] * euro_rate / currency_rate)"/>
             </TaxAmount>
         </xpath>
+        <xpath expr="//t[@t-set='subtotal_gross']" position="attributes">
+            <attribute name="t-value">line.company_currency_id.round(line.quantity * line.price_unit)</attribute>
+        </xpath>
         <xpath expr="//Items//TaxesOutputs/t/Tax/TaxAmount" position="replace">
             <TaxAmount>
                 <TotalAmount t-esc="'%.2f' % line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount']"/>
