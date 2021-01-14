@@ -25,59 +25,38 @@
         <xpath expr="//AdditionalData" position="attributes">
             <attribute name="t-if">invoice.fiscal_position_id.note or invoice.invoice_line_ids.mapped('move_line_ids.picking_id').filtered('note') or invoice.comment</attribute>
         </xpath>
-        <xpath expr="//Invoice//TaxesOutputs/t/Tax/TaxableBase" position="replace">
-            <TaxableBase>
-                <TotalAmount t-esc="'%.2f' % round(tax_line.base, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((tax_line.base * euro_rate / currency_rate), 2)"/>
-            </TaxableBase>
-        </xpath>
-        <xpath expr="//Invoice//TaxesOutputs/t/Tax/TaxAmount" position="replace">
-            <TaxAmount>
-                <TotalAmount t-esc="'%.2f' % round(tax_line.amount, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((tax_line.amount * euro_rate / currency_rate), 2)"/>
-            </TaxAmount>
-        </xpath>
-        <xpath expr="//Invoice//TaxesWithheld/t/Tax/TaxableBase" position="replace">
-            <TaxableBase>
-                <TotalAmount t-esc="'%.2f' % round(tax_line.base, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((tax_line.base * euro_rate / currency_rate), 2)"/>
-            </TaxableBase>
-        </xpath>
-        <xpath expr="//Invoice//TaxesWithheld/t/Tax/TaxAmount" position="replace">
-            <TaxAmount>
-                <TotalAmount t-esc="'%.2f' % round(-tax_line.amount, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((-tax_line.amount * euro_rate / currency_rate), 2)"/>
-            </TaxAmount>
-        </xpath>
-        <xpath expr="//TotalTaxOutputs" position="attributes">
-            <attribute name="t-esc">'%.2f' % round(amount_tax, 2)</attribute>
-        </xpath>
-        <xpath expr="//TotalTaxesWithheld" position="attributes">
-            <attribute name="t-esc">'%.2f' % round(amount_tax_withheld, 2)</attribute>
-        </xpath>
-        <xpath expr="//Items//TaxesWithheld/t/Tax/TaxableBase" position="replace">
-            <TaxableBase>
-                <TotalAmount t-esc="'%.2f' % round(line.price_subtotal, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((line.price_subtotal * euro_rate / currency_rate), 2)"/>
-            </TaxableBase>
-        </xpath>
         <xpath expr="//Items//TaxesWithheld/t/Tax/TaxAmount" position="replace">
             <TaxAmount>
-                <TotalAmount t-esc="'%.2f' % round((line.price_subtotal * (-line_tax.amount)), 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((line.price_subtotal * (-line_tax.amount) * euro_rate / currency_rate), 2)"/>
+                <TotalAmount t-esc="'%.2f' % -line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount']"/>
+                <EquivalentInEuros t-esc="'%.2f' % (-line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount'] * euro_rate / currency_rate)"/>
             </TaxAmount>
         </xpath>
-        <xpath expr="//Items//TaxesOutputs/t/Tax/TaxableBase" position="replace">
-            <TaxableBase>
-                <TotalAmount t-esc="'%.2f' % round(line.price_subtotal, 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((line.price_subtotal * euro_rate / currency_rate), 2)"/>
-            </TaxableBase>
+        <xpath expr="//t[@t-set='subtotal_gross']" position="attributes">
+            <attribute name="t-value">line.company_currency_id.round(line.quantity * line.price_unit)</attribute>
         </xpath>
         <xpath expr="//Items//TaxesOutputs/t/Tax/TaxAmount" position="replace">
             <TaxAmount>
-                <TotalAmount t-esc="'%.2f' % round((line.price_subtotal * (line_tax.amount) / 100), 2)"/>
-                <EquivalentInEuros t-esc="'%.2f' % round((line.price_subtotal * (line_tax.amount) / 100 * euro_rate / currency_rate), 2)"/>
+                <TotalAmount t-esc="'%.2f' % line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount']"/>
+                <EquivalentInEuros t-esc="'%.2f' % (line_tax.with_context(round=True).compute_all(line.price_unit * (1 - (line.discount or 0.0) / 100.0), invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes'][0]['amount'] * euro_rate / currency_rate)"/>
             </TaxAmount>
+        </xpath>
+        <xpath expr="//t[@t-value='amount_tax + tax_line.amount']" position="attributes">
+            <attribute name="t-value">amount_tax + tax_line.amount_total</attribute>
+        </xpath>
+        <xpath expr="//t[@t-value='amount_tax_withheld - tax_line.amount']" position="attributes">
+            <attribute name="t-value">amount_tax_withheld - tax_line.amount_total</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesOutputs//TaxAmount/TotalAmount" position="attributes">
+            <attribute name="t-esc">'%.2f' % tax_line.amount_total</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesOutputs//TaxAmount/EquivalentInEuros" position="attributes">
+            <attribute name="t-esc">'%.2f' % (tax_line.amount_total * euro_rate / currency_rate)</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesWithheld//TaxAmount/TotalAmount" position="attributes">
+            <attribute name="t-esc">'%.2f' % (-tax_line.amount_total)</attribute>
+        </xpath>
+        <xpath expr="//Invoice/TaxesWithheld//TaxAmount/EquivalentInEuros" position="attributes">
+            <attribute name="t-esc">'%.2f' % (-tax_line.amount_total * euro_rate / currency_rate)</attribute>
         </xpath>
     </template>
 
