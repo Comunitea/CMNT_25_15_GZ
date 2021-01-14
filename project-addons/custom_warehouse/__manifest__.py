@@ -20,18 +20,20 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move Extended',
+    'name': 'Custom Warehouse',
     'version': '11.0.0.0.1',
     'category': 'general',
     'description': """
-        Personalizaciones para mejorar el control de los stock moves.
+        Personalizaciones para almacén
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
+    'depends': ['stock', 'purchase', 'sale_stock', 'purchase_requisition_extended'],
     'data': [
         'views/stock_move_view.xml',
         'views/stock_picking_view.xml',
+        'views/sale_view.xml',
+        'views/res_partner.xml',
     ],
     'installable': True,
 }

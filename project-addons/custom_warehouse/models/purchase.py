@@ -19,19 +19,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move Extended',
-    'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Personalizaciones para mejorar el control de los stock moves.
-    """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-    ],
-    'installable': True,
-}
+
+from odoo import models, fields, api, exceptions, _
+from odoo.addons import decimal_precision as dp
+from odoo.tools.float_utils import float_is_zero, float_compare
+
+import logging
+_logger = logging.getLogger(__name__)
+
+class PurchaseOrderLine(models.Model):
+    _inherit = "purchase.order.line"
+
+    overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
+
+    def _make_po_select_supplier(self, values, suppliers):
+        """ Method intended to be overridden by customized modules to implement any logic in the
+            selection of supplier.
+        """
+        return suppliers[0]
+
+    @api.multi
+    def _prepare_stock_moves(self, picking):
+        res = super()._prepare_stock_moves(picking)
+        for val in res:
+            val['overprocess_by_supplier'] = self.overprocess_by_supplier
+        return res
+

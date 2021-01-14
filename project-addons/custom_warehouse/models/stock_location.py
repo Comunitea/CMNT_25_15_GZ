@@ -19,19 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move Extended',
-    'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Personalizaciones para mejorar el control de los stock moves.
-    """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-    ],
-    'installable': True,
-}
+
+from odoo import models, fields, api, exceptions, _
+from odoo.addons import decimal_precision as dp
+
+
+class ProductChangeQuantity(models.TransientModel):
+    _inherit = "stock.change.product.qty"
+
+    location_id = fields.Many2one(domain="[('usage', 'in', ['view', 'internal'])]")
+
+
+class StockLocation(models.Model):
+    _inherit = 'stock.location'

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    Copyright (C) 2020-TODAY
+#    Copyright (C) 2004-TODAY
 #    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
 #    All Rights Reserved
 #    $Kiko Sánchez$
@@ -19,19 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move Extended',
-    'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Personalizaciones para mejorar el control de los stock moves.
-    """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-    ],
-    'installable': True,
-}
+
+from odoo import models, fields, api, _
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    purchase_ids = fields.One2many(comodel_name='purchase.order', inverse_name="sale_id", string="Purchase Order", help="Purchase orders created from asociated purchase requistion")
+
+    @api.multi
+    def open_puchase_ids(self):
+        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action['domain'] = [('id', 'in', self.purchase_ids.ids)]
+        return action
+
+    @api.multi
+    def action_cancel(self):
+        domain =[('sale_id', 'in', self.ids), ('state', 'in', ['draft', 'in_progress', 'open'])]
+        self.env['purchase.requisition'].search(domain).action_cancel()
+        return super().action_cancel()
+

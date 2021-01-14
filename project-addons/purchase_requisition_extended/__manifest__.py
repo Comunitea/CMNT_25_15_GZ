@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    Copyright (C) 2020-TODAY
+#    Copyright (C) 2004-TODAY
 #    Comunitea Servicios Tecnológicos S.L. (https://www.comunitea.com)
 #    All Rights Reserved
 #    $Kiko Sánchez$
@@ -20,18 +20,15 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move Extended',
+    'name': 'Purchase Requisition Extended',
     'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Personalizaciones para mejorar el control de los stock moves.
-    """,
+    'category': 'Purchases',
+    'description': """Genera líneas de compra para cada seller, proponiendo la primera""",
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-    ],
+    'depends': ['stock', 'product', 'purchase', 'purchase_discount', 'purchase_requisition'],
+    'data': ['views/purchase_views.xml',
+             'views/sale_views.xml',
+             'views/purchase_requisition.xml'],
     'installable': True,
 }
