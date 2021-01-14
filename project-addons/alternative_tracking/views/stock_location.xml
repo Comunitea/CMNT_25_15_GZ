@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="stock_location_view_tree2_editable" model="ir.ui.view">
+        <field name="name">stock.location.tree2.editable</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_tree2" />
+        <field name="arch" type="xml">
+            <field name="usage" position="after">
+                <field name="removal_priority" />
+            </field>
+        </field>
+    </record>
+    <record id="view_location_search_wh" model="ir.ui.view">
+        <field name="name">stock.location.search.wh</field>
+        <field name="inherit_id" ref="stock.view_location_search" />
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Priority"
+                        name="by_kanban_priority"
+                        domain="[]"
+                        context="{'group_by':'removal_priority'}"
+                    />
+                    <filter
+                        string="Pasillo"
+                        name="groupby_product_id"
+                        domain="[]"
+                        context="{'group_by': 'posx'}"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_inventory_form_at" model="ir.ui.view">
+        <field name="name">stock.inventory.form.at</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <button name="action_start" position="after">
+                <button name="action_start_serial" states="draft" string="Start Serial Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
+            </button>
+            <field name="filter" position="after">
+                <field name="inventory_type" readonly="1"/>
+            </field>
+            <xpath expr="//page/field[@name='line_ids']/.." position="attributes">
+                <attribute name="attrs">{'invisible': [('inventory_type', '=', 'serial')]}</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='move_ids']/.." position="attributes">
+                <attribute name="attrs">{'invisible': [('state', '!=', 'done')]}</attribute>
+            </xpath>
+            <field name="product_uom" position="after">
+                <field name="lot_ids" widget="many2many_tags" readonly="1" attributes="{'column_invisible': [('inventory_type', '!=', 'serial')]}"/>
+            </field>
+            <xpath expr="//notebook" position="inside">
+                <page string="Serial Inventory Details" attrs="{'invisible': [('inventory_type', '=', 'qty')]}">
+                    <field name="available_lot_ids" context="{'default_inventory_id': id, 'default_location_id': location_id, 'default_product_id': product_id}">
+                        <tree string="Serial numbers Moves" decoration-success="not to_delete" decoration-danger="to_delete" editable="top">
+                            <field name="product_id" create="0"/>
+                            <field name="location_id" create="0"/>
+                            <field name="create_date" invisible="1" />
+                            <field name="prod_lot_id" domain="[('location_id', 'child_of', parent.location_id)]"/>
+                            <field name="lot_name"/>
+                            <field name="to_delete" invisible="1" />
+                            <button name="alternate_to_delete" attrs="{'invisible': [('parent.state', '=', 'done')]}" string="Alternate to delete lot" type="object" icon="fa-chain-broken" options="{&quot;warn&quot;: true}"/>
+
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

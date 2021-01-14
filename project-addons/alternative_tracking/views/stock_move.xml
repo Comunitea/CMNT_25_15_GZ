@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<record id="view_stock_move_line_operation_tree_at" model="ir.ui.view">
+        <field name="name">Stock Move Line Alternative Tracking</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree" />
+        <field name="arch" type="xml">
+            <field name="product_uom_id" position="after">
+                <field name="virtual_tracking" invisible="1" />
+                <field name="track_from_line" invisible="1" />
+                <button
+                    name="action_open_tracking_form"
+                    string="Open tracking"
+                    type="object"
+                    icon="fa-barcode"
+                    attrs="{'invisible': ['|', ('virtual_tracking', '=', False), ('virtual_tracking', '=', True), ('track_from_line', '=', False)]}"
+                />
+            </field>
+        </field>
+</record>
+
+
+<record id="stock_move_line_tracking_form" model="ir.ui.view">
+        <field name="name">Stock Move Line Tracking Form Tracking</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">9999</field>
+        <field name="arch" type="xml">
+             <form string="Move Detail">
+                 <header>
+                     <field name="state" widget="statusbar" readonly="1" />
+                 </header>
+                 <group attrs="{'invisible': [('state', '=', 'done')]}">
+                    <group>
+                         <field name="location_id" invisible="0" readonly="1" />
+                        <field name="location_dest_id" invisible="0" />
+                    </group>
+                    <group>
+                       <field name="picking_id" invisible="0" readonly="1" />
+                        <field name="is_locked" invisible="0" readonly="1" />
+                    </group>
+                </group>
+                    <group attrs="{'invisible': [('state', '=', 'done')]}">
+                        <group>
+                            <field name="product_id" readonly="1" />
+                            <label for="product_qty" />
+                            <div class="o_row">
+                                <span><field
+                                    name="product_qty"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                                <span><field
+                                    name="product_uom_id"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="qty_done" />
+                            <div class="o_row">
+                                <span><field
+                                    name="qty_done"
+                                    attrs="{'readonly': [('state', '=', 'done')]}"
+                                    nolabel="1"
+                                /></span>
+                                <span><field
+                                    name="product_uom_id"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                            </div>
+
+                        </group>
+                     </group>
+                     <group
+                    string="Tracking"
+                    attrs="{'invisible': [('virtual_tracking','=', False)]}"
+                >
+                        <group invisible="0">
+                            <group>
+                                <field name="track_from_line" />
+                                <field name="picking_type_use_existing_lots" />
+                            </group>
+                            <group>
+                                <field name="virtual_tracking" />
+                                <field
+                                name="available_serial_ids"
+                                nolabel="1"
+                                widget="many2many_tags"
+                            />
+                            </group>
+                        </group>
+
+                        <field
+                        name="lot_ids_string"
+                        nolabel="1"
+                        attrs="{'readonly': [('state', '=', 'done')],
+                           'invisible': ['|', '|', ('virtual_tracking','=', False), ('state', '=', 'done'), ('picking_type_use_existing_lots', '=', True)]}"
+                    />
+                        <field
+                        name="lot_ids"
+                        nolabel="1"
+                        widget="many2many_tags"
+                        attrs="{'readonly': [('state', '=', 'done')],
+                               'invisible': [('lot_ids', '=', []), ('available_serial_ids', '=', [])]}"
+                        domain="[('id', 'in', available_serial_ids)]"
+                    />
+                    </group>
+                    <footer class="oe_edit_only">
+                        <button
+                        string="Apply"
+                        type="object"
+                        name="apply_lot_ids_string"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|', ('lot_ids_string', '=', ''), ('picking_type_use_existing_lots', '=', True)]}"
+                    />
+                        <button string="Confirm" special="save" class="oe_highlight" />
+                        <button string="Discard" special="cancel" />
+                    </footer>
+            </form>
+        </field>
+</record>
+<record id="view_stock_move_operations_at" model="ir.ui.view">
+    <field name="name">stock.move.operations.form.at</field>
+    <field name="model">stock.move</field>
+    <field name="inherit_id" ref="stock.view_stock_move_operations" />
+    <field name="arch" type="xml">
+        <field name="move_line_ids" position="before">
+            <group
+                    string="Tracking"
+                    attrs="{'invisible': [('virtual_tracking','=', False)]}"
+                >
+                <group invisible="1">
+                    <group>
+                        <field name="track_from_line" />
+                        <field name="use_existing_lots" />
+                    </group>
+                    <group>
+                        <field name="virtual_tracking" />
+                        <field
+                                name="available_serial_ids"
+                                nolabel="1"
+                                widget="many2many_tags"
+                            />
+                    </group>
+
+                </group>
+            </group>
+            <field
+                    name="lot_ids_string"
+                    nolabel="1"
+                    attrs="{'readonly': [('state', '=', 'done')],
+                           'invisible': ['|', '|', ('virtual_tracking','=', False), ('state', '=', 'done'), ('use_existing_lots', '=', True)]}"
+                />
+        </field>
+        <field name="move_line_ids" position="after">
+             <field
+                    name="lot_ids"
+                    nolabel="1"
+                    widget="many2many_tags"
+                    attrs="{'readonly': [('state', '=', 'done')],
+                               'invisible': [('lot_ids', '=', []), ('available_serial_ids', '=', [])]}"
+                    domain="[('id', 'in', available_serial_ids)]"
+                />
+        </field>
+        <xpath expr="//footer" position="inside">
+            <button
+                    string="Apply"
+                    type="object"
+                    name="apply_lot_ids_string"
+                    attrs="{'invisible': ['|', ('lot_ids_string', '=', ''), ('use_existing_lots', '=', True)]}"
+                />
+        </xpath>
+
+    </field>
+</record>
+
+<record id="view_stock_move_lot_names" model="ir.ui.view">
+            <field name="name">stock.move.lot_name.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">9999</field>
+            <field name="arch" type="xml">
+                <form string="Move Detail">
+                    <field name="state" invisible="1" />
+                    <field name="location_id" invisible="1" />
+                    <field name="location_dest_id" invisible="1" />
+                    <field name="picking_id" invisible="1" />
+                    <field name="is_locked" invisible="1" />
+                    <!--field name="picking_type_entire_packs" invisible="1" /-->
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="1" />
+                            <label for="product_uom_qty" />
+                            <div class="o_row">
+                                <span><field
+                                    name="product_uom_qty"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                                <span><field
+                                    name="product_uom"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                            </div>
+                            <label for="quantity_done" />
+                            <div class="o_row">
+                                <span><field
+                                    name="quantity_done"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                                <span
+                                attrs="{'invisible': [('state', '=', 'done')]}"
+                            > / </span>
+                                <span><field
+                                    name="reserved_availability"
+                                    nolabel="1"
+                                    attrs="{'invisible': [('state', '=', 'done')]}"
+                                /></span>
+                                <span><field
+                                    name="product_uom"
+                                    readonly="1"
+                                    nolabel="1"
+                                /></span>
+                            </div>
+
+
+                        </group>
+                    </group>
+                    <!--field name="lot_name_ids"
+                           attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
+                           context="{'default_move_id': id,
+                                     'default_product_id': product_id,
+                                     'default_usage': usage}">
+                           <tree>
+                                <field name="name"/>
+                           </tree>
+                    </field-->
+
+                    <footer class="oe_edit_only">
+                        <button
+                        string="Apply"
+                        name="apply_stock_lot_name"
+                        class="oe_highlight"
+                    />
+                        <button string="Confirm" special="save" class="oe_highlight" />
+                        <button string="Discard" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+    </record>
+</odoo>
