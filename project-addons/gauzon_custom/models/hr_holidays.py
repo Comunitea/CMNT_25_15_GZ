@@ -8,3 +8,9 @@ class Holidays(models.Model):
     _inherit = "hr.holidays"
 
     state = fields.Selection(default="draft")
+
+    @api.multi
+    def _prepare_create_by_category(self, employee):
+        values = super()._prepare_create_by_category(employee)
+        values['state'] = 'confirm'
+        return values
