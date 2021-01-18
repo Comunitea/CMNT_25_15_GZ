@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_formcw" model="ir.ui.view">
+            <field name="name">sale.order.form.gq</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                     <button name="action_picking_move_tree" class="oe_stat_button" icon="fa-arrows-v"
+                             type="object" help="List view of operations">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Operations</span>
+                            </div>
+                    </button>
+                </xpath>
+
+           </field>
+        </record>
+
+         <record id="view_order_formcw" model="ir.ui.view">
+            <field name="name">sale.order.form.gq</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_delivery']" position="before">
+                     <button name="action_picking_move_tree" class="oe_stat_button" icon="fa-arrows-v"
+                             type="object" help="List view of operations">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Operations</span>
+                            </div>
+                    </button>
+                </xpath>
+                <field name="picking_policy" position="after">
+                    <field name="destination_code_id"/>
+                </field>
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                    <field name="destination_code_id" groups="sale_stock.group_route_so_lines" attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                    <field name="destination_code_id" groups="sale_stock.group_route_so_lines"
+                           attrs="{'readonly': [('state', 'in', ['sale', 'done', 'cancel'])],
+                           'column_invisible': [('parent.destination_code_id', '=', True)]}" options="{'no_create': True}"/>
+                </xpath>
+           </field>
+        </record>
+        <!--record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record-->
+    </data>
+</odoo>

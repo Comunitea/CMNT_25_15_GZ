@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+     <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit_at</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form" />
+            <field name="arch" type="xml">
+                <field name="tracking" position="after">
+                    <field
+                    name="virtual_tracking"
+                    attrs="{'invisible': ['|', ('tracking', '!=', 'none'), ('type', 'in', ['service', 'digital'])]}"
+                />
+                </field>
+            </field>
+     </record>
+    <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit_at</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="before">
+                    <button
+                    class="oe_stat_button"
+                    name="action_view_serials"
+                    type="object"
+                    icon="fa-barcode"
+                    help="Open serial list"
+                >
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field
+                                name="tracking_count"
+                                widget="statinfo"
+                                nolabel="1"
+                                class="mr4"
+                            />
+                            </span>
+                            <span class="o_stat_text">Barcodes</span>
+                        </div>
+                    </button>
+                </button>
+            </field>
+     </record>
+        product_template_form_view
+        <record model="ir.ui.view" id="product_form_view_at">
+            <field name="name">product.product.form.at</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="before">
+                    <button
+                    class="oe_stat_button"
+                    name="action_view_serials"
+                    type="object"
+                    icon="fa-barcode"
+                    help="Open serial list"
+                >
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field
+                                name="tracking_count"
+                                widget="statinfo"
+                                nolabel="1"
+                                class="mr4"
+                            />
+                            </span>
+                            <span class="o_stat_text">Barcodes</span>
+                        </div>
+                    </button>
+                </button>
+
+            </field>
+        </record>
+</odoo>

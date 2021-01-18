@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="action_rules_form" model="ir.actions.act_window">
+            <field name="name">Rules</field>
+            <field name="res_model">procurement.rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock.view_procurement_rule_tree" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a route.
+              </p>
+                <p>You can define here the main routes that run through
+                    your warehouses and that define the flows of your products. These
+                    routes can be assigned to a product, a product category or be fixed
+                    on procurement or sales order. </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_rules_config" action="action_rules_form" name="Rules" parent="stock.menu_warehouse_config" sequence="4" groups="stock.group_adv_location"/>
+
+    <record model="ir.ui.view" id="stock_picking_form_cw">
+      <field name="name">stock.picking.form.cw</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+            <field name="picking_type_id" position="after">
+                <field name="rule_id" />
+            </field>
+          <field name="state" position="before">
+              <button name="change_moves_to_stockage"
+                        attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
+                        string="Change to Stock Procurement"
+                        confirm="Are you sure you want to change procurements to stock procurement. Only 'make to order' moves will be changed?"
+                        type="object"/>
+              <button name="change_incoming_moves_to_storage"
+                        states="assigned,partially_available,waiting"
+                        attrs="{'invisible': ['|', ('picking_type_code', '!=', 'incoming'), ('state', '!=', 'assigned')]} "
+                        string="Unchain outgoing picking"
+                        confirm="Are you sure you want to unchain outgoing pick and send to stock"
+                        type="object"/>
+
+            </field>
+      </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+       <record id="purchase_order_form" model="ir.ui.view">
+           <field name="name">purchase.order.form</field>
+           <field name="model">purchase.order</field>
+           <field name="inherit_id" ref="purchase.purchase_order_form"/>
+           <field name="arch" type="xml">
+               <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="decoration-muted">line_state =='cancel'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='state']" position="after">
+                     <field name="line_state" invisible="0"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="domain">[('product_id', '=', context.get('product_id'))]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+       <record id="purchase_order_line_tree" model="ir.ui.view">
+           <field name="name">purchase.order.line.tree</field>
+           <field name="model">purchase.order.line</field>
+           <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+           <field name="arch" type="xml">
+
+                <field name="date_planned" position="after">
+                    <field name="date_need"  widget="date"/>
+                    <field name="state" />
+                </field>
+               <field name="order_id" position="after">
+                    <button name="action_open_po" icon="fa-list" type="object"/>
+               </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">date_planned >= date_need</attribute>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="purchase_order_line_tree_pre" model="ir.ui.view">
+           <field name="name">purchase.order.line.tree.pre</field>
+           <field name="model">purchase.order.line</field>
+           <!--field name="inherit_id" ref="purchase.purchase_order_line_tree"/-->
+           <field name="arch" type="xml">
+               <tree string="Purchase Order Lines" create="false" editable="bottom"
+                    default_order='product_id, price_subtotal, order_id'
+                    decoration-muted="line_state=='cancel'"
+                    decoration-success="line_state=='done' or line_state=='purchase'"
+                    decoration-danger="date_planned > date_need">
+                    <field name="order_id" readonly="1"/>
+                    <button name="action_open_po" icon="fa-eye" type="object" string="Open related purchase order"/>
+                    <button name="action_filter" icon="fa-filter" type="object"
+                            string="Filter purchase order lines by purchase order"
+                            context="{'active_field': 'order_id', 'search_default_order_id': context.get('search_default_order_id', False)}"/>
+                    <field name="name" readonly="1" invisible="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <button name="action_filter" icon="fa-filter" type="object"
+                            string="Filter purchase order lines by product"
+                            context="{'active_field': 'product_id', 'search_default_product_id': context.get('search_default_product_id', False)}"/>
+                    <field name="qty_need" readonly="1"/>
+                    <field name="price_unit"/>
+                    <button name="action_open_seller" icon="fa-pencil-square-o" type="object"
+                            string="Open related supplier rule. Changes are not propagated to line"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" readonly="1" groups="product.group_uom"/>
+                    <field name="price_subtotal" widget="monetary" readonly="1"/>
+                    <field name="date_planned" widget="date" readonly="1"/>
+                    <field name="date_need"  widget="date" readonly="1"/>
+                    <field name="partner_id" string="Vendor" readonly="1"/>
+                    <field name="seller_id" invisible="1"/>
+                    <button name="action_filter" icon="fa-filter" type="object"
+                            string="Filter purchase order lines by seller"
+                            context="{'active_field': 'partner_id', 'search_default_partner_id': context.get('search_default_partner_id', False)}"/>
+                    <field name="line_state" readonly="1"/>
+                    <field name="state" invisible="1"/>
+                    <button name="action_filter" icon="fa-filter" type="object"
+                            string="Filter purchase order lines by state"
+                            context="{'active_field': 'line_state', 'search_default_line_state': context.get('search_default_line_state', False)}"/>
+                    <button name="action_confirm_self" icon="fa-check-square-o" type="object"
+                            string="Confirm this rule. This action will cancel the other purchase order lines"
+                            attrs="{'invisible': [('line_state', 'in', ['done','purchase', 'cancel'])]}"/>
+                    <button name="action_reconfirm_self" icon="fa-refresh" type="object"
+                            string="Reconfirm this rule. This action will put this rule ready to check again"
+                            attrs="{'invisible': [('line_state', '!=', 'cancel')]}"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+
+        <record id="view_purchase_requisition_form_extended" model="ir.ui.view">
+            <field name="name">purchase.requisition.form.extended</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_in_progress']" position="before">
+                    <button name="generate_new_orders" type="object"
+                    string="New Quotations"
+                    attrs="{'invisible': [('state', '!=', 'open'), ('group_id', '=', False)]}"/>
+                </xpath>
+                <field name="vendor_id" position="after">
+                    <field name="vendor_ids" attrs="{'invisible': [('group_id', '=', False)]}" widget="many2many_tags"/>
+                    <field name="seller_ids" attrs="{'invisible': [('group_id', '=', False)]}" widget="many2many_tags"/>
+                </field>
+
+                <field name="origin" position="after">
+                    <field name="group_id"/>
+                </field>
+            </field>
+        </record>
+
+
+       <record id="purchase_order_line_search" model="ir.ui.view">
+           <field name="name">purchase.order.line.search</field>
+           <field name="model">purchase.order.line</field>
+           <field name="inherit_id" ref="purchase.purchase_order_line_search"/>
+           <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="line_state" domain ="[('line_state', '=', self)]"/>
+                </field>
+                <xpath expr="//group" position="before">
+                    <separator/>
+                    <filter name="hide_line_cancelled" string="Hide cancelled lines" domain="[('line_state', '!=', 'cancel')]"/>
+               </xpath>
+
+
+            </field>
+        </record>
+</odoo>
