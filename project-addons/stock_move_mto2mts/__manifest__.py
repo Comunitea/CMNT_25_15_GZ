@@ -20,11 +20,11 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move Extended',
+    'name': 'Stock Move MTO 2 MTS',
     'version': '11.0.0.0.1',
     'category': 'general',
     'description': """
-        Personalizaciones para mejorar el control de los stock moves.
+        Desenlanza los movientos MTO
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',

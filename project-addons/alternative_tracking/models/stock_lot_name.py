@@ -17,7 +17,6 @@ LOT_NAMES_TYPES = [
     ("transit", "Transit Location"),
 ]
 
-
 class StockLotName(models.Model):
     _name = "move.lot.name"
 

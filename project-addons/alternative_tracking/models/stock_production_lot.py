@@ -50,19 +50,20 @@ class StockProductionLot(models.Model):
         )
         self.move_ids = self.move_line_ids.mapped("move_id")
 
+    @api.model
+    def get_available_lot_ids(self, location_id=False, product_id=False):
+        domain = self.get_domain_for_available_lot_ids(location_id=location_id, product_ids=product_id)
+        return self.search(domain)
+
     def get_domain_for_available_lot_ids(
-        self, location_id=False, product_id=False, strict=False, bom=True
+        self, location_id=False, product_ids=False, strict=False, bom=True
     ):
         ## domain for virtual_tracking
         product_domain = []
         rest_domain = []
         tracking_domain = quant_domain = [("id", "=", False)]
-        if product_id:
-            if bom:
-                product_ids = product_id.get_sub_product()
-                product_domain = [("product_id", "in", product_ids.ids)]
-            else:
-                product_domain = [("product_id", "in", product_id.ids)]
+        if product_ids:
+            product_domain = [("product_id", "in", product_ids.ids)]
         else:
             product_domain = [("product_id.virtual_tracking", "=", True)]
 
@@ -81,7 +82,7 @@ class StockProductionLot(models.Model):
         res = [("virtual_tracking", "=", True)] + product_domain + loc_domain
         _logger.info(res)
         return res
-
+"""
         if product_id and product_id.virtual_tracking or not product_id:
             tracking_domain = [("virtual_tracking", "=", True)]
             if product_id:
@@ -109,13 +110,6 @@ class StockProductionLot(models.Model):
         print(domain)
         return domain
 
-    """
-    @api.model
-    def get_available_lot_ids(self, location_id=False, product_id=False):
-        domain = self.get_domain_for_available_lot_ids(location_id=location_id, product_id=product_id)
-        return self.search(domain)
-    """
-
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
 
@@ -142,3 +136,4 @@ class StockProductionLot(models.Model):
         return super(StockProductionLot, self).search(
             args, offset=offset, limit=limit, order=order, count=count
         )
+"""

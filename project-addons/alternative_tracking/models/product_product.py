@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
         action = self.env.ref("stock.action_production_lot_form").read()[0]
         action["context"] = {"product_id": self.id}
         domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
-            product_id=self, bom=True
+            product_ids=self, bom=True
         )
         res = self.env["stock.production.lot"].search_read(domain, ["id"])
         if res:
@@ -46,7 +46,7 @@ class ProductProduct(models.Model):
     def _compute_tracking_count(self):
         for product_id in self:
             domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
-                product_id=product_id, bom=True
+                product_ids=product_id, bom=True
             )
             product_id.tracking_count = self.env["stock.production.lot"].search_count(
                 domain
@@ -61,7 +61,7 @@ class ProductProduct(models.Model):
         action = self.env.ref("stock.action_production_lot_form").read()[0]
         action["context"] = {"product_id": self.id}
         domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
-            product_id=self, bom=True
+            product_ids=self, bom=True
         )
         res = self.env["stock.production.lot"].search_read(domain, ["id"])
         if res:

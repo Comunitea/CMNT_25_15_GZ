@@ -406,6 +406,7 @@ class StockMove(models.Model):
                 default_usage=self.location_dest_id.usage,
             ),
         }
+
     def _run_valuation(self, quantity=None):
         if not self.quantity_done:
             return 0

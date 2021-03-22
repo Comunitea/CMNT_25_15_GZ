@@ -72,7 +72,7 @@ class StockMove(models.Model):
         return vals
 
     def split_excess_to_stock(self, qty_done=True):
-        import pdb; pdb.set_trace()
+
         ## si recibimos má cantidad que la que necesitamos, entonces se envían a stock
 
         ## Si qty_done = True hacemos split sobre la cantidad hecha,
@@ -141,7 +141,6 @@ class StockMove(models.Model):
         return res
 
     def _action_done(self):
-        import pdb; pdb.set_trace()
         Entrada = self.env.ref('stock.stock_location_company')
         if self.location_dest_id == Entrada and self.move_dest_ids and self.quantity_done > 0:
             precision = self.product_uom.rounding
@@ -162,8 +161,8 @@ class StockMove(models.Model):
                 stock_move._action_confirm()
                 stock_move._action_assign()
                 stock_move._assign_picking()
-                _logger.info(_('Move %s (%s) for %s %s overprocessed in %s') %
-                             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
+                #_logger.info(_('Move %s (%s) for %s %s overprocessed in %s') %
+                #             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
         return super()._action_done()
 
 
@@ -207,7 +206,7 @@ class StockMove(models.Model):
         Proveedores   >>>>    Entrada     >>>>    Stock   >>>>    Salida  >>>>    Clientes
         """
 
-
+        import pdb; pdb.set_trace()
         Entrada = self.env.ref('stock.stock_location_company')
         Salida = self.env.ref('stock.stock_location_output')
         Stock = self.env.ref('stock.stock_location_stock')
@@ -272,21 +271,20 @@ class StockMove(models.Model):
         Picking     >>>>    Salida  >>>>    Clientes
         (make_to_stock - en espera/reservado)
         """
-
         if self.location_dest_id.usage != 'customer':
             raise ValidationError (_('Only outgoing pickings'))
-
         Entrada = self.env.ref('stock.stock_location_company')
         Salida = self.env.ref('stock.stock_location_output')
         Stock = self.env.ref('stock.stock_location_stock')
 
         sol_dict = {}
         moves = self.env['stock.move']
-
         for move in self:
             if move.sale_line_id:
                 sol_dict[move.sale_line_id] = move.product_uom_qty
-            move._do_unreserve()
+
+            # move._action_cancel()
+            # move._do_unreserve()
             moves |= move
             # Como supongo que los movimientos son de salida, la ubicación de destino debería ser salidas.
             # orig_move_ids son los pickings
@@ -295,12 +293,19 @@ class StockMove(models.Model):
             if orig_move_ids.filtered(lambda x: x.state == 'done'):
                 raise ValidationError (_('Previous move are done'))
 
-            orig_move_ids = orig_move_ids.filtered(lambda x: x.procure_method == 'make_to_order' and x.group_id == move.group_id)
+            orig_move_ids = orig_move_ids.filtered(lambda x: x.group_id == move.group_id)
+
             if orig_move_ids:
-                orig_move_ids._do_unreserve()
+                if len(orig_move_ids) > 1:
+                    raise ValidationError(_('Move %s have more than one move orig'))
+                if len(orig_move_ids.mapped('move_dest_ids')) > 1:
+                    raise ValidationError(_('Orig moves for Move %s have more than one move dest'))
+
+                #orig_move_ids._do_unreserve()
+                #if orig_move_ids.procure_method == 'make_to_order':
                 moves |= orig_move_ids
 
-        moves.write({'state': 'cancel'})
+        moves._action_cancel()
         ctx = self._context.copy()
         ctx.update(new_picking=True,
                    rule_domain=[('action', '=', 'move')])

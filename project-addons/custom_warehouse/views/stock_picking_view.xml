@@ -21,6 +21,7 @@
 
         <menuitem id="menu_rules_config" action="action_rules_form" name="Rules" parent="stock.menu_warehouse_config" sequence="4" groups="stock.group_adv_location"/>
 
+    <!--delete id="custom_warehouse.stock_picking_form_cw"/-->
     <record model="ir.ui.view" id="stock_picking_form_cw">
       <field name="name">stock.picking.form.cw</field>
       <field name="model">stock.picking</field>
@@ -33,7 +34,7 @@
               <button name="change_moves_to_stockage"
                         attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
                         string="Change to Stock Procurement"
-                        confirm="Are you sure you want to change procurements to stock procurement. Only 'make to order' moves will be changed?"
+                        confirm="Are you sure you want to change sale line procurements to stock procurement. Only 'make to order' moves will be changed?. If you have associted purchases check them after change procurement."
                         type="object"/>
               <button name="change_incoming_moves_to_storage"
                         states="assigned,partially_available,waiting"

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_move_picking_form" model="ir.ui.view">
-        <field name="name">stock.move.form</field>
-        <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_picking_form"/>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <field name="picking_code" invisible="1"/>
                 <button
                     type="object"
                     name="unchain_move"
                     string="Unchain Move"
-                    attrs= "{'invisible': ['|', ('picking_code','=', 'incoming'), ('state', '!=', 'waiting')]"
+                    attrs= "{'invisible': [('state', '!=', 'waiting')]}"
                     groups="stock.group_stock_manager"/>
             </xpath>
 

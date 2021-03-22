@@ -32,9 +32,10 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _search_rule(self, product_id, values, domain):
-        import pdb; pdb.set_trace()
+
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
+
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
 
 class ProcurementRule(models.Model):
