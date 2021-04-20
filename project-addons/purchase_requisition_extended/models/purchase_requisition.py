@@ -127,7 +127,13 @@ class PurchaseRequisition(models.Model):
         return action
 
     def create_purchase_orders(self):
+
         self.ensure_one()
+        self.mapped('purchase_ids').button_cancel()
+        self.mapped('purchase_ids').unlink()
+
+
+
         po_ids = self.env['purchase.order']
         sale_id = self.sale_id
         for partner in self.vendor_ids:
@@ -150,7 +156,7 @@ class PurchaseRequisition(models.Model):
         message = '{}{}'.format(message, "</ul>")
         if sale_id:
             self.sale_id.message_post(message)
-
+        self.state = 'open'
 
     def generate_new_orders(self):
         self.create_purchase_orders()
@@ -180,7 +186,7 @@ class PurchaseRequisition(models.Model):
                 res['sale_id'] = values['group_id'].sale_id.id
         if res['line_ids']:
             res['line_ids'][0][2]['schedule_date'] = values['move_dest_ids'].date_expected
-        print("Tender values %s" %res)
+        ## print("Tender values %s" %res)
         return res
 
 
@@ -194,8 +200,8 @@ class PurchaseRequisition(models.Model):
                 'schedule_date': values['move_dest_ids'].date_expected
 
         }
-        print (values)
         return values
+    
     @api.multi
     def action_in_progress(self):
         super().action_in_progress()
