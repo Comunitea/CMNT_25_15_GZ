@@ -62,7 +62,7 @@ class StockMoveLine(models.Model):
                     domain = spl.get_domain_for_available_lot_ids(location_id, product_id, strict=False, bom=True)
             ## Si el movimiento es de retorno:
             if line.move_id.origin_returned_move_id:
-                domain +=[('id', 'in', line.move_id.origin_retruned_move_id.lot_ids.ids)]
+                domain +=[('id', 'in', line.move_id.origin_returned_move_id.lot_ids.ids)]
                 
             line.available_serial_ids = self.env["stock.production.lot"].search(domain)
 
