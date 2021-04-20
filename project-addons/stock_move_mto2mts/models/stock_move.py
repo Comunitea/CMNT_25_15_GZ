@@ -30,9 +30,11 @@ _logger = logging.getLogger(__name__)
 class StockMove(models.Model):
 
     _inherit = "stock.move"
+    
     @api.multi
     def unchain_move(self):
         return True
+
     @api.multi
     def _unchain_move(self, move_orig_ids=False, procure_method='make_to_stock', assign=True, message=True):
         if not move_orig_ids:
@@ -56,7 +58,7 @@ class StockMove(models.Model):
             # busco todos los pedidos de compra que tengan por movimiento de destino este movimiento
             # En compras
             # move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
-            domain = [('mo')]
+            # domain = [('mo')]
 
 
 
