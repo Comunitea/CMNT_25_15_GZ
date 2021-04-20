@@ -13,7 +13,7 @@
                     string="Open tracking"
                     type="object"
                     icon="fa-barcode"
-                    attrs="{'invisible': ['|', ('virtual_tracking', '=', False), ('virtual_tracking', '=', True), ('track_from_line', '=', False)]}"
+                    attrs="{'invisible': ['|', ('virtual_tracking', '=', False), ('track_from_line', '=', False)]}"
                 />
             </field>
         </field>
@@ -165,11 +165,12 @@
                 />
         </field>
         <xpath expr="//footer" position="inside">
+            <field name="hide_apply_button" invisible="1"/>
             <button
                     string="Apply"
                     type="object"
                     name="apply_lot_ids_string"
-                    attrs="{'invisible': ['|', ('lot_ids_string', '=', ''), ('use_existing_lots', '=', True)]}"
+                    attrs="{'invisible': ['|', ('hide_apply_button', '=', True), ('lot_ids_string', '=', '')]}"
                 />
         </xpath>
 

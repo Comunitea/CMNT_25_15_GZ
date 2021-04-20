@@ -11,6 +11,7 @@
         "mrp",
         "stock",
         "stock_account",
+        "stock_move_location",
         "web_widget_color",
         # NOT BATCH PICKING
         #"stock_picking_batch_extended",

@@ -307,8 +307,8 @@ class StockMove(models.Model):
     #                                string='Lot name',
     #                                domain=_get_domain_for_lots,
     #                                copy=False)
-    virtual_tracking = fields.Boolean(
-        string="virtual_tracking", compute="_compute_track_from_product", store=True
+    virtual_tracking = fields.Boolean(related='product_id.virtual_tracking',
+        string="virtual_tracking", store=True
     )
     lot_ids_string = fields.Text("Serial list to add")
     track_from_line = fields.Boolean(
@@ -319,12 +319,17 @@ class StockMove(models.Model):
     )
     removal_priority = fields.Integer(string="Removal priority")
     removal_dest_priority = fields.Integer(string="Removal dest priority")
+    hide_apply_button = fields.Boolean(compute="compute_show_apply_button")
+
+    def compute_show_apply_button(self):
+        if not self.product_id.virtual_tracking or self.use_existing_lots or self.state not in [('assigned', 'partially_available')]:
+            self.hide_apply_button = True
 
     @api.depends("product_id", "move_line_ids")
     def _compute_track_from_product(self):
         for move in self:
             product_id = move.product_id
-            move.virtual_tracking = product_id.virtual_tracking
+            # move.virtual_tracking = product_id.virtual_tracking
             if move.virtual_tracking:
                 _logger.info(
                     "Compute _compute_track_from_product {}: {}/ [{}]".format(
