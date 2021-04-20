@@ -25,6 +25,7 @@
     'category': 'general',
     'description': """
         Personalizaciones para almacén
+        
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',

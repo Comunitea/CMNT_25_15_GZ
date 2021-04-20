@@ -17,6 +17,7 @@
             <field name="location_dest_id" position="after">
                 <field name="destination_code_id" />
             </field>
+        
         </field>
     </record>
 
@@ -47,6 +48,12 @@
                     <field name="is_quantity_done_editable" invisible="1"/>
                     <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                     <field name="reserved_availability" string="Reserved"/>
+                    
+                    <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                        attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
+                    <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento" 
+                        attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
+                    
                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="procure_method"/>
@@ -57,4 +64,34 @@
                 </tree>
             </field>
         </record>
+
+    <record id="action_reassing_split_from_picking" model="ir.actions.server">
+        <field name="name">Split por fecha</field>
+        <field name="model_id" ref="stock.model_stock_move"/>
+        <field name="binding_model_id" ref="stock.model_stock_move"/>
+        <field name="state">code</field>
+        <field name="code">
+            records.reassing_split_from_picking()
+        </field>
+    </record>
+
+     <record id="view_picking_move_tree" model="ir.ui.view">
+        <field name="name">stock.picking.move.tree</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+        <field name="arch" type="xml">
+            <field name="date_expected" position="replace">
+                
+                <field name="date_expected"
+                       attrs="{'readonly': [('state', '=', ['done', 'cancel', 'draft'])]}"/>
+            </field>
+            <field name="reserved_availability" position="after">
+                <field name="procure_method" invisible="1"/>
+                <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
+                <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento"
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
+            </field>
+        </field>
+    </record>
 </odoo>

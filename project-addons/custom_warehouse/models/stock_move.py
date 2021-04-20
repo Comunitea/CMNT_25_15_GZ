@@ -33,7 +33,7 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
-    destination_code_id = fields.Boolean('Destination code')
+    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
     procurement_route_id = fields.Many2one(related="rule_id.route_id")
     overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
 
@@ -195,6 +195,7 @@ class StockMove(models.Model):
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
 
     def change_incoming_moves_to_storage(self):
+
         """ EN RECEPCIONES : LOCATION_DEST_ID = entradas
 
         esta función quita el enlace entre entradas y salidas, y deja el de salida a stock.
@@ -206,13 +207,19 @@ class StockMove(models.Model):
         Proveedores   >>>>    Entrada     >>>>    Stock   >>>>    Salida  >>>>    Clientes
         """
 
-        import pdb; pdb.set_trace()
-        Entrada = self.env.ref('stock.stock_location_company')
-        Salida = self.env.ref('stock.stock_location_output')
-        Stock = self.env.ref('stock.stock_location_stock')
+
+        self.ensure_one()
         # Solo recepciones.
         if self.filtered(lambda x:x.picking_code != 'incoming'):
             raise ValidationError (_("Only 'incoming' picking types"))
+
+
+        warehouse_id = self.picking_type_id.warehouse_id
+
+        Entrada = warehouse_id.wh_input_stock_loc_id ## self.env.ref('stock.stock_location_company')
+        Salida = warehouse_id.wh_output_stock_loc_id ## self.env.ref('stock.stock_location_output')
+        Stock = warehouse_id.lot_stock_id ## self.env.ref('stock.stock_location_stock')
+        
         for move in self:
             if move.location_dest_id != Entrada:
                 continue
@@ -262,7 +269,6 @@ class StockMove(models.Model):
 
 
     def change_moves_to_stockage(self):
-
         """ EN SALIDAS : LOCATION_DEST_ID.USAGE = CUSTOMER
         Esta función cambia un movimiento de salida que ha sido creado con regla make_to_stock a make_to_order
 
@@ -273,9 +279,12 @@ class StockMove(models.Model):
         """
         if self.location_dest_id.usage != 'customer':
             raise ValidationError (_('Only outgoing pickings'))
-        Entrada = self.env.ref('stock.stock_location_company')
-        Salida = self.env.ref('stock.stock_location_output')
-        Stock = self.env.ref('stock.stock_location_stock')
+        
+        warehouse_id = self.picking_type_id.warehouse_id
+
+        Entrada = warehouse_id.wh_input_stock_loc_id ## self.env.ref('stock.stock_location_company')
+        Salida = warehouse_id.wh_output_stock_loc_id ## self.env.ref('stock.stock_location_output')
+        Stock = warehouse_id.lot_stock_id ## self.env.ref('stock.stock_location_stock')
 
         sol_dict = {}
         moves = self.env['stock.move']
@@ -296,7 +305,7 @@ class StockMove(models.Model):
             orig_move_ids = orig_move_ids.filtered(lambda x: x.group_id == move.group_id)
 
             if orig_move_ids:
-                if len(orig_move_ids) > 1:
+                if len(orig_move_ids) > 1 and orig_move_ids.mapped("move_dest_ids") != move:
                     raise ValidationError(_('Move %s have more than one move orig'))
                 if len(orig_move_ids.mapped('move_dest_ids')) > 1:
                     raise ValidationError(_('Orig moves for Move %s have more than one move dest'))
@@ -319,14 +328,79 @@ class StockMove(models.Model):
             lambda x: x.location_dest_id.usage == 'customer' and x.state != 'cancel')
         new_move_ids |= new_move_ids.mapped('move_orig_ids').filtered(lambda x: x.location_id.usage == 'internal' and x.state != 'cancel')
         sp_ids = new_move_ids.mapped('picking_id')
-
+        new_move_ids._action_assign()
         if sp_ids:
             for sp in sp_ids:
                 post = 'This picking was created changing procurement from storage location.'
                 sp.message_post(post)
 
 
+    def reassing_split_from_picking(self):
+        picking_id = self.mapped('picking_id')
+        print (picking_id)
+        if picking_id.state in ['cancel', 'draft', 'done']:
+            raise ValidationError('El albarań %s está en estado incorrecto: %s'%(picking_id.name, picking_id.state))
+        if len(picking_id) != 1:
+            raise ValidationError('Todos los movimientos deben ser del mismo albarán')
+        if any(x.picking_id == False for x in self):
+            raise ValidationError('Todos los movimientos deben tener ya un albarán asignado')
+        scheduled_date = picking_id.scheduled_date
+        moves_to_split = self.filtered(lambda x: x.date_expected != scheduled_date)
+        moves_to_split.write({'picking_id': False})
+        backorder_ids = self.env['stock.picking']
+        dates = {}
+        for move in moves_to_split:
+            if not move.date_expected in dates.keys():
+                dates[move.date_expected] = move.date_expected
+
+        if dates:
+            for date in dates.keys():
+                dates[date] = moves_to_split.filtered(lambda x: x.date_expected == date)
+                if picking_id.scheduled_date == date:
+                    dates[date].write({'picking_id': picking_id})
+                else:
+                    backorder_picking = picking_id.copy({
+                        'name': '/',
+                        'move_lines': [],
+                        'move_line_ids': [],
+                        'backorder_id': picking_id.id,
+                    })
+                    picking_id.message_post(
+                        body=_(
+                            'Este albarán ha creado un nuevo albarán <a href="#" '
+                            'data-oe-model="stock.picking" '
+                            'data-oe-id="%d">%s</a> al cambiar la fecha de estimada a %s.'
+                        ) % (
+                                 backorder_picking.id,
+                                 backorder_picking.name,
+                                 date
+                             )
+                    )
+                    dates[date].write({
+                        'picking_id': backorder_picking.id,
+                    })
+                    dates[date].mapped('move_line_ids').write({
+                        'picking_id': backorder_picking.id,
+                    })
+                    backorder_ids |= backorder_picking
+                    print("se ha creado el %s" % backorder_picking.name)
+            if backorder_ids:
+                action = self.env.ref('stock.action_picking_tree_all').read()[0]
+                action['domain'] = [('id', 'in', backorder_ids.ids)]
+                return action
+        return
 
 
+    @api.multi
+    def apply_change_procurement(self):
+        for move in self:
+            if move.picking_type_id.code == 'outgoing' and move.procure_method == 'make_to_order':
+                move.change_moves_to_stockage()
+            
+            elif move.picking_type_id.code == 'incoming':
+                move.change_moves_to_stockage() 
+            else:
+                raise ValidationError ('No hay operación disponible para este movimiento')
 
 
+        return True

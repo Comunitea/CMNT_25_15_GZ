@@ -40,7 +40,7 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
                     <field name="destination_code_id" groups="sale_stock.group_route_so_lines"
                            attrs="{'readonly': [('state', 'in', ['sale', 'done', 'cancel'])],
-                           'column_invisible': [('parent.destination_code_id', '=', True)]}" options="{'no_create': True}"/>
+                           'column_invisible': [('parent.destination_code_id', '=', False)]}" options="{'no_create': True}"/>
                 </xpath>
            </field>
         </record>

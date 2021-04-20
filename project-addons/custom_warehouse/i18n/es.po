@@ -1,0 +1,236 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* custom_warehouse
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-20 11:30+0000\n"
+"PO-Revision-Date: 2021-04-20 11:30+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_order_formcw
+msgid "<span class=\"o_stat_text\">Operations</span>"
+msgstr "<span class=\"o_stat_text\">Operations</span>"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.stock_picking_form_cw
+msgid "Are you sure you want to change sale line procurements to stock procurement. Only 'make to order' moves will be changed?. If you have associted purchases check them after change procurement."
+msgstr "Estás seguro que quieres cambiar el abastecimento de la línea de 'Aplicar Regla' a 'Tomar de Stock'. Solo los movimientos 'Aplicar Regla' se verán afectados. Si tienes compras asociadas, verificalas una vez cambiada el abastecimiento"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.stock_picking_form_cw
+msgid "Are you sure you want to unchain outgoing pick and send to stock"
+msgstr "Estás seguro de que quieres 'liberar' los movimientos de salida y enviar el material a Stock"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_stock_change_product_qty
+msgid "Change Product Quantity"
+msgstr "Cambiar cantidad de producto"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.stock_picking_form_cw
+msgid "Change to Stock Procurement"
+msgstr "Cambiar el abastecimiento a 'Tomar de Stock'"
+
+#. module: custom_warehouse
+#: model:ir.actions.act_window,help:custom_warehouse.action_rules_form
+msgid "Click to add a route."
+msgstr "Clic para añadir una ruta."
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: custom_warehouse
+#: model:ir.model.fields,field_description:custom_warehouse.field_res_partner_destination_code_id
+#: model:ir.model.fields,field_description:custom_warehouse.field_res_users_destination_code_id
+#: model:ir.model.fields,field_description:custom_warehouse.field_sale_order_destination_code_id
+#: model:ir.model.fields,field_description:custom_warehouse.field_sale_order_line_destination_code_id
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_move_destination_code_id
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_picking_destination_code_id
+msgid "Destination code"
+msgstr "Código de destino"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_picking_move_tree_cw
+msgid "Done"
+msgstr "Hecho"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:367
+#, python-format
+msgid "Este albarán ha creado un nuevo albarán <a href=\"#\" data-oe-model=\"stock.picking\" data-oe-id=\"%d\">%s</a> al cambiar la fecha de estimada a %s."
+msgstr "Este albarán ha creado un nuevo albarán <a href=\"#\" data-oe-model=\"stock.picking\" data-oe-id=\"%d\">%s</a> al cambiar la fecha de estimada a %s."
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_picking_move_tree_cw
+msgid "Initial Demand"
+msgstr "Demanda inicial"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_stock_location
+msgid "Inventory Locations"
+msgstr "Ubicaciones de inventario"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_order_formcw
+msgid "List view of operations"
+msgstr "Lista de operaciones"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:307
+#, python-format
+msgid "Move %s have more than one move orig"
+msgstr "El movimiento %s tine más de un movimiento de origen"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:102
+#, python-format
+msgid "Not rule for excess purchases"
+msgstr "No hay regla para un exceso de compras"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:115
+#, python-format
+msgid "Not rule for movs from {} to {}"
+msgstr "No hay regla para movimientos desde {} a {}"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:214
+#, python-format
+msgid "Only 'incoming' picking types"
+msgstr "Solo albaranes de entrada"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:282
+#, python-format
+msgid "Only outgoing pickings"
+msgstr "Solo albaranes de salida"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:309
+#, python-format
+msgid "Orig moves for Move %s have more than one move dest"
+msgstr "Los movimientos previos a  %s tienen varios destinos"
+
+#. module: custom_warehouse
+#: model:ir.model.fields,field_description:custom_warehouse.field_purchase_order_line_overprocess_by_supplier
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_move_overprocess_by_supplier
+msgid "Overprocess by supplier min qty. Exceed must go to stock"
+msgstr "Procesada más cantidad por la regla de compra del proveedor. El exceso irá a stock"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:301
+#, python-format
+msgid "Previous move are done"
+msgstr "Los movimientos previos están realizados"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Petición de abastecimiento"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_procurement_rule
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_picking_rule_id
+msgid "Procurement Rule"
+msgstr "Regla de abastecimiento"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea de pedido de compra"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_sale_order
+msgid "Quotation"
+msgstr "Presupuesto"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_picking_move_tree_cw
+msgid "Reserved"
+msgstr "Reservado"
+
+#. module: custom_warehouse
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_move_procurement_route_id
+msgid "Route"
+msgstr "Ruta"
+
+#. module: custom_warehouse
+#: model:ir.actions.act_window,name:custom_warehouse.action_rules_form
+#: model:ir.ui.menu,name:custom_warehouse.menu_rules_config
+msgid "Rules"
+msgstr "Reglas"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de ventas"
+
+#. module: custom_warehouse
+#: model:ir.model.fields,field_description:custom_warehouse.field_stock_picking_show_moves_to_stock
+msgid "Show Moves To Stock"
+msgstr "Mostrar movimiento con destino Stock"
+
+#. module: custom_warehouse
+#: model:ir.actions.server,name:custom_warehouse.action_reassing_split_from_picking
+msgid "Split por fecha"
+msgstr "Split por fecha"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_stock_move
+#: model:ir.model.fields,field_description:custom_warehouse.field_sale_order_stock_move_ids
+msgid "Stock Move"
+msgstr "Movimiento de Stock"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_picking_move_tree_cw
+msgid "Stock Moves"
+msgstr "Movimientos de Stock"
+
+#. module: custom_warehouse
+#: model:ir.model.fields,help:custom_warehouse.field_stock_picking_rule_id
+msgid "The procurement rule that created this stock move"
+msgstr "La regla de aprovisonamiento que creó este movimiento de stock"
+
+#. module: custom_warehouse
+#: model:ir.model,name:custom_warehouse.model_stock_picking
+msgid "Transfer"
+msgstr "Albarán"
+
+#. module: custom_warehouse
+#: code:addons/custom_warehouse/models/stock_move.py:236
+#, python-format
+msgid "Ubication type not found"
+msgstr "Tipo de ubicación no encontrado"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.stock_picking_form_cw
+msgid "Unchain outgoing picking"
+msgstr "Liberar albarán de salida"
+
+#. module: custom_warehouse
+#: model:ir.ui.view,arch_db:custom_warehouse.view_picking_move_tree_cw
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: custom_warehouse
+#: model:ir.actions.act_window,help:custom_warehouse.action_rules_form
+msgid "You can define here the main routes that run through\n"
+"                    your warehouses and that define the flows of your products. These\n"
+"                    routes can be assigned to a product, a product category or be fixed\n"
+"                    on procurement or sales order."
+msgstr "Puede definir aquí las principales rutas que discurren por\n"
+"                    sus almacenes y que definen los flujos de sus productos. Estas\n"
+"                    rutas se pueden asignar a un producto, a una categoría de producto o\n"
+"                   establecerse para los pedidos de compra o de venta."
+

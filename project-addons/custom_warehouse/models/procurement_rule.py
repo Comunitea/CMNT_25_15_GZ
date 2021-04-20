@@ -67,5 +67,6 @@ class ProcurementRule(models.Model):
                                                 origin, values, group_id)
         if values.get('sale_line_id', False):
             line = self.env['sale.order.line'].browse(values['sale_line_id'])
-            result['destination_code_id'] = line.destination_code_id
+            if line.destination_code_id:
+                result['destination_code_id'] = line.destination_code_id.id
         return result

@@ -30,19 +30,30 @@
             <field name="picking_type_id" position="after">
                 <field name="rule_id" />
             </field>
+           <field name="partner_id" position="after">
+                <field name="destination_code_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+            </field>
+
           <field name="state" position="before">
               <button name="change_moves_to_stockage"
-                        attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
+                        attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
                         string="Change to Stock Procurement"
                         confirm="Are you sure you want to change sale line procurements to stock procurement. Only 'make to order' moves will be changed?. If you have associted purchases check them after change procurement."
                         type="object"/>
               <button name="change_incoming_moves_to_storage"
-                        states="assigned,partially_available,waiting"
                         attrs="{'invisible': ['|', ('picking_type_code', '!=', 'incoming'), ('state', '!=', 'assigned')]} "
                         string="Unchain outgoing picking"
                         confirm="Are you sure you want to unchain outgoing pick and send to stock"
                         type="object"/>
 
+            </field>
+
+            <field name="reserved_availability" position="after">
+                <field name="procure_method" invisible="1"/>
+                <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
+                <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento" 
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
             </field>
       </field>
     </record>

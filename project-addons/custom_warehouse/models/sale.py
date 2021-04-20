@@ -54,7 +54,7 @@ class SaleOrderLine(models.Model):
 
     _inherit = "sale.order.line"
 
-    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain = [('destination_code', '=', True)])
+    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
 
     @api.multi
     def name_get(self):

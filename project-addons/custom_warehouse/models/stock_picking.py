@@ -42,7 +42,7 @@ class StockPicking(models.Model):
                 continue
         picks.write({'show_moves_to_stock': True})
 
-    destination_code_id = fields.Boolean('Destination code')
+    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
     show_moves_to_stock = fields.Boolean(compute="show_moves_to_stock")
 
