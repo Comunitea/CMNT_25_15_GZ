@@ -29,7 +29,9 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_view_serials(self):
         action = self.env.ref("stock.action_production_lot_form").read()[0]
-        action["context"] = {"product_id": self.id}
+        Stock = self.env['stock.warehouse'].search([])[0].lot_stock_id
+        action["context"] = {"default_product_id": self.id, 'default_virtual_tracking': True, 'default_location_id': Stock.id}
+        print (action['context'])
         domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
             product_ids=self, bom=True
         )
@@ -58,8 +60,9 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_view_serials(self):
-        action = self.env.ref("stock.action_production_lot_form").read()[0]
-        action["context"] = {"product_id": self.id}
+        action = self.env.ref("stock.action_production_lot_form").read()[0] 
+        Stock = self.env['stock.warehouse'].search([])[0].lot_stock_id
+        action["context"] = {"default_product_id": self.id, 'default_virtual_tracking': True, 'default_location_id': Stock.id}
         domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
             product_ids=self, bom=True
         )

@@ -31,83 +31,53 @@
                  </header>
                  <group attrs="{'invisible': [('state', '=', 'done')]}">
                     <group>
-                         <field name="location_id" invisible="0" readonly="1" />
-                        <field name="location_dest_id" invisible="0" />
+                         <field name="location_id" invisible="0" readonly="1"/>
+                        <field name="location_dest_id" invisible="0"/>
                     </group>
                     <group>
-                       <field name="picking_id" invisible="0" readonly="1" />
-                        <field name="is_locked" invisible="0" readonly="1" />
+                       <field name="picking_id" invisible="0" readonly="1"/>
+                        <field name="is_locked" invisible="0" readonly="1"/>
+                        <field name="virtual_tracking" invisible="0" readonly="1"/>
                     </group>
                 </group>
                     <group attrs="{'invisible': [('state', '=', 'done')]}">
                         <group>
-                            <field name="product_id" readonly="1" />
-                            <label for="product_qty" />
+                            <field name="product_id" readonly="1"/>
+                            <label for="product_qty"/>
                             <div class="o_row">
-                                <span><field
-                                    name="product_qty"
-                                    readonly="1"
-                                    nolabel="1"
-                                /></span>
-                                <span><field
-                                    name="product_uom_id"
-                                    readonly="1"
-                                    nolabel="1"
-                                /></span>
+                                <span><field name="product_qty" readonly="1" nolabel="1"/></span>
+                                <span><field name="product_uom_id" readonly="1" nolabel="1"/></span>
                             </div>
                         </group>
                         <group>
-                            <label for="qty_done" />
+                            <label for="qty_done"/>
                             <div class="o_row">
-                                <span><field
-                                    name="qty_done"
-                                    attrs="{'readonly': [('state', '=', 'done')]}"
-                                    nolabel="1"
-                                /></span>
-                                <span><field
-                                    name="product_uom_id"
-                                    readonly="1"
-                                    nolabel="1"
-                                /></span>
+                                <span><field name="qty_done" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1"/></span>
+                                <span><field name="product_uom_id" readonly="1" nolabel="1"/></span>
                             </div>
 
                         </group>
                      </group>
-                     <group
-                    string="Tracking"
-                    attrs="{'invisible': [('virtual_tracking','=', False)]}"
-                >
+                     <group string="Tracking" attrs="{'invisible': [('virtual_tracking','=', False)]}">
                         <group invisible="0">
                             <group>
-                                <field name="track_from_line" />
-                                <field name="picking_type_use_existing_lots" />
+                                <field name="track_from_line"/>
+                                <field name="picking_type_use_existing_lots"/>
                             </group>
                             <group>
-                                <field name="virtual_tracking" />
-                                <field
-                                name="available_serial_ids"
-                                nolabel="1"
-                                widget="many2many_tags"
-                            />
+                                <field name="virtual_tracking"/>
+                                <field name="available_serial_ids" nolabel="1" widget="many2many_tags"/>
                             </group>
                         </group>
 
-                        <field
-                        name="lot_ids_string"
-                        nolabel="1"
-                        attrs="{'readonly': [('state', '=', 'done')],
-                           'invisible': ['|', '|', ('virtual_tracking','=', False), ('state', '=', 'done'), ('picking_type_use_existing_lots', '=', True)]}"
-                    />
-                        <field
-                        name="lot_ids"
-                        nolabel="1"
-                        widget="many2many_tags"
-                        attrs="{'readonly': [('state', '=', 'done')],
-                               'invisible': [('lot_ids', '=', []), ('available_serial_ids', '=', [])]}"
-                        domain="[('id', 'in', available_serial_ids)]"
-                    />
+                        <field name="lot_ids_string" nolabel="1" attrs="{'readonly': [('state', '=', 'done')], 
+                        'invisible': [('state', '=', 'done')]}"/>
+                        <field name="lot_ids" nolabel="1" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" domain="[('id', 'in', available_serial_ids)]"/>
                     </group>
-                    <footer class="oe_edit_only">
+                
+                
+                
+                 <footer class="oe_edit_only">
                         <button
                         string="Apply"
                         type="object"
@@ -230,7 +200,7 @@
 
                         </group>
                     </group>
-                    <!--field name="lot_name_ids"
+                    <field name="lot_name_ids"
                            attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
                            context="{'default_move_id': id,
                                      'default_product_id': product_id,
@@ -238,7 +208,7 @@
                            <tree>
                                 <field name="name"/>
                            </tree>
-                    </field-->
+                    </field>
 
                     <footer class="oe_edit_only">
                         <button

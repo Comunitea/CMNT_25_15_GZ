@@ -48,7 +48,7 @@ class MrpStockReport(models.TransientModel):
                 final_vals = sorted(
                     move_line_vals, key=lambda v: v["date"], reverse=True
                 )
-                lines = self.with_context(context)._final_vals_to_lines(
+                lines = self.with_context(context).final_vals_to_lines(
                     final_vals, level
                 )
                 return lines
@@ -64,7 +64,7 @@ class MrpStockReport(models.TransientModel):
                 final_vals = sorted(
                     move_line_vals, key=lambda v: v["date"], reverse=True
                 )
-                lines = self.with_context(context)._final_vals_to_lines(
+                lines = self.with_context(context).final_vals_to_lines(
                     final_vals, level
                 )
                 return lines

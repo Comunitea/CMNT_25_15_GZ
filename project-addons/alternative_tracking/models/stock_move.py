@@ -38,22 +38,33 @@ class StockMoveLine(models.Model):
     def _get_available_serial_ids(self):
         spl = self.env["stock.production.lot"]
         for line in self:
-            move_orig_ids = (
-                self.move_id.origin_returned_move_id | self.move_id.move_orig_ids
-            )
             location_id = line.move_id.location_id
             product_id = line.product_id
-            if move_orig_ids:
-                domain = [
-                    ("product_id", "=", product_id.id),
-                    ("location_id", "child_of", location_id.id),
-                    ("id", "in", move_orig_ids.mapped("lot_ids").ids),
-                ]
-            else:
-                domain = spl.get_domain_for_available_lot_ids(
-                    location_id, product_id, strict=False, bom=True
-                )
-            line.available_serial_ids += self.env["stock.production.lot"].search(domain)
+            ## Los nuemros de serie disponibles son:
+            domain = spl.get_domain_for_available_lot_ids(location_id, product_id, strict=False, bom=True)
+            
+            # Si viene de un mov anterior. 
+            
+            if line.move_id.procure_method == 'make_to_order':
+                # 1. los movimientos no están hechos, entonces esos no:
+                move_orig_ids_not_done = line.move_id.move_orig_ids.filtered(lambda x: x.state != 'done').mapped('lot_ids')
+                if move_orig_ids_not_done:
+                    domain += [('id', 'not in', move_orig_ids_not_done.ids)]
+                # 2. Los mov. están hechos y el albarán requiere series.
+                move_orig_ids_done = line.move_id.move_orig_ids.filtered(lambda x:x.state=='done' and not x.picking_type_id.bypass_tracking).mapped('lot_ids')
+                if move_orig_ids_not_done:
+                    domain += [('id', 'in', move_orig_ids_done.ids)]
+                # 3. Los mov. están hechos pero bypass_tracking
+                # En este caso los numeros de serie deben estar de donde sale el movimiento original
+                move_orig_ids_done_with_bypass = line.move_id.move_orig_ids.filtered(lambda x:x.state=='done' and x.picking_type_id.bypass_tracking)
+                if move_orig_ids_done_with_bypass:
+                    location_id += move_orig_ids_done_with_bypass[0].location_id
+                    domain = spl.get_domain_for_available_lot_ids(location_id, product_id, strict=False, bom=True)
+            ## Si el movimiento es de retorno:
+            if line.move_id.origin_returned_move_id:
+                domain +=[('id', 'in', line.move_id.origin_retruned_move_id.lot_ids.ids)]
+                
+            line.available_serial_ids = self.env["stock.production.lot"].search(domain)
 
     """@api.model
     def _get_domain_for_lot_ids(self, product_id):
@@ -372,7 +383,7 @@ class StockMove(models.Model):
             raise ValidationError(_("Incorrect state. Change in move lines"))
         if self.state in ["done", "cancel", "draft"]:
             raise ValidationError(_("Incorrect move state"))
-
+        # import pdb; pdb.set_trace()
         self.move_line_ids.lot_ids = self.lot_ids
         self.compute_new_move_line_quantities()
 
@@ -393,18 +404,21 @@ class StockMove(models.Model):
         """Returns an action that will open a form view (in a popup) allowing to
         add lot for alternative tracking.
         """
+
+        
         self.ensure_one()
-        view = self.env.ref("alternative_tracking.view_stock_move_lot_names")
+        res_id = self.move_line_ids[0].id
+        view = self.env.ref("alternative_tracking.stock_move_line_tracking_form")
         return {
             "name": _("Detailed Lots"),
             "type": "ir.actions.act_window",
             "view_type": "form",
             "view_mode": "form",
-            "res_model": "stock.move",
+            "res_model": "stock.move.line",
             "views": [(view.id, "form")],
             "view_id": view.id,
             "target": "new",
-            "res_id": self.id,
+            "res_id": res_id,
             "context": dict(
                 self.env.context,
                 default_product_id=self.product_id,

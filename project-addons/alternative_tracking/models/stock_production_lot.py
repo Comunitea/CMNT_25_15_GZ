@@ -68,13 +68,16 @@ class StockProductionLot(models.Model):
             product_domain = [("product_id.virtual_tracking", "=", True)]
 
         if location_id:
-            if strict:
-                operator = "="
+            if len(location_id) == 1:
+                if strict:
+                    operator = "="
+                else:
+                    operator = "child_of"
+                loc_domain = [("location_id", operator, location_id.id)]
+                if location_id.usage not in ("internal", "view", "transit", "customer"):
+                    loc_domain = ["|", ("location_id", "=", False)] + loc_domain
             else:
-                operator = "child_of"
-            loc_domain = [("location_id", operator, location_id.id)]
-            if location_id.usage not in ("internal", "view", "transit", "csutomer"):
-                loc_domain = ["|", ("location_id", "=", False)] + loc_domain
+                loc_domain = [("location_id", 'in', location_id.ids)]
         else:
             # Si hay ubicación, supongo solo lo que hay en stock (Internal)
             loc_domain = [("location_id.usage", "=", "internal")]
