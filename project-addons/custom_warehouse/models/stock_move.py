@@ -141,32 +141,35 @@ class StockMove(models.Model):
         return res
 
     def _action_done(self):
+        ##todo Revisar
         Entrada = self.env.ref('stock.stock_location_company')
-        if self.location_dest_id == Entrada and self.move_dest_ids and self.quantity_done > 0:
-            precision = self.product_uom.rounding
-            need_qty = sum(x.product_uom_qty for x in self.move_dest_ids)
-            if float_compare(self.quantity_done, need_qty, precision_rounding=precision) > 0:
-                Stock = self.env.ref('stock.stock_location_stock')
-                pick_domain = [('code', '=', 'internal'), ('default_location_src_id', '=', Entrada.id), ('default_location_dest_id', '=', Stock.id)]
-                type_id = self.picking_type_id.search(pick_domain, limit=1)
-                copy_vals = {'location_id': Entrada.id,
-                             'location_dest_id': Stock.id,
-                             'picking_type_id': type_id.id,
-                             'product_uom_qty': self.quantity_done - need_qty,
-                             'move_orig_ids': [(6, 0, [self.id])],
-                             'picking_id': False,
-                             'rule_id': False,
-                             'procure_method': 'make_to_stock'}
-                stock_move = self.move_dest_ids[0].copy(copy_vals)
-                stock_move._action_confirm()
-                stock_move._action_assign()
-                stock_move._assign_picking()
-                #_logger.info(_('Move %s (%s) for %s %s overprocessed in %s') %
-                #             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
+        for move in self.filtered(lambda x: x.location_dest_id == Entrada):
+            if move.move_dest_ids and move.quantity_done > 0:
+                precision = move.product_uom.rounding
+                need_qty = sum(x.product_uom_qty for x in move.move_dest_ids)
+                if float_compare(move.quantity_done, need_qty, precision_rounding=precision) > 0:
+                    Stock = self.env.ref('stock.stock_location_stock')
+                    pick_domain = [('code', '=', 'internal'), ('default_location_src_id', '=', Entrada.id), ('default_location_dest_id', '=', Stock.id)]
+                    type_id = move.picking_type_id.search(pick_domain, limit=1)
+                    copy_vals = {'location_id': Entrada.id,
+                                'location_dest_id': Stock.id,
+                                'picking_type_id': type_id.id,
+                                'product_uom_qty': move.quantity_done - need_qty,
+                                'move_orig_ids': [(6, 0, [move.id])],
+                                'picking_id': False,
+                                'rule_id': False,
+                                'procure_method': 'make_to_stock'}
+                    stock_move = move.move_dest_ids[0].copy(copy_vals)
+                    stock_move._action_confirm()
+                    stock_move._action_assign()
+                    stock_move._assign_picking()
+                    #_logger.info(_('Move %s (%s) for %s %s overprocessed in %s') %
+                    #             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
         return super()._action_done()
 
 
     def _push_apply(self):
+        ##todo Revisar
         return super()._push_apply()
         # Si llega una cantidad a entrada, tiene moviemiento de destino y la cantidad que llega es mayor que
         # la del movieminto de destino, lo que sobre debe de ir a stock.
@@ -215,7 +218,6 @@ class StockMove(models.Model):
 
 
         warehouse_id = self.picking_type_id.warehouse_id
-
         Entrada = warehouse_id.wh_input_stock_loc_id ## self.env.ref('stock.stock_location_company')
         Salida = warehouse_id.wh_output_stock_loc_id ## self.env.ref('stock.stock_location_output')
         Stock = warehouse_id.lot_stock_id ## self.env.ref('stock.stock_location_stock')
