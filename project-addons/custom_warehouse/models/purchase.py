@@ -52,8 +52,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _compute_lines_info(self):
         for po in self:
-            canceled = len(po.order_line.filtered(lambda x: x.state == 'cancel'))
-            po.lines_info = '%d/%d canceladas'%(canceled,  len(po.order_line))
+            activas = len(po.order_line.filtered(lambda x: x.state != 'cancel'))
+            po.lines_info = '%d/%d'%(activas,  len(po.order_line))
 
     lines_info = fields.Char("Líneas", compute=_compute_lines_info)
 
@@ -71,9 +71,6 @@ class PurchaseOrder(models.Model):
             else:
                 po.button_cancel()
         if not_canceled:
-            warning = {}
-            warning['message'] = 'Los albaranes %s no se han podido cancelar'%not_canceled.mapped('name')
-            res = {'warning': warning}
-            return res
+            _logger.info ('Los albaranes %s no se han podido cancelar'%not_canceled.mapped('name'))
         
 
