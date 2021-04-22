@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_tree" model="ir.ui.view">
+        <field name="name">purchase.order.tree.cw</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+
+                <field name="lines_info"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <button name="action_cw_back_to_draft" string="Vuelve el pedido al estado presupuesto"
+                        attrs="{'invisible': [('state', '!=', 'cancel')]}" type="object" icon="fa-thumbs-o-up" />
+                <button name="action_cw_cancel_purchase" string="Cancela el pedido (si todas sus lineas están canceladas)" 
+                        attrs="{'invisible': [('state', '!=', 'draft')]}" type="object" icon="fa-thumbs-o-down" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Execute action from "More" menu -->
+    <record id="menu_action_cw_back_to_draft" model="ir.actions.server">
+        <field name="name">RFQ: Volver a borrador</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_purchase_order" />
+        <field name="binding_model_id" ref="model_purchase_order" />
+        <field name="state">code</field>
+        <field name="code">records.action_cw_back_to_draft()</field>
+    </record>
+    <record id="menu_action_cw_cancel_purchase" model="ir.actions.server">
+        <field name="name">RFQ: Cancelar</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_purchase_order" />
+        <field name="binding_model_id" ref="model_purchase_order" />
+        <field name="state">code</field>
+        <field name="code">records.action_cw_cancel_purchase()</field>
+    </record>
+</odoo>

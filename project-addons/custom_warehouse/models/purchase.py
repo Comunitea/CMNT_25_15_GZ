@@ -20,8 +20,9 @@
 #
 ##############################################################################
 
-from odoo import models, fields, api, exceptions, _
+from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_is_zero, float_compare
 
 import logging
@@ -44,4 +45,35 @@ class PurchaseOrderLine(models.Model):
         for val in res:
             val['overprocess_by_supplier'] = self.overprocess_by_supplier
         return res
+
+class PurchaseOrder(models.Model):
+    _inherit = "purchase.order"
+
+    @api.multi
+    def _compute_lines_info(self):
+        for po in self:
+            canceled = len(po.order_line.filtered(lambda x: x.state == 'cancel'))
+            po.lines_info = '%d/%d canceladas'%(canceled,  len(po.order_line))
+
+    lines_info = fields.Char("Líneas", compute=_compute_lines_info)
+
+    @api.multi
+    def action_cw_back_to_draft(self):
+        for po in self.filtered(lambda x: x.state == 'cancel'):
+            po.button_draft()
+
+    @api.multi
+    def action_cw_cancel_purchase(self):
+        not_canceled = self.env['purchase.order']
+        for po in self.filtered(lambda x: x.state != 'cancel'):
+            if any(po.order_line.filtered(lambda x: x.state != 'cancel')):
+                not_canceled |= po
+            else:
+                po.button_cancel()
+        if not_canceled:
+            warning = {}
+            warning['message'] = 'Los albaranes %s no se han podido cancelar'%not_canceled.mapped('name')
+            res = {'warning': warning}
+            return res
+        
 
