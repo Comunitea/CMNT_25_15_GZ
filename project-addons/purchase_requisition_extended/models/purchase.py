@@ -26,9 +26,34 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
 
     _inherit = "purchase.order"
-
+    
+    @api.multi
+    def _compute_lines_info(self):
+        # import pdb; pdb.set_trace()
+        for po in self:
+            not_canceled = po.order_line.filtered(lambda x: x.line_state != 'cancel')
+            activas = len(not_canceled)
+            po.lines_info = '%d/%d'%(activas,  len(po.order_line))
+            po.amount_untaxed_not_canceled = sum(x.price_subtotal for x in not_canceled)
+    
     sale_id = fields.Many2one('sale.order', string='Sale order')
+    lines_info = fields.Char("Líneas", compute=_compute_lines_info)
+    amount_untaxed_not_canceled = fields.Float('*Total*', compute=_compute_lines_info)
 
+    @api.multi
+    def action_cw_back_to_draft(self):
+        for po in self.filtered(lambda x: x.state == 'cancel'):
+            po.button_draft()
+
+    @api.multi
+    def action_cw_cancel_purchase(self):
+        not_canceled = self.env['purchase.order']
+        for po in self.filtered(lambda x: x.state != 'cancel'):
+            if any(po.order_line.filtered(lambda x: x.state != 'cancel')):
+                not_canceled |= po
+            else:
+                po.button_cancel()
+                po.order_line.write({'line_state': 'cancel'})
 
     @api.multi
     def _get_destination_location(self):
@@ -66,6 +91,21 @@ class PurchaseOrderLine(models.Model):
                                     ('cancel', 'Cancelled')
                                     ], string='Status', compute="_compute_line_status", store=True)
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
+    lines_info = fields.Char("Líneas", related="order_id.lines_info")
+    
+    @api.multi
+    def action_cw_back_to_draft(self):
+        self.ensure_one()
+        if self.order_id.state == 'cancel':
+            self.order_id.button_draft()
+
+    @api.multi
+    def action_cw_cancel_purchase(self):
+        self.ensure_one()
+        if self.order_id.state != 'cancel':
+            if all(self.order_id.order_line.filtered(lambda x: x.state == 'cancel')):
+                self.order_id.button_cancel()
+                self.order_id.order_line.write({'line_state': 'cancel'})
 
     @api.multi
     def action_reconfirm_self(self):

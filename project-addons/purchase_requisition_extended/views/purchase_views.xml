@@ -48,10 +48,15 @@
                     decoration-success="line_state=='done' or line_state=='purchase'"
                     decoration-danger="date_planned > date_need">
                     <field name="order_id" readonly="1"/>
-                    <button name="action_open_po" icon="fa-eye" type="object" string="Open related purchase order"/>
-                    <button name="action_filter" icon="fa-filter" type="object"
-                            string="Filter purchase order lines by purchase order"
-                            context="{'active_field': 'order_id', 'search_default_order_id': context.get('search_default_order_id', False)}"/>
+                        <field name="lines_info"/>
+                        <button name="action_cw_back_to_draft" string="Vuelve el pedido al estado presupuesto" 
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}" type="object" icon="fa-thumbs-o-up" />
+                        <button name="action_cw_cancel_purchase" string="Cancela el pedido (si todas sus lineas están canceladas)"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}" type="object" icon="fa-thumbs-o-down" />
+                        <button name="action_open_po" icon="fa-eye" type="object" string="Open related purchase order"/>
+                        <button name="action_filter" icon="fa-filter" type="object"
+                                string="Filter purchase order lines by purchase order"
+                                context="{'active_field': 'order_id', 'search_default_order_id': context.get('search_default_order_id', False)}"/>
                     <field name="name" readonly="1" invisible="1"/>
                     <field name="product_id" readonly="1"/>
                     <button name="action_filter" icon="fa-filter" type="object"
@@ -127,5 +132,55 @@
 
 
             </field>
+        </record>
+
+
+        <record id="purchase_order_tree" model="ir.ui.view">
+            <field name="name">purchase.order.tree.cw</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_total']" position="after">
+    
+                    <field name="lines_info" invisible="context.get('show_amount_not_canceled', True)"/>
+                    <field name="amount_untaxed_not_canceled" widget="monetary" invisible="context.get('show_amount_not_canceled', True)"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="after">
+                    <button name="action_cw_back_to_draft" string="Vuelve el pedido al estado presupuesto" invisible="context.get('show_amount_not_canceled', True)"
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}" type="object" icon="fa-thumbs-o-up" />
+                    <button name="action_cw_cancel_purchase" string="Cancela el pedido (si todas sus lineas están canceladas)" invisible="context.get('show_amount_not_canceled', True)"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}" type="object" icon="fa-thumbs-o-down" />
+                </xpath>
+            </field>
+        </record>
+    
+        <!-- Execute action from "More" menu -->
+        <record id="menu_action_cw_back_to_draft" model="ir.actions.server">
+            <field name="name">RFQ: Volver a borrador</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_purchase_order" />
+            <field name="binding_model_id" ref="model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">records.action_cw_back_to_draft()</field>
+        </record>
+        <record id="menu_action_cw_cancel_purchase" model="ir.actions.server">
+            <field name="name">RFQ: Cancelar</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_purchase_order" />
+            <field name="binding_model_id" ref="model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">records.action_cw_cancel_purchase()</field>
+        </record>
+    
+        <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition_list">
+            <field name="name">Request for Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('requisition_id','=',active_id)]</field>
+            <field name="context">{"show_purchase": False, 
+                                   "show_amount_not_canceled": False, 
+                                   "default_requisition_id":active_id}</field>
         </record>
 </odoo>
