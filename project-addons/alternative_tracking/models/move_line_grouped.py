@@ -72,7 +72,7 @@ class MoveLineGrouped(models.Model):
     # batch_id = fields.Many2one("stock.picking.batch", "Batch Picking")
     product_uom_qty = fields.Float("Reserved quantity")
     quantity_done = fields.Float("Quantity done")
-    track_from_line = fields.Boolean("Track from line")
+    track_from_line = fields.Boolean(related="move_id.track_from_line")
     virtual_tracking = fields.Boolean("With tracking")
     location_id = fields.Many2one("stock.location", "Src Location")
     loc_name = fields.Char("Loc Name")
@@ -105,7 +105,7 @@ class MoveLineGrouped(models.Model):
 
         select_ = """
             CASE WHEN
-                sm.track_from_line THEN 'stock.move.line'
+                count(sml.id) > 1 THEN 'stock.move.line'
                 ELSE 'stock.move' END
                 AS model,
             min(sml.id) as id,
@@ -120,7 +120,6 @@ class MoveLineGrouped(models.Model):
             (sum(sml.product_uom_qty) / greatest(1, count(lml.lot_id)))::integer as product_uom_qty,
             (sum(sml.qty_done) / greatest(1, count(lml.lot_id)))::integer as quantity_done,
             sm.virtual_tracking as virtual_tracking,
-            sm.track_from_line as track_from_line,
             sml.removal_priority as removal_priority,
             sml.removal_dest_priority as removal_dest_priority,
             sm.picking_id as picking_id,
@@ -160,7 +159,6 @@ class MoveLineGrouped(models.Model):
             sld.name,
             sml.location_id,
             sml.move_id,
-            sm.track_from_line,
             sm.virtual_tracking,
             sm.name,
             sml.removal_priority,
