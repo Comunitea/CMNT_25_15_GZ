@@ -55,13 +55,14 @@ class PurchaseOrder(models.Model):
                 po.button_cancel()
                 po.order_line.write({'line_state': 'cancel'})
 
+    """
     @api.multi
     def _get_destination_location(self):
         self.ensure_one()
         if self.sale_id:
             return self.env.ref('stock.stock_location_company').id
         return super()._get_destination_location()
-
+    """
 
     @api.multi
     def button_approve(self, force=False):

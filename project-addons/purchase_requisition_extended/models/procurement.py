@@ -34,8 +34,12 @@ class ProcurementRule(models.Model):
             domain = [('group_id', '=', group_id.id), ('state', 'in', ['draft', 'in_progress'])]
             pr = self.env['purchase.requisition'].search(domain, limit=1)
             if pr:
-                new_linevalues = pr._prepare_tender_line_values(product_id, product_qty, product_uom, values)
-                pr.line_ids.create(new_linevalues)
+                req_line = pr.line_ids.filtered(lambda x: x.product_id) 
+                if req_line:
+                    req_line.product_qty += product_qty
+                else:
+                    new_linevalues = pr._prepare_tender_line_values(product_id, product_qty, product_uom, values)
+                    pr.line_ids.create(new_linevalues)
                 return True
         values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
         values['picking_type_id'] = self.picking_type_id.id
