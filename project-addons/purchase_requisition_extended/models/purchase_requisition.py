@@ -55,7 +55,7 @@ class PurchaseRequisition(models.Model):
         fpos = FiscalPosition.browse(fpos)
         order_lines = []
         seller_ids = self.seller_ids.filtered(lambda x: x.name == partner)
-        for seller_id in seller_ids:
+        for seller_id in seller_ids.filtered(lambda x: x.control_ok):
             line_ids = self.line_ids.filtered(lambda x: x.product_id == seller_id.product_id or x.product_id.product_tmpl_id == seller_id.product_tmpl_id)
             for line in line_ids:
                 order_date = fields.Datetime.from_string(line.schedule_date)

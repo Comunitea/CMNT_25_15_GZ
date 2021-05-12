@@ -23,6 +23,14 @@ from odoo import models, fields, api, _
 #from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 
+class ProductSupplierinfo(models.Model):
+    _inherit = 'product.supplierinfo'
+
+    control_ok = fields.Boolean(
+        'Q. Control', default=True,
+        help="Si está marcado, SE propondrá en los acuerdos de compras")
+
+
 class PurchaseOrder(models.Model):
 
     _inherit = "purchase.order"
