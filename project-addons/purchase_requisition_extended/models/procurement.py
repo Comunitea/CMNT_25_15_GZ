@@ -27,6 +27,7 @@ class ProcurementRule(models.Model):
 
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+        
         if product_id.purchase_requisition != 'tenders':
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         group_id = values.get('group_id', False)
@@ -34,7 +35,7 @@ class ProcurementRule(models.Model):
             domain = [('group_id', '=', group_id.id), ('state', 'in', ['draft', 'in_progress'])]
             pr = self.env['purchase.requisition'].search(domain, limit=1)
             if pr:
-                req_line = pr.line_ids.filtered(lambda x: x.product_id) 
+                req_line = pr.line_ids.filtered(lambda x: x.product_id == product_id) 
                 if req_line:
                     req_line.product_qty += product_qty
                 else:

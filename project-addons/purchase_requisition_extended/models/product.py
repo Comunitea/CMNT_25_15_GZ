@@ -24,7 +24,7 @@ from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
 
 
-class ProductSProduct(models.Model):
+class ProductProduct(models.Model):
 
     _inherit = 'product.product'
 
@@ -33,7 +33,8 @@ class ProductSProduct(models.Model):
         if self._context.get('seller_id', False):
             print ("Forzado de supplier info a %s" % self._context['seller_id'].name)
             return self._context['seller_id']
-        return super()._select_seller(partner_id=partner_id, quantity=quantity,date=date,uom_id=uom_id)
+        res = super()._select_seller(partner_id=partner_id, quantity=quantity,date=date,uom_id=uom_id)
+        return res.filtered(lambda x: x.control_ok)
 
     @api.multi
     def _select_seller_without_qty(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
@@ -43,7 +44,7 @@ class ProductSProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        sellers = self.seller_ids
+        sellers = self.seller_ids.filtered(lambda x: x.control_ok and x.name.control_ok)
         if self.env.context.get('force_company'):
             sellers = sellers.filtered(
                 lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])

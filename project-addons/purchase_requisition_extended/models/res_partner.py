@@ -19,17 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Purchase Requisition Extended',
-    'version': '11.0.0.0.1',
-    'category': 'Purchases',
-    'description': """Genera líneas de compra para cada seller, proponiendo la primera""",
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['stock', 'product', 'purchase', 'purchase_discount', 'purchase_requisition'],
-    'data': ['views/purchase_views.xml',
-             'views/sale_views.xml',
-             'views/res_partner.xml',
-             'views/purchase_requisition.xml'],
-    'installable': True,
-}
+
+from odoo import models, fields, api
+from odoo.addons import decimal_precision as dp
+
+
+class ResPartner(models.Model):
+
+    _inherit = 'res.partner'
+
+
+    control_ok = fields.Boolean(
+        'Q. Control', default=True,
+        help="Si no está marcado, no aparecerá en los listados de seller para aprovisionamiento")
