@@ -12,5 +12,40 @@
                  </xpath>
              </field>
          </record>
- 
+        <!-- Añado colores a las líneas --> 
+        <record id="view_order_line_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.ext.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree" />
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="state" invisible="1"/>
+                </field>
+                <xpath expr="/tree" position="attributes">
+                    <attribute name="decoration-muted">state == 'draft'</attribute>
+                </xpath>
+            </field>
+        </record>
+        <!--Quieren ver los presupeustos enviados a los clientes, no solo los conifrmados--> 
+         <record id="sale.action_product_sale_list" model="ir.actions.act_window">
+            <field name="name">Sales Order Lines</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
+            <field name="domain">[('state', '!=', 'cancel')]</field>
+        </record> 
+        <!--Tengo que haver uno nuevo por el contexto que trtae la acción original-->
+        <record id="action_sale_order_lines_all" model="ir.actions.act_window">
+            <field name="name">Sales Order Lines</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="context"></field>
+            <field name="domain">[('state', '!=', 'cancel')]</field>
+        </record>
+
+        
+         <menuitem id="menu_sale_order_lines_all"
+         action="action_sale_order_lines_all"
+         parent="sale.sale_order_menu"
+         sequence="99" groups="sales_team.group_sale_salesman"/>
 </odoo>

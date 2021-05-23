@@ -22,6 +22,7 @@
 
 from odoo import models, fields, api, _
 
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -39,3 +40,15 @@ class SaleOrder(models.Model):
         self.env['purchase.requisition'].search(domain).action_cancel()
         return super().action_cancel()
 
+    @api.multi
+    def action_view_delivery(self):
+
+        '''Heredo para añadir que agrupe por tipo de albarán"
+
+        '''
+        ctx = self._context.copy()
+        ctx.update({'search_default_picking_type': True})
+        action = super().action_view_delivery()
+        action['context'] = ctx
+        print (action)
+        return action

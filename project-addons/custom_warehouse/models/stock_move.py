@@ -167,7 +167,6 @@ class StockMove(models.Model):
                     #             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
         return super()._action_done()
 
-
     def _push_apply(self):
         ##todo Revisar
         return super()._push_apply()
@@ -279,7 +278,11 @@ class StockMove(models.Model):
         Picking     >>>>    Salida  >>>>    Clientes
         (make_to_stock - en espera/reservado)
         """
-        if self.location_dest_id.usage != 'customer':
+        location_dest_id = self.mapped('location_dest_id')
+        if len(location_dest_id) != 1:
+            raise ValidationError (_('Todos los albaranes deben de ir a la misma ubicación'))
+        # Como supongo que los movimientos son de salida, la ubicación de destino debería ser salidas.
+        if location_dest_id.usage != 'customer':
             raise ValidationError (_('Only outgoing pickings'))
         
         warehouse_id = self.picking_type_id.warehouse_id
@@ -291,22 +294,21 @@ class StockMove(models.Model):
         sol_dict = {}
         moves = self.env['stock.move']
         for move in self:
-            if move.sale_line_id:
-                sol_dict[move.sale_line_id] = move.product_uom_qty
+            if not move.sale_line_id:
+                continue
 
+            sol_dict[move.sale_line_id] = move.product_uom_qty
+            ## Además, solo permito si los moviemitnos anteriores son del mismo grupo de abastecimietno.
+            ## en estado distinto a draft, cancel, done
+            orig_move_ids = move.move_orig_ids.filtered(
+                lambda x: x.group_id == move.group_id 
+                and x.state not in ['draft', 'cancel', 'done'])
             # move._action_cancel()
             # move._do_unreserve()
             moves |= move
-            # Como supongo que los movimientos son de salida, la ubicación de destino debería ser salidas.
-            # orig_move_ids son los pickings
-
-            orig_move_ids = move.move_orig_ids.filtered(lambda x:x.state not in ['draft', 'cancel'])
-            if orig_move_ids.filtered(lambda x: x.state == 'done'):
-                raise ValidationError (_('Previous move are done'))
-
-            orig_move_ids = orig_move_ids.filtered(lambda x: x.group_id == move.group_id)
 
             if orig_move_ids:
+                ## Puede tener varios movimeintos previos, pero TODOS deben ir al este
                 if len(orig_move_ids) > 1 and orig_move_ids.mapped("move_dest_ids") != move:
                     raise ValidationError(_('Move %s have more than one move orig'))
                 if len(orig_move_ids.mapped('move_dest_ids')) > 1:
@@ -315,12 +317,13 @@ class StockMove(models.Model):
                 #orig_move_ids._do_unreserve()
                 #if orig_move_ids.procure_method == 'make_to_order':
                 moves |= orig_move_ids
-
+        ## Cancelo el movieminto. Esto cancela los anteriores, si cumplen condiciones anteriores.
         moves._action_cancel()
         ctx = self._context.copy()
         ctx.update(new_picking=True,
                    rule_domain=[('action', '=', 'move')])
         line_ids = self.env['sale.order.line']
+        ##vuelvo a lanzar el procurement de la línea de venta, pero con distinta acción
         for sale_line_id in sol_dict.keys():
             sale_line_id.state = 'sale'
             sale_line_id.with_context(ctx)._action_launch_procurement_rule()
