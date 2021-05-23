@@ -39,7 +39,7 @@ class StockMove(models.Model):
 
     def get_domain_for_assign_picking(self):
         domain = []
-        if self.rule_id:
+        if self.rule_id and self.picking_type_id.code != 'outgoing':
             domain += [('rule_id', '=', self.rule_id.id)]
         if self.destination_code_id:
             domain += [('destination_code_id', '=', self.destination_code_id.id)]
