@@ -228,15 +228,18 @@
             <field name="arch" type="xml">
                 <field name="property_account_position_id" position="replace"/>
                 <field name="category_id" position="after">
-                    <group colspan="4" col="4">
-                        <field name="gln"/>
-                        <field name="edi_operational_code"/>
-                        <field name="customer_reference"/>
-                        <field name="edi_relation"/>
-                        <field name="center_code" string="UNOR"/>
-                        <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
-                    </group>
+                    <div colspan="2">
+                        <group colspan="4" col="4">
+                                <field name="gln"/>
+                                <field name="edi_operational_code"/>
+                                <field name="customer_reference"/>
+                                <field name="edi_relation"/>
+                                <field name="center_code" string="UNOR"/>
+                                <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </div>
                 </field>
+
             </field>
         </record>
 
@@ -348,4 +351,3 @@
             <menuitem id="menu_edi_doc" parent="menu_edi" name="Documentos" action="act_edi_doc" sequence="1"/>
 
 </odoo>
-
