@@ -29,12 +29,21 @@
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
-    'depends': ['stock', 'purchase', 'sale_stock', 'purchase_requisition_extended'],
+    'depends': [
+        'stock', 
+        'purchase', 
+        'sale_stock',
+        'stock_picking_imp',
+        'destination_code',
+        'purchase_requisition_extended',
+        'procurement_group_extended'],
     'data': [
         'views/stock_move_view.xml',
         'views/stock_picking_view.xml',
         'views/sale_view.xml',
+        'views/stock_picking_type.xml',
         'views/res_partner.xml',
+
     ],
     'installable': True,
 }

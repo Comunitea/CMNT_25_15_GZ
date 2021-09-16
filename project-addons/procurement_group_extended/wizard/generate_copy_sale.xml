@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_generate_new_sales" model="ir.ui.view">
+            <field name="name">generate.sale.copy.form</field>
+            <field name="model">generate.sale.copy</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Asistente para duplicar ventas/líneas">
+                    <group>
+                        <group>
+                            <field name="sale_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="destination_code"/>
+                        </group>
+                        <group>
+                            <field name="group_id" context="{'default_partner_id': partner_id}"/>
+                            <field name="merge_moves"/>
+                        </group>
+                    </group>
+                    <field name="child_ids" widget="many2many_tags" invisible="1"/>
+                    <group>
+                        <field nolabel="1" name="line_ids">
+                            <tree editable="top" create="true">
+                                <field name="partner_id" domain="[('id', 'in', parent.child_ids)]"/>
+                                <field name="ref_client" attrs="{'column_invisible': [('parent.destination_code', '=', True)]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="generate_sales" string="Sí" type="object" icon="gtk-ok" default_focus="1"/>
+                        <button special="cancel" string="No" icon="gtk-cancel"/>
+                    </footer>
+                    
+                </form>
+            </field>
+        </record>
+        <!-- Pedido de venta-->
+        <act_window
+            id="action wizard_generate_new_sales" name="Duplicar ventas/lineas"
+            res_model="generate.sale.copy"
+            src_model="sale.order"
+            view_type="form"
+            view_mode="form"
+            target="new"
+            view_id="wizard_generate_new_sales"
+            key2="client_action_multi"
+            />
+    </data>
+</odoo>

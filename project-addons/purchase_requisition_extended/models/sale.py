@@ -23,22 +23,28 @@
 from odoo import models, fields, api, _
 
 
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+    
+    @api.multi
+    def _prepare_procurement_values(self, group_id=False):
+        
+        return super()._prepare_procurement_values(group_id=group_id)
+        values['sale_id'] = self.order_id.id
+        return values
+
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     purchase_ids = fields.One2many(comodel_name='purchase.order', inverse_name="sale_id", string="Purchase Order", help="Purchase orders created from asociated purchase requistion")
-
+    requisition_id = fields.Many2one(related='procurement_group_id.requisition_id')
+    
     @api.multi
     def open_puchase_ids(self):
         action = self.env.ref('purchase.purchase_form_action').read()[0]
         action['domain'] = [('id', 'in', self.purchase_ids.ids)]
         return action
-
-    @api.multi
-    def action_cancel(self):
-        domain =[('sale_id', 'in', self.ids), ('state', 'in', ['draft', 'in_progress', 'open'])]
-        self.env['purchase.requisition'].search(domain).action_cancel()
-        return super().action_cancel()
 
     @api.multi
     def action_view_delivery(self):
@@ -50,5 +56,4 @@ class SaleOrder(models.Model):
         ctx.update({'search_default_picking_type': True})
         action = super().action_view_delivery()
         action['context'] = ctx
-        print (action)
         return action

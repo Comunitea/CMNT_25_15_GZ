@@ -12,7 +12,6 @@ class FixedPutAwayStrategy(models.Model):
     @api.multi
     def name_get(self):
         res = []
-        print (self._context)
         for name in self:
             display_name = '{}: {}'.format(name.putaway_id.name, name.fixed_location_id.name)
             if self._context.get('with_product'):
@@ -125,7 +124,6 @@ class ProductProduct(models.Model):
         order= 'in_date DESC NULLS LAST, id desc'
         Quant = self.env['stock.quant']
         putaway_ids = self.env['stock.fixed.putaway.strat']
-        print ('Calculando nuevas ubicaciones para {}'.format(len(self)))
         for product_id in product_ids:
             domain = [('product_id', '=', product_id.id),
                       ('location_id', 'child_of', location_id.id),
@@ -150,7 +148,6 @@ class ProductProduct(models.Model):
                             'from_script': True,
                             'fixed_location_id': quant.location_id.id}
                     quant_line = self.env['stock.fixed.putaway.strat'].create(vals)
-                    print("-- {} --> {}".format(quant_line.product_id.display_name, quant_line.fixed_location_id.name))
 
         xml_id = 'product_putaway.action_stock_fixed_putaway_strat_tree_pp'
         action = self.env.ref(xml_id).read()[0]

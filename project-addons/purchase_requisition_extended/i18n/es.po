@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-20 10:59+0000\n"
-"PO-Revision-Date: 2021-04-20 10:59+0000\n"
+"POT-Creation-Date: 2021-09-16 14:18+0000\n"
+"PO-Revision-Date: 2021-09-16 14:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,27 @@ msgid "# Order lines"
 msgstr "Nº Líneas"
 
 #. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_requisition_line_pol_count
+msgid "# PO lines"
+msgstr "# PO lines"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_amount_untaxed_not_canceled
+msgid "*Total*"
+msgstr "*Total*"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_requisition_line_price_subtotal
+msgid "Amount"
+msgstr "Importe"
+
+#. module: purchase_requisition_extended
+#: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_line_tree_pre
+#: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_tree
+msgid "Cancela el pedido (si todas sus lineas están canceladas)"
+msgstr "Cancela el pedido (si todas sus lineas están canceladas)"
+
+#. module: purchase_requisition_extended
 #: selection:purchase.order.line,line_state:0
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -31,9 +52,24 @@ msgid "Confirm this rule. This action will cancel the other purchase order lines
 msgstr "Confirma esta regla. Esta acción cancelará las otras líneas para este artículo"
 
 #. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_res_partner
+msgid "Contact"
+msgstr "Proveedor"
+
+#. module: purchase_requisition_extended
+#: selection:procurement.group,purchase_requisition:0
+msgid "Create a draft purchase order"
+msgstr "Crear un pedido de compra borrador"
+
+#. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_date_need
 msgid "Date needed"
 msgstr "Fecha solicitada"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_requisition_line_move_dest_ids
+msgid "Downstream Moves"
+msgstr "Movimientos de destino"
 
 #. module: purchase_requisition_extended
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_line_tree_pre
@@ -61,6 +97,11 @@ msgid "Hide cancelled lines"
 msgstr "Ocultar líneas canceladas"
 
 #. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_product_supplierinfo
+msgid "Information about a product vendor"
+msgstr "Información sobre el proveedor del producto"
+
+#. module: purchase_requisition_extended
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.view_purchase_requisition_form_extended
 msgid "Lines"
 msgstr "Líneas"
@@ -71,18 +112,24 @@ msgid "Locked"
 msgstr "Bloqueado"
 
 #. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_lines_info
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_lines_info
+msgid "Líneas"
+msgstr "Líneas"
+
+#. module: purchase_requisition_extended
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.view_purchase_requisition_form_extended
 msgid "New Quotations"
 msgstr "Generar Propuestas"
 
 #. module: purchase_requisition_extended
-#: code:addons/purchase_requisition_extended/models/purchase_requisition.py:144
+#: code:addons/purchase_requisition_extended/models/purchase_requisition.py:151
 #, python-format
 msgid "Next purchase orders has been created from purchase requisition %s</br><ul>"
 msgstr "Las siguientes ordenes de compra han sido creadas desde el RFQ %s</br><ul>"
 
 #. module: purchase_requisition_extended
-#: code:addons/purchase_requisition_extended/models/purchase.py:186
+#: code:addons/purchase_requisition_extended/models/purchase.py:234
 #, python-format
 msgid "Only for purchase requisitiom"
 msgstr "Solo para acuerdos de compra. RFQs"
@@ -98,9 +145,19 @@ msgid "Open related supplier rule. Changes are not propagated to line"
 msgstr "Abre la regla de proveedor. Los cambios en esta no se propagan a las líneas de la propuesta"
 
 #. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_procurement_group_purchase_requisition
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_requisition_group_id
 msgid "Procurement Group"
 msgstr "Grupo de abastecimiento"
+
+#. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Petición de abastecimiento"
 
 #. module: purchase_requisition_extended
 #: model:ir.model,name:purchase_requisition_extended.model_procurement_rule
@@ -113,6 +170,11 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: purchase_requisition_extended
+#: selection:procurement.group,purchase_requisition:0
+msgid "Propose a call for tenders"
+msgstr "Proponer una licitación"
+
+#. module: purchase_requisition_extended
 #: model:ir.model,name:purchase_requisition_extended.model_purchase_order
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_sale_order_purchase_ids
 #: selection:purchase.order.line,line_state:0
@@ -122,12 +184,18 @@ msgstr "Pedido de compra"
 #. module: purchase_requisition_extended
 #: model:ir.model,name:purchase_requisition_extended.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Línea de pedido de compra"
+msgstr "Línea pedido de compra"
 
 #. module: purchase_requisition_extended
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_line_tree_pre
 msgid "Purchase Order Lines"
-msgstr "Líneas de Pedido de Compra"
+msgstr "Líneas pedido de compra"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_procurement_group_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_sale_order_requisition_id
+msgid "Purchase Req"
+msgstr "Licitación"
 
 #. module: purchase_requisition_extended
 #: model:ir.model,name:purchase_requisition_extended.model_purchase_requisition
@@ -135,9 +203,11 @@ msgid "Purchase Requisition"
 msgstr "Solicitud de compra"
 
 #. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_purchase_requisition_line_id
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_stock_move_pr_line_id
 msgid "Purchase Requisition Line"
-msgstr "Propuesta de compra"
+msgstr "Línea de solicitud de compra"
 
 #. module: purchase_requisition_extended
 #: model:ir.model.fields,help:purchase_requisition_extended.field_sale_order_purchase_ids
@@ -148,6 +218,13 @@ msgstr "Ordenes de compra creadas desde el RFQ asociado"
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.view_order_form
 msgid "Purchases"
 msgstr "Compras"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_product_supplierinfo_control_ok
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_res_partner_control_ok
+#: model:ir.model.fields,field_description:purchase_requisition_extended.field_res_users_control_ok
+msgid "Q. Control"
+msgstr "Q. Control"
 
 #. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_qty_need
@@ -170,6 +247,16 @@ msgid "RFQ Sent"
 msgstr "RFQ Enviada"
 
 #. module: purchase_requisition_extended
+#: model:ir.actions.server,name:purchase_requisition_extended.menu_action_cw_cancel_purchase
+msgid "RFQ: Cancelar"
+msgstr "RFQ: Cancelar"
+
+#. module: purchase_requisition_extended
+#: model:ir.actions.server,name:purchase_requisition_extended.menu_action_cw_back_to_draft
+msgid "RFQ: Volver a borrador"
+msgstr "RFQ: Volver a borrador"
+
+#. module: purchase_requisition_extended
 #: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_line_tree_pre
 msgid "Reconfirm this rule. This action will put this rule ready to check again"
 msgstr "Reconfirma esta regla. Esta acción habilita esta propuesta de nuevo"
@@ -181,21 +268,43 @@ msgid "Sale order"
 msgstr "Pedido de venta"
 
 #. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea pedido de venta"
+
+#. module: purchase_requisition_extended
+#: model:ir.actions.act_window,name:purchase_requisition_extended.action_sale_order_lines_all
+#: model:ir.ui.menu,name:purchase_requisition_extended.menu_sale_order_lines_all
+msgid "Sales Order Lines"
+msgstr "Líneas pedido de ventas"
+
+#. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_seller_id
 msgid "Seller"
 msgstr "Vendedor"
 
 #. module: purchase_requisition_extended
-#: code:addons/purchase_requisition_extended/models/purchase.py:94
+#: code:addons/purchase_requisition_extended/models/purchase.py:143
 #, python-format
 msgid "Seller Properties"
 msgstr "Regla del vendedor"
 
 #. module: purchase_requisition_extended
-#: code:addons/purchase_requisition_extended/models/purchase.py:117
+#: code:addons/purchase_requisition_extended/models/purchase.py:166
 #, python-format
 msgid "Seller min qty is %s"
 msgstr "La cantidad mínima de la regla de compra es %s"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,help:purchase_requisition_extended.field_product_supplierinfo_control_ok
+msgid "Si está marcado, SE propondrá en los acuerdos de compras"
+msgstr "Si está marcado, SE propondrá en los acuerdos de compras"
+
+#. module: purchase_requisition_extended
+#: model:ir.model.fields,help:purchase_requisition_extended.field_res_partner_control_ok
+#: model:ir.model.fields,help:purchase_requisition_extended.field_res_users_control_ok
+msgid "Si no está marcado, no aparecerá en los listados de seller para aprovisionamiento"
+msgstr "Si no está marcado, no aparecerá en los listados de seller para aprovisionamiento"
 
 #. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_order_line_line_state
@@ -203,9 +312,14 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: purchase_requisition_extended
+#: model:ir.model,name:purchase_requisition_extended.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: purchase_requisition_extended
 #: model:ir.model.fields,field_description:purchase_requisition_extended.field_purchase_requisition_seller_ids
 msgid "Supplier Info"
-msgstr "Información Regla de compra"
+msgstr "Info. proveedor"
 
 #. module: purchase_requisition_extended
 #: selection:purchase.order.line,line_state:0
@@ -223,8 +337,8 @@ msgid "Vendors"
 msgstr "Proveedores"
 
 #. module: purchase_requisition_extended
-#: code:addons/purchase_requisition_extended/models/purchase_requisition.py:212
-#, python-format
-msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
-msgstr "Tienes que cancelar o validar cada compra antes de verrar el RFQ."
+#: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_line_tree_pre
+#: model:ir.ui.view,arch_db:purchase_requisition_extended.purchase_order_tree
+msgid "Vuelve el pedido al estado presupuesto"
+msgstr "Vuelve el pedido al estado presupuesto"
 

@@ -31,7 +31,6 @@ class ProductTemplate(models.Model):
         action = self.env.ref("stock.action_production_lot_form").read()[0]
         Stock = self.env['stock.warehouse'].search([])[0].lot_stock_id
         action["context"] = {"default_product_id": self.id, 'default_virtual_tracking': True, 'default_location_id': Stock.id}
-        print (action['context'])
         domain = self.env["stock.production.lot"].get_domain_for_available_lot_ids(
             product_ids=self, bom=True
         )

@@ -384,7 +384,6 @@ class StockMove(models.Model):
             raise ValidationError(_("Incorrect state. Change in move lines"))
         if self.state in ["done", "cancel", "draft"]:
             raise ValidationError(_("Incorrect move state"))
-        # import pdb; pdb.set_trace()
         self.move_line_ids.lot_ids = self.lot_ids
         self.compute_new_move_line_quantities()
 

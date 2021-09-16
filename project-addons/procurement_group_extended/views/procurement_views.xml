@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="do_view_sales" model="ir.actions.act_window">
+            <field name="name">Ventas for Groups</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('procurement_group_id','=',active_id)]</field>
+        </record>
+        <record id="do_view_purchases" model="ir.actions.act_window">
+            <field name="name">Compras for Groups</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('group_id','=',active_id)]</field>
+        </record>
+        <record id="do_view_requisitions" model="ir.actions.act_window">
+            <field name="name">RQF for Groups</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('group_id','=',active_id)]</field>
+        </record>
+        <record id="procurement_group_tree_view" model="ir.ui.view">
+            <field name="name">procurement.group.tree</field>
+            <field name="model">procurement.group</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Procurement Group" decoration-success="picking_state=='done'" decoration-muted="picking_state=='draft'">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="picking_state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="procurement_group_form_view" model="ir.ui.view">
+            <field name="name">procurement.group.form</field>
+            <field name="model">procurement.group</field>
+            <field name="inherit_id" ref="stock.procurement_group_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="show_confirm_sale" invisible="1"/>
+                        <button name="action_confirm" string="Confirm" type="object" attrs="{'invisible': [('show_confirm_sale', '=', False)]}"/>
+                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('picking_state', '=', 'done')]}"/>
+                        <field name="picking_state" widget="statusbar"/>
+                    </header>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    
+                    <button name="%(do_view_sales)d" string="Ventas" type="action" icon="fa-usd" context="{'default_procurement_group_id': active_id, 'default_partner_id': partner_id}" class="oe_stat_button"/>
+                    <button name="%(do_view_purchases)d" string="Compras" type="action" icon="fa-usd" class="oe_stat_button"/>
+   
+                </xpath>
+                <field name="move_type" position="replace"></field>
+                <!--field name="purchase_requisition" position="replace"></field-->
+                <field name="name" position="replace">
+                    
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="notes"/>
+                        </group>
+                        <group>
+                            <field name="purchase_requisition"/>
+                            <field name="requisition_id"/>
+                            <field name="move_type"/>
+                            <field name="merge_moves"/>
+                        </group>
+                    
+                </field>
+               
+                <xpath expr="//field[@name='name']/../.." position="after">
+                    <group>
+                        <group string="Ventas">
+                            <field name="sale_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Compras">
+                            <field name="purchase_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                    <group string="Albaranes">
+                        <field name="picking_ids"  nolabel="1" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="state"/>
+                                <field name="scheduled_date"/>
+                                <field name="date_done"/>
+                            </tree>
+                        </field>
+                    </group> 
+
+                    </xpath>
+
+            </field>
+        </record>
+        <!--Tengo que haver uno nuevo por el contexto que trtae la acción original-->
+        <record id="action_procurement_group_tree" model="ir.actions.act_window">
+            <field name="name">Grupo de abastecimeinto</field>
+            <field name="res_model">procurement.group</field>
+            <field name="view_mode">tree,form</field>
+            
+        </record>
+        <menuitem id="menu_purchase_group"
+            action="action_procurement_group_tree"
+            parent="sale.sale_order_menu"
+            sequence="99" groups="sales_team.group_sale_salesman"/>
+
+    </data>
+</odoo>

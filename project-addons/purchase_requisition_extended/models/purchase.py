@@ -197,7 +197,6 @@ class PurchaseOrderLine(models.Model):
         action['domain'] = []
         name = ''
         context = eval(action['context'])
-        print(context)
         pr_id = self.order_id.requisition_id
         if pr_id:
             action['domain'] += [('order_id', 'in', pr_id.purchase_ids.ids)]
@@ -234,8 +233,20 @@ class PurchaseOrderLine(models.Model):
         if not requisition_id:
             raise ValidationError(_('Only for purchase requisitiom'))
         ## tengo que buscar todas las lineas para esté producto y cancelarlas
-        self.move_dest_ids = self.purchase_requisition_line_id.move_dest_id
+        # self.move_dest_ids = self.purchase_requisition_line_id.move_dest_id
         line_ids = requisition_id.purchase_ids.mapped('order_line').filtered(lambda x: x.product_id == self.product_id and self.id != x.id)
         line_ids.write({'line_state': 'cancel'})
 
 
+    @api.multi
+    def _prepare_stock_moves(self, picking):
+        res = super()._prepare_stock_moves(picking=picking)
+        if self.move_dest_ids:
+            new_location_dest_id = self.move_dest_ids.mapped('location_id')
+            if picking.location_dest_id != new_location_dest_id:
+                picking.location_dest_id = new_location_dest_id
+
+            for vals in res:
+                vals['location_dest_id'] = new_location_dest_id.id
+        return res
+        

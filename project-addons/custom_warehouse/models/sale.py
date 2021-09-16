@@ -36,7 +36,6 @@ class SaleOrder(models.Model):
                 move_orig_ids = move_orig_ids.mapped('move_orig_ids')
             sale.stock_move_ids = stock_moves.filtered(lambda x: x.state != 'cancel')
 
-    destination_code_id = fields.Boolean('Destination code')
     stock_move_ids = fields.One2many('stock.move', compute="_get_stock_move_ids")
 
     def action_picking_move_tree(self):
@@ -53,8 +52,6 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
 
     _inherit = "sale.order.line"
-
-    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
 
     @api.multi
     def name_get(self):

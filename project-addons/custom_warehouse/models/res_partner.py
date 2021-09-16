@@ -20,10 +20,8 @@
 #
 ##############################################################################
 
-from odoo import models, fields, api, exceptions, _
+from odoo import models
 from odoo.addons import decimal_precision as dp
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
-
-    destination_code_id = fields.Boolean('Destination code')

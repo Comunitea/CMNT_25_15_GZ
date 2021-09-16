@@ -31,11 +31,5 @@ _logger = logging.getLogger(__name__)
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-
-    def get_default_locations():
-
-        warehouse_id = self.warehouse_id
-        Entrada = warehouse_id.wh_input_stock_loc_id ## self.env.ref('stock.stock_location_company')
-        Salida = warehouse_id.wh_output_stock_loc_id ## self.env.ref('stock.stock_location_output')
-        Stock = warehouse_id.lot_stock_id 
-        
+    excess_location_id = fields.Many2one('stock.location', string="Excess Location", 
+    help="Si el tipo de albarán tiene esta ubicación, el exceso de stock se envía a esta ubicación")

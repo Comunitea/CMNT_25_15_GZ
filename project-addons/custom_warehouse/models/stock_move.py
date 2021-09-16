@@ -33,30 +33,26 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
-    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
     procurement_route_id = fields.Many2one(related="rule_id.route_id")
     overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
 
-    def get_domain_for_assign_picking(self):
-        domain = []
-        if self.rule_id and self.picking_type_id.code != 'outgoing':
-            domain += [('rule_id', '=', self.rule_id.id)]
-        if self.destination_code_id:
-            domain += [('destination_code_id', '=', self.destination_code_id.id)]
+    def _get_new_picking_domain(self):
+        domain = super()._get_new_picking_domain()
+        if self.picking_type_id.code == 'outgoing':
+            domain += [('partner_id', '=', self.partner_id.id)]
+            if self.sale_id:
+                domain += [('sale_id', '=', self.sale_id.id)]
         return domain
-
+    """
     def _assign_picking(self):
         ctx = self._context.copy()
-        if self.picking_type_id.code == 'outgoing':
-            ctx.update(assign_picking_domain=self.get_domain_for_assign_picking())
+        ctx.update(assign_picking_domain=self.get_domain_for_assign_picking())
         return super(StockMove, self.with_context(ctx))._assign_picking()
-
+    """
     def _get_new_picking_values(self):
         vals = super()._get_new_picking_values()
         if self.rule_id:
             vals['rule_id'] = self.rule_id.id
-        if self.destination_code_id:
-            vals['destination_code_id'] = self.destination_code_id.id
         return vals
 
     def _prepare_move_split_vals(self, qty):
@@ -72,22 +68,24 @@ class StockMove(models.Model):
         return vals
 
     def split_excess_to_stock(self, qty_done=True):
-
+        return True
         ## si recibimos má cantidad que la que necesitamos, entonces se envían a stock
 
         ## Si qty_done = True hacemos split sobre la cantidad hecha,
         # si no sobre la cantidad que se necesita en los siguientes movimientos
         ctx = self._context.copy()
         res = self.env['stock.move']
+
         for move in self:
+            
             _logger.info('%s: desde %s a %s. %s'%(move.display_name, move.location_id.name, move.location_dest_id.name, move.product_uom_qty))
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             need_qty = sum(x.product_uom_qty for x in move.move_dest_ids)
+            
             if not qty_done:
-                qty_purchased = move.product_uom_qty
-                to_stock_qty = qty_purchased - need_qty
+                to_stock_qty = move.product_uom_qty - need_qty
             else:
-                to_stock_qty = move.quantity_done
+                to_stock_qty = move.product_uom_qty - move.quantity_done
 
             location_dest_id = move.warehouse_id.lot_stock_id
             if float_is_zero(to_stock_qty, precision_digits=precision):
@@ -95,77 +93,108 @@ class StockMove(models.Model):
             ## si el movimiento siguiente tienen menos cantidad, el resto va para stock
             _logger.info("Split move in {} to {} and {} to {}".format(need_qty, move.location_dest_id.name, to_stock_qty, location_dest_id.name))
             # cojo el primero
-            move_to_split = move.move_dest_ids[0]
+            next_move = move.move_dest_ids[0]
             # La ruta seleccionada es
-            rule_id = move_to_split.rule_id
+            rule_id = next_move.rule_id
             if not rule_id:
                 raise ValidationError(_('Not rule for excess purchases'))
-            move_to_split.product_uom_qty += to_stock_qty
-            move_to_split._do_unreserve()
+            #next_move.product_uom_qty += to_stock_qty
+            #next_move._do_unreserve()
 
-            _logger.info("El movimiento original a salida se queda con  {}".format(move_to_split.product_uom_qty))
+            _logger.info("El movimiento original a salida se queda con  {}".format(next_move.product_uom_qty))
 
-            rule_domain = [('location_src_id', '=', move_to_split.location_id.id),
-                          ('location_id', '=', location_dest_id.id),
+            rule_domain = [
+                          ('location_src_id', '=', next_move.location_id.id),
+                          ('location_id', '!=', next_move.location_dest_id.id),
                           ('action', '=', 'move'),
                           ('route_id', '=', rule_id.route_id.id),
                           ('procure_method', '=', 'make_to_stock')]
             rule_id = move.rule_id.search(rule_domain, limit=1)
             if not rule_id:
-                raise ValidationError(_('Not rule for movs from {} to {}'.format(move_to_split.location_id.name, location_dest_id.name)))
+                raise ValidationError(_('Not rule for movs from {} to {}'.format(next_move.location_id.name, location_dest_id.name)))
             _logger.info("Encuentro la regla  {}".format(rule_id.display_name))
             ctx.update({
-                'location_dest_id': location_dest_id.id,
-                'procure_method': move_to_split.procure_method,
+                'location_dest_id': rule_id.location_id,
+                'procure_method': rule_id.procure_method,
                 'picking_type_id': rule_id.picking_type_id.id,
                 'rule_id': rule_id.id,
             })
-            move_to_stock = move_to_split.browse(move_to_split.with_context(ctx)._split(to_stock_qty))
-            move_to_stock.picking_id = False
+            new_move = next_move.browse(next_move.with_context(ctx)._split(to_stock_qty))
+            new_move.picking_id = False
             if not ctx.get('no_assign_picking', False):
-                move_to_stock._assign_picking()
-
-            move_to_stock.move_dest_ids = False
+                new_move._assign_picking()
+            move.move_dest_ids |= new_move
+            new_move.move_dest_ids = False
             _logger.info(
-                "El movimienro nuevo a stock se queda con  {} y picking {}".format(move_to_stock.product_uom_qty,
-                                                                                    move_to_stock.picking_id.name))
-            res |= move_to_stock
+                "El movimienro nuevo a stock se queda con  {} y picking {}".format(new_move.product_uom_qty,
+                                                                                    new_move.picking_id.name))
+            res |= new_move
 
         return res
 
     def _action_assign(self):
-        res = super()._action_assign()
+        return super()._action_assign()
         m_ids = self.filtered(lambda x: x.overprocess_by_supplier and x.state in ('confirmed', 'waiting', 'assigned'))
         if m_ids:
             m_ids.split_excess_to_stock()
-        return res
+        return super()._action_assign()
 
     def _action_done(self):
+        import pdb; pdb.set_trace()
+        excess_moves = self.filtered(lambda x: x.picking_type_id.excess_location_id)
+        if excess_moves:
+            excess_moves.check_split_move()
+        res =  super()._action_done()
+        return res
+
+    def check_split_move(self):
         ##todo Revisar
-        Entrada = self.env.ref('stock.stock_location_company')
-        for move in self.filtered(lambda x: x.location_dest_id == Entrada):
-            if move.move_dest_ids and move.quantity_done > 0:
-                precision = move.product_uom.rounding
-                need_qty = sum(x.product_uom_qty for x in move.move_dest_ids)
-                if float_compare(move.quantity_done, need_qty, precision_rounding=precision) > 0:
-                    Stock = self.env.ref('stock.stock_location_stock')
-                    pick_domain = [('code', '=', 'internal'), ('default_location_src_id', '=', Entrada.id), ('default_location_dest_id', '=', Stock.id)]
-                    type_id = move.picking_type_id.search(pick_domain, limit=1)
-                    copy_vals = {'location_id': Entrada.id,
-                                'location_dest_id': Stock.id,
-                                'picking_type_id': type_id.id,
-                                'product_uom_qty': move.quantity_done - need_qty,
-                                'move_orig_ids': [(6, 0, [move.id])],
-                                'picking_id': False,
-                                'rule_id': False,
-                                'procure_method': 'make_to_stock'}
-                    stock_move = move.move_dest_ids[0].copy(copy_vals)
-                    stock_move._action_confirm()
-                    stock_move._action_assign()
-                    stock_move._assign_picking()
+        STATES = ['waiting', 'assigned', 'partially_available']
+        for move in self.filtered(lambda x:x.move_dest_ids):
+            precision = move.product_uom.rounding
+            ## Todos los movimientos que llegan a los mov de destino que no estén hechos
+            move_dest_ids = move.move_dest_ids.filtered(lambda x: x.state in STATES)
+
+            ## No se porque en el move origids tengo que quitar asi
+            move_orig_ids = move.mapped('move_dest_ids.move_orig_ids') - move - move_dest_ids
+
+            move_orig_ids_not_done = move_orig_ids.filtered(lambda x: x.state in STATES)
+            if move_orig_ids_not_done:
+                """ En este caso hay varios albarnes que podrían alimentar el de destino, por lo que no puedo saber cuanto hay que ubicar"""
+                _logger.info("No se puede definir la cantidad sobrante, porque hay otros movimientos pendientes")
+                continue
+            
+            
+
+            ## supongo que el resto de movimientos que suministran el de destino están hechos, por lo que la reserva irá aumentantdo
+            need_qty =sum(x.product_uom_qty - x.reserved_availability for x in move_dest_ids)
+            
+            if float_compare(move.quantity_done, need_qty, precision_rounding=precision) > 0:
+                excess_qty = move.quantity_done - need_qty
+                type_domain = [('warehouse_id', '=', move.picking_type_id.warehouse_id.id),
+                               ('default_location_src_id', '=', move.location_dest_id.id),
+                               ('default_location_dest_id', '=', move.picking_type_id.excess_location_id.id)]
+                type_id = self.env['stock.picking.type'].search(type_domain)
+                if not type_id:
+                    _logger.info("No se ha encontrado un tipo de albarán para overprocess")
+                copy_vals = {
+                    'location_id': move.location_dest_id.id,
+                    'location_dest_id': type_id.default_location_dest_id.id,
+                    'picking_type_id': type_id.id,
+                    'product_uom_qty': excess_qty,
+                    #'move_orig_ids': [(6, 0, [move.id])],
+                    'picking_id': False,
+                    'rule_id': False,
+                    'procure_method': 'make_to_stock'}
+                stock_move = move.copy(copy_vals)
+                stock_move._action_confirm()
+                stock_move._action_assign()
+                stock_move._assign_picking()
+                ## Tengo que quitar los predecesores, ya que no es capaz de reservar correctamente
+                
                     #_logger.info(_('Move %s (%s) for %s %s overprocessed in %s') %
                     #             (stock_move.name, stock_move.picking_id.name, need_qty, stock_move.product_uom_name, self.picking_id.name))
-        return super()._action_done()
+        return True
 
     def _push_apply(self):
         ##todo Revisar
@@ -190,12 +219,13 @@ class StockMove(models.Model):
                 move_to_stock.move_orig_ids = self
         return super()._push_apply()
 
+    """
     @api.model
     def _search_rule(self, product_id, values, domain):
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
-
+    """
     def change_incoming_moves_to_storage(self):
 
         """ EN RECEPCIONES : LOCATION_DEST_ID = entradas
@@ -342,7 +372,6 @@ class StockMove(models.Model):
 
     def reassing_split_from_picking(self):
         picking_id = self.mapped('picking_id')
-        print (picking_id)
         if picking_id.state in ['cancel', 'draft', 'done']:
             raise ValidationError('El albarań %s está en estado incorrecto: %s'%(picking_id.name, picking_id.state))
         if len(picking_id) != 1:
@@ -388,7 +417,6 @@ class StockMove(models.Model):
                         'picking_id': backorder_picking.id,
                     })
                     backorder_ids |= backorder_picking
-                    print("se ha creado el %s" % backorder_picking.name)
             if backorder_ids:
                 action = self.env.ref('stock.action_picking_tree_all').read()[0]
                 action['domain'] = [('id', 'in', backorder_ids.ids)]

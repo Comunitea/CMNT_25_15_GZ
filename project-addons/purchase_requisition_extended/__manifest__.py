@@ -30,6 +30,7 @@
     'data': ['views/purchase_views.xml',
              'views/sale_views.xml',
              'views/res_partner.xml',
+             ##'views/procurement_views.xml',
              'views/purchase_requisition.xml'],
     'installable': True,
 }

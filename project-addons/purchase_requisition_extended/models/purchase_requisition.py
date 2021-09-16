@@ -23,6 +23,7 @@
 from odoo import models, fields, api, _
 
 from datetime import datetime, timedelta
+import odoo.addons.decimal_precision as dp
 
 class PurchaseRequisition(models.Model):
     _inherit = "purchase.requisition"
@@ -58,10 +59,13 @@ class PurchaseRequisition(models.Model):
         for seller_id in seller_ids:
             line_ids = self.line_ids.filtered(lambda x: x.product_id == seller_id.product_id or x.product_id.product_tmpl_id == seller_id.product_tmpl_id)
             for line in line_ids:
+                
                 order_date = fields.Datetime.from_string(line.schedule_date)
                 min_order_date = fields.Datetime.from_string(fields.Datetime.now()[:10]) + timedelta(days=seller_id.delay)
-                order_date = fields.Datetime.from_string(line.schedule_date)
-
+                if line.schedule_date:
+                    order_date = fields.Datetime.from_string(line.schedule_date)
+                else:
+                    order_date = min_order_date
                 po_order_date = fields.Datetime.to_string(max(order_date, min_order_date))
 
 
@@ -111,7 +115,6 @@ class PurchaseRequisition(models.Model):
                 order_line_values['date_need'] = fields.Datetime.to_string(order_date)
                 order_line_values['qty_need'] = line.product_qty
                 order_line_values['seller_id'] = seller_id.id
-                print(order_line_values)
                 order_lines.append((0, 0, order_line_values))
         purchase_id.order_line = order_lines
 
@@ -131,9 +134,6 @@ class PurchaseRequisition(models.Model):
         self.ensure_one()
         self.mapped('purchase_ids').button_cancel()
         self.mapped('purchase_ids').unlink()
-
-
-
         po_ids = self.env['purchase.order']
         sale_id = self.sale_id
         for partner in self.vendor_ids:
@@ -160,7 +160,6 @@ class PurchaseRequisition(models.Model):
 
     def generate_new_orders(self):
         self.create_purchase_orders()
-
         return
 
     @api.multi
@@ -186,7 +185,9 @@ class PurchaseRequisition(models.Model):
                 res['sale_id'] = values['group_id'].sale_id.id
         if res['line_ids']:
             res['line_ids'][0][2]['schedule_date'] = values['move_dest_ids'].date_expected
-        ## print("Tender values %s" %res)
+            move_dest_id = res['line_ids'][0][2]['move_dest_id']
+            if move_dest_id:
+                res['line_ids'][0][2]['move_dest_ids'] = [(6, 0, [move_dest_id])]
         return res
 
 
@@ -207,3 +208,55 @@ class PurchaseRequisition(models.Model):
         super().action_in_progress()
         self.compute_seller_ids()
 
+
+class PurchaseRequisitionLine(models.Model):
+    _inherit = "purchase.requisition.line"
+
+    
+    @api.multi
+    def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+        values = super()._prepare_purchase_order_line(name=name,
+                                                      product_qty=product_qty,
+                                                      price_unit=price_unit,
+                                                      taxes_ids=taxes_ids)
+        if self.move_dest_ids:
+            values['move_dest_ids'] = [(6, 0, self.move_dest_ids.ids)]
+        return values
+
+
+    ### SObre escribo totalmente la función para no replicar el bucle ###
+    @api.multi
+    @api.depends('requisition_id.purchase_ids.state')
+    def _compute_ordered_qty(self):
+        STATES = ['cancel']
+        for line in self:
+            total = 0.0
+            price_subtotal = 0.0
+            pol_count = 0
+            for po in line.requisition_id.purchase_ids:#.filtered(lambda purchase_order: purchase_order.state in ['purchase', 'done']):
+                for po_line in po.order_line.filtered(lambda order_line: order_line.state not in STATES and order_line.product_id == line.product_id):
+                    if po_line.product_uom != line.product_uom_id:
+                        total += po_line.product_uom._compute_quantity(po_line.product_qty, line.product_uom_id)
+                    else:
+                        total += po_line.product_qty
+                    price_subtotal += po_line.price_subtotal
+                    pol_count +=1
+
+            line.qty_ordered = total
+            line.price_subtotal = price_subtotal
+            line.pol_count = pol_count
+            line.price_unit = total and price_subtotal/total or 0
+
+    price_subtotal = fields.Float(string='Amount', digits=dp.get_precision('Product Price'), compute=_compute_ordered_qty)
+    price_unit = fields.Float(compute=_compute_ordered_qty)
+    pol_count = fields.Integer("# PO lines", compute=_compute_ordered_qty)
+    move_dest_ids = fields.One2many(comodel_name='stock.move', inverse_name='pr_line_id', string='Downstream Moves')
+
+    @api.multi
+    def action_view_order_lines(self):
+        lines = self.requisition_id.mapped('purchase_ids').mapped('order_line').filtered(lambda x: x.product_id == self.product_id)
+        action = self.env.ref('purchase.action_purchase_line_product_tree').read()[0]
+        res = self.env.ref('purchase_requisition_extended.purchase_order_line_tree_pre', False)
+        action['views'] = [(res and res.id or False, 'tree')]
+        action['domain'] = [('id', 'in', lines.ids)]
+        return action

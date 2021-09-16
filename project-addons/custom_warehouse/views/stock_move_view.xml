@@ -14,10 +14,6 @@
             <field name="move_dest_ids" position="after">
                 <field name="move_orig_ids" />
             </field>
-            <field name="location_dest_id" position="after">
-                <field name="destination_code_id" />
-            </field>
-        
         </field>
     </record>
 

@@ -42,6 +42,12 @@
                     <field name="group_id"/>
                     <field name="sale_id"/>
                 </field>
+                <xpath expr="//tree/field[@name='price_unit']" position="after">
+                    <field name="price_subtotal"/>
+                    <field name="pol_count"/>
+                    <button name="action_view_order_lines" type="object" class="oe_stat_button" icon="fa-filter"/>
+                    
+                </xpath>
             </field>
         </record>
 

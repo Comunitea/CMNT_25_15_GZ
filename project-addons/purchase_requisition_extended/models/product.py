@@ -31,7 +31,6 @@ class ProductProduct(models.Model):
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         if self._context.get('seller_id', False):
-            print ("Forzado de supplier info a %s" % self._context['seller_id'].name)
             return self._context['seller_id']
         res = super()._select_seller(partner_id=partner_id, quantity=quantity,date=date,uom_id=uom_id)
         return res.filtered(lambda x: x.control_ok)
@@ -39,7 +38,7 @@ class ProductProduct(models.Model):
     @api.multi
     def _select_seller_without_qty(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         self.ensure_one()
-        if date is None:
+        if not date:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 

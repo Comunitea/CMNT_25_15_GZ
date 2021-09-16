@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+      
+    <record model="ir.ui.view" id="stock_picking_form_cw">
+      <field name="name">stock.picking.form.dc</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+        <field name="partner_id" position="after">
+            <field name="destination_code_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+        </field>
+      </field>
+    </record>
+
+</odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <record id="view_order_formcw" model="ir.ui.view">
+        <!--record id="view_order_formcw" model="ir.ui.view">
             <field name="name">sale.order.form.gq</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
@@ -14,9 +14,10 @@
                             </div>
                     </button>
                 </xpath>
+              
 
            </field>
-        </record>
+        </record-->
 
          <record id="view_order_formcw" model="ir.ui.view">
             <field name="name">sale.order.form.gq</field>
@@ -30,18 +31,10 @@
                                 <span class="o_stat_text">Operations</span>
                             </div>
                     </button>
-                </xpath>
-                <field name="picking_policy" position="after">
-                    <field name="destination_code_id"/>
-                </field>
-                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
-                    <field name="destination_code_id" groups="sale_stock.group_route_so_lines" attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}" options="{'no_create': True}"/>
-                </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
-                    <field name="destination_code_id" groups="sale_stock.group_route_so_lines"
-                           attrs="{'readonly': [('state', 'in', ['sale', 'done', 'cancel'])],
-                           'column_invisible': [('parent.destination_code_id', '=', False)]}" options="{'no_create': True}"/>
-                </xpath>
+                </xpath>  
+                <!--field name='partner_id' position="before">
+                    <field name="procurement_group_id" context="{'default_partner_id': partner_id}" domain = "[('partner_id', '=', partner_id)]"/>
+                </field-->
            </field>
         </record>
         <!--record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">

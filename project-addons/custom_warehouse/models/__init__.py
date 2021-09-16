@@ -1,1 +1,1 @@
-from . import stock_move, sale, stock_picking, procurement_rule, purchase, res_partner, stock_location, purchase
+from . import stock_move, sale, stock_picking, procurement_rule, purchase, res_partner, stock_location, purchase, stock_picking_type

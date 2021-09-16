@@ -27,6 +27,8 @@ from datetime import date, timedelta
 import logging
 _logger = logging.getLogger(__name__)
 
+
+
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
 
@@ -35,8 +37,8 @@ class ProcurementGroup(models.Model):
 
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
-
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
+
 
 class ProcurementRule(models.Model):
 
@@ -59,14 +61,3 @@ class ProcurementRule(models.Model):
                                                    supplier=supplier)
         res['overprocess_by_supplier'] = overprocess_by_supplier
         return res
-
-    def _get_stock_move_values(self, product_id, product_qty, product_uom,
-                               location_id, name, origin, values, group_id):
-        result = super()._get_stock_move_values(product_id, product_qty,
-                                                product_uom, location_id, name,
-                                                origin, values, group_id)
-        if values.get('sale_line_id', False):
-            line = self.env['sale.order.line'].browse(values['sale_line_id'])
-            if line.destination_code_id:
-                result['destination_code_id'] = line.destination_code_id.id
-        return result

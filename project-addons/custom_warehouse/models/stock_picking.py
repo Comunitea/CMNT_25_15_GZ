@@ -42,19 +42,19 @@ class StockPicking(models.Model):
                 continue
         picks.write({'show_moves_to_stock': True})
 
-    destination_code_id = fields.Many2one('res.partner', 'Destination code', domain=[('destination_code_id', '=', True)])
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
     show_moves_to_stock = fields.Boolean(compute="show_moves_to_stock")
-
+    """
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self.env.context.get('assign_picking_domain'):
             args += self.env.context.get('assign_picking_domain')
         if self.env.context.get('new_picking'):
             args = [('id', '=', 0)]
+        print (order)
         return super(StockPicking, self).search(
             args, offset=offset, limit=limit, order=order, count=count)
-
+    """
     def change_incoming_moves_to_storage(self):
         self.move_lines.change_incoming_moves_to_storage()
 

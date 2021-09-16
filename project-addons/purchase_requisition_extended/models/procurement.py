@@ -22,30 +22,44 @@
 
 from odoo import models, fields, api, _
 
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+    
+    requisition_id = fields.Many2one('purchase.requisition', string='Purchase Req')
+    purchase_requisition = fields.Selection(
+        [('rfq', 'Create a draft purchase order'),
+         ('tenders', 'Propose a call for tenders')],
+        string='Procurement', default='rfq')
+
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
 
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        
-        if product_id.purchase_requisition != 'tenders':
+        group_id = values.get('group_id', False)
+        if group_id.purchase_requisition == 'rfq' or product_id.purchase_requisition == 'rfq':
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         group_id = values.get('group_id', False)
-        if product_id.purchase_requisition == 'tenders' and group_id:
+        if group_id:
             domain = [('group_id', '=', group_id.id), ('state', 'in', ['draft', 'in_progress'])]
             pr = self.env['purchase.requisition'].search(domain, limit=1)
-            if pr:
+            if not pr:
+                tender_values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
+                tender_values['picking_type_id'] = self.picking_type_id.id
+                tender_values['user_id'] = group_id.create_uid.id
+                pr = self.env['purchase.requisition'].create(tender_values)  
+                group_id.requisition_id = pr
+            else:
                 req_line = pr.line_ids.filtered(lambda x: x.product_id == product_id) 
                 if req_line:
+                    if values['move_dest_ids']:
+                        req_line.write({'move_dest_ids': [(4, values['move_dest_ids'].id)]})
                     req_line.product_qty += product_qty
                 else:
                     new_linevalues = pr._prepare_tender_line_values(product_id, product_qty, product_uom, values)
-                    pr.line_ids.create(new_linevalues)
-                return True
-        values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
-        values['picking_type_id'] = self.picking_type_id.id
-        pr = self.env['purchase.requisition'].create(values)
-        if group_id.sale_id:
-            message = "This sale order has created this purchase requisition: <a href=# data-oe-model=purchase.requisition data-oe-id=%d>%s</a>"%(pr.id, pr.name)
-            group_id.sale_id.message_post(body=message)
+                    req_line = pr.line_ids.create(new_linevalues)
+            
+        #if group_id.sale_id:
+        #    message = "This sale order has been assigned to purchase requisition: <a href=# data-oe-model=purchase.requisition data-oe-id=%d>%s</a>"%(pr.id, pr.name)
+        #    group_id.sale_id.message_post(body=message)
         return True

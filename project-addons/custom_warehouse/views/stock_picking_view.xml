@@ -28,13 +28,9 @@
       <field name="inherit_id" ref="stock.view_picking_form"/>
       <field name="arch" type="xml">
             <field name="picking_type_id" position="after">
-                <field name="rule_id" />
+                <field name="rule_id" invisible="1"/>
             </field>
-           <field name="partner_id" position="after">
-                <field name="destination_code_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
-            </field>
-
-          <field name="state" position="before">
+            <field name="state" position="before">
               <button name="change_moves_to_stockage"
                         attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
                         string="Change to Stock Procurement"
