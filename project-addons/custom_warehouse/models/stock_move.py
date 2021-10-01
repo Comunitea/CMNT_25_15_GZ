@@ -140,7 +140,6 @@ class StockMove(models.Model):
         return super()._action_assign()
 
     def _action_done(self):
-        import pdb; pdb.set_trace()
         excess_moves = self.filtered(lambda x: x.picking_type_id.excess_location_id)
         if excess_moves:
             excess_moves.check_split_move()
