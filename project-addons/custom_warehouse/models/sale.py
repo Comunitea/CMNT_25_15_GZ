@@ -34,9 +34,13 @@ class SaleOrder(models.Model):
             while move_orig_ids:
                 stock_moves |= move_orig_ids
                 move_orig_ids = move_orig_ids.mapped('move_orig_ids')
-            sale.stock_move_ids = stock_moves.filtered(lambda x: x.state != 'cancel')
+            stock_move_ids = stock_moves.filtered(lambda x: x.state != 'cancel')
+            sale.stock_move_ids = stock_move_ids
+            sale.stock_move_ids_count = len(stock_move_ids)
 
     stock_move_ids = fields.One2many('stock.move', compute="_get_stock_move_ids")
+    stock_move_ids_count = fields.Integer(compute="_get_stock_move_ids")
+
 
     def action_picking_move_tree(self):
         ctx = self.env.context.copy()

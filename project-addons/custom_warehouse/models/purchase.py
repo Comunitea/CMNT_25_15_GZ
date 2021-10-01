@@ -33,12 +33,6 @@ class PurchaseOrderLine(models.Model):
 
     overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
 
-    def _make_po_select_supplier(self, values, suppliers):
-        """ Method intended to be overridden by customized modules to implement any logic in the
-            selection of supplier.
-        """
-        return suppliers[0]
-
     @api.multi
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)
