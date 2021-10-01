@@ -35,6 +35,7 @@
         'sale_stock',
         'stock_picking_imp',
         'destination_code',
+        'product_button_stock_move',
         'purchase_requisition_extended',
         'procurement_group_extended'],
     'data': [

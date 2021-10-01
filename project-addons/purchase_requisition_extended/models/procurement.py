@@ -39,7 +39,7 @@ class ProcurementRule(models.Model):
         group_id = values.get('group_id', False)
         if group_id.purchase_requisition == 'rfq' or product_id.purchase_requisition == 'rfq':
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
-        group_id = values.get('group_id', False)
+        
         if group_id:
             domain = [('group_id', '=', group_id.id), ('state', 'in', ['draft', 'in_progress'])]
             pr = self.env['purchase.requisition'].search(domain, limit=1)
@@ -62,4 +62,5 @@ class ProcurementRule(models.Model):
         #if group_id.sale_id:
         #    message = "This sale order has been assigned to purchase requisition: <a href=# data-oe-model=purchase.requisition data-oe-id=%d>%s</a>"%(pr.id, pr.name)
         #    group_id.sale_id.message_post(body=message)
+
         return True

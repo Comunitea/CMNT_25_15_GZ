@@ -9,13 +9,11 @@
             <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_view_delivery']" position="before">
-                    <field name="stock_move_ids_count" invisible="1"/>
                     <button name="action_picking_move_tree" class="oe_stat_button" icon="fa-arrows-v"
                              type="object" help="List view of operations"
                              attrs="{'invisible': [('stock_move_ids_count', '=', 0)]}">
-                            <div class="o_form_field o_stat_info">
-                                <span class="o_stat_text">Operations</span>
-                            </div>
+
+                            <field name="stock_move_ids_count" widget="statinfo" string="Operations"/>
                     </button>
                 </xpath>  
                 <!--field name='partner_id' position="before">

@@ -44,13 +44,19 @@ class SaleOrder(models.Model):
 
     def action_picking_move_tree(self):
         ctx = self.env.context.copy()
-        ctx.update(search_default_by_product=True)
+        ctx.update({
+                    'search_default_by_product': True,
+                    'search_default_groupby_picking_type': True,
+                    })
         action = self.env.ref('stock.stock_move_action').read()[0]
         action['views'] = [
             (self.env.ref('custom_warehouse.view_picking_move_tree_cw').id, 'tree'),
         ]
+        
         action['context'] = ctx
+
         action['domain'] = [('id', 'in', self.stock_move_ids.sorted(key=lambda l: l.id).ids)]
+
         return action
 
 class SaleOrderLine(models.Model):

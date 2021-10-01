@@ -183,10 +183,6 @@ class PurchaseOrderLine(models.Model):
 
             self.price_unit = price_unit
 
-    @api.model
-    def search(self, domain, offset=0, limit=None, order=None, count=False):
-        return super().search(
-            domain, offset=offset, limit=limit, order=order, count=count)
 
     @api.multi
     def action_filter(self):

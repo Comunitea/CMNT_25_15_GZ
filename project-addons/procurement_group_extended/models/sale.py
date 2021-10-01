@@ -45,6 +45,7 @@ class SaleOrder(models.Model):
                                    'sale_id', 
                                    string='Picking(s)', domain=[('state', '!=','cancel')])
     
+    purchase_ids = fields.One2many(related="procurement_group_id.purchase_ids")
 
     @api.multi
     def action_cancel(self):

@@ -39,10 +39,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _get_open_puchase_ids(self):
-        for purchase in self:
-            purchase.purchase_ids_count = len(purchase.purchase_ids)
+        for sale in self:
+            sale.purchase_ids_count = len(sale.purchase_ids)
 
-    purchase_ids = fields.One2many(comodel_name='purchase.order', inverse_name="sale_id", string="Purchase Order", help="Purchase orders created from asociated purchase requistion")
     purchase_ids_count = fields.Integer(compute=_get_open_puchase_ids)
     requisition_id = fields.Many2one(related='procurement_group_id.requisition_id')
     
