@@ -35,6 +35,8 @@ class AccountMoveLine(models.Model):
 
     _inherit = "account.move.line"
 
+    warehouse_id = fields.Many2one("stock.warehouse", "Warehouse")
+
     @api.constrains('analytic_tag_ids', 'account_id')
     def _check_if_need_business_line(self):
         for line in self:

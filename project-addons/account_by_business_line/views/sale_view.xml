@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_add_analytic_tag" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="after">
+                <field name="analytic_tag_id" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
