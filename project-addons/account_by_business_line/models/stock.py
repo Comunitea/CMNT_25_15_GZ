@@ -113,7 +113,6 @@ class StockMoveLine(models.Model):
             else:
                 move = self[0].move_id
             warehouse_id = False
-            import pdb; pdb.set_trace()
             if move._is_in():
                 warehouse_id = self.env['stock.warehouse'].\
                     search([('lot_stock_id', '=', vals.
