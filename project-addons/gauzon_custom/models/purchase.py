@@ -46,3 +46,9 @@ class PurchaseOrder(models.Model):
         res = super().action_view_invoice()
         del res['context']['default_reference']
         return res
+
+    @api.onchange('picking_type_id')
+    def _onchange_picking_type_id(self):
+        super()._onchange_picking_type_id()
+        if self.picking_type_id.analytic_tag_id:
+            self.global_analytic_id = self.picking_type_id.analytic_tag_id.id
