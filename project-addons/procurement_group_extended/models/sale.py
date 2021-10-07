@@ -25,26 +25,19 @@ from odoo import models, fields, api, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    """
     @api.multi
     def _compute_list_picking_ids(self):
         # self.ensure_one()
-        
-        if len(self) != 1:
-            self.write({'picking_ids': []})
-        else:
-            domain = [('sale_id', '=', self.id)]
+        for sale in self:
+            domain = [('sale_id', '=', sale.id)]
             picking_ids = self.env["stock.move"].search(domain).mapped('picking_id')
-            self.picking_ids = picking_ids
-    ##purchase_requisition_id = fields.Many2one(related='group_id.requisition_id')
+            sale.picking_ids = picking_ids
+    """
+    ## purchase_requisition_id = fields.Many2one(related='group_id.requisition_id')
     ## pasa a ser un grupo calculado
     merge_moves = fields.Boolean(related='procurement_group_id.merge_moves')
 
-    picking_ids = fields.Many2many('stock.picking', 
-                                   'stock_picking_sale_order_rel',
-                                   'pick_id',
-                                   'sale_id', 
-                                   string='Picking(s)', domain=[('state', '!=','cancel')])
-    
     purchase_ids = fields.One2many(related="procurement_group_id.purchase_ids")
 
     @api.multi
