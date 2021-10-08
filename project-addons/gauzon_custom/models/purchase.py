@@ -50,5 +50,6 @@ class PurchaseOrder(models.Model):
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
         super()._onchange_picking_type_id()
-        if self.picking_type_id.analytic_tag_id:
-            self.global_analytic_id = self.picking_type_id.analytic_tag_id.id
+        if self.picking_type_id.warehouse_id.analytic_tag_id:
+            self.global_analytic_id = self.picking_type_id.warehouse_id.\
+                analytic_tag_id.id
