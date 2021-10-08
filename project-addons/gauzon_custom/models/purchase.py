@@ -30,6 +30,9 @@ class PurchaseOrder(models.Model):
     global_analytic_id = fields.\
         Many2one('account.analytic.account', 'Analytic account',
                  help="This account is entered by default for new lines")
+    global_analytic_tag_id = fields.\
+        Many2one('account.analytic.tag', 'Business Line',
+                 domain=[('is_business_line', '=', True)])
     carrier_id = fields.Many2one("delivery.carrier", "Delivery Method")
 
     @api.onchange('partner_id', 'company_id')
@@ -51,5 +54,5 @@ class PurchaseOrder(models.Model):
     def _onchange_picking_type_id(self):
         super()._onchange_picking_type_id()
         if self.picking_type_id.warehouse_id.analytic_tag_id:
-            self.global_analytic_id = self.picking_type_id.warehouse_id.\
+            self.global_analytic_tag_id = self.picking_type_id.warehouse_id.\
                 analytic_tag_id.id
