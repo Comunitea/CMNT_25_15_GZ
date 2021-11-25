@@ -42,6 +42,12 @@ odoo.define('account_bank_statement_business_line.abs', function (require) {
             return result;
         },
 
+        _formatQuickCreate: function (line, values) {
+            var prop = this._super(line, values);
+            prop.analytic_tag_id = '';
+            return prop;
+        },
+
     });
 
     ReconciliationRenderer.LineRenderer.include({
