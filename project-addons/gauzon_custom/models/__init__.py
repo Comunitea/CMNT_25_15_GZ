@@ -8,3 +8,4 @@ from . import stock
 from . import analytic
 from . import hr_holidays
 from . import sale
+from . import stock_landed_cost
