@@ -69,3 +69,11 @@ class AccountInvoice(models.Model):
         else:
             self.reference = False
         return res
+
+    def _prepare_invoice_line_from_po_line(self, line):
+        data = super()._prepare_invoice_line_from_po_line(line)
+        if not data['analytic_tag_ids'] and line.order_id.\
+                global_analytic_tag_id:
+            data['analytic_tag_ids'] = [(6, 0, [line.order_id.
+                                                global_analytic_tag_id.id])]
+        return data

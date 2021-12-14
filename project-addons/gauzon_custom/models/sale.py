@@ -18,11 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, api
+from odoo import models, api, fields
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
+
+    force_invoiced = fields.Boolean(track_visibility='onchange')
 
     @api.multi
     def action_confirm(self):

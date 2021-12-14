@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="origin" position="after">
                 <field name="global_analytic_id"/>
+                <field name="global_analytic_tag_id"/>
                 <field name="carrier_id"/>
             </field>
             <field name="order_line" position="attributes">

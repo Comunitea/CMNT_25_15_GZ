@@ -63,6 +63,19 @@ class StockMove(models.Model):
         if self._context.get('valuation_wh_id'):
             for line in res:
                 line[2]['warehouse_id'] = self._context['valuation_wh_id']
+        else:
+            warehouse_id = False
+            if self._is_in():
+                warehouse_id = self.env['stock.warehouse'].\
+                    search([('lot_stock_id', '=', self.location_dest_id.id)],
+                           limit=1)
+            elif self._is_out():
+                warehouse_id = self.env['stock.warehouse'].\
+                    search([('lot_stock_id', '=', self.location_id.id)],
+                           limit=1)
+            if warehouse_id:
+                for line in res:
+                    line[2]['warehouse_id'] = warehouse_id.id
         return res
 
 

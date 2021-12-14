@@ -32,7 +32,9 @@
                 'purchase_discount', 'sale_disable_inventory_check',
                 'delivery', 'stock_picking_invoice_link',
                 'account_analytic_parent', 'purchase_order_line_sequence',
-                'hr_holidays_notify_employee_manager', 'mrp'],
+                'hr_holidays_notify_employee_manager', 'mrp',
+                'account_by_business_line', 'sale_force_invoiced',
+                'stock_landed_costs'],
     'data': [
         'data/gauzon_custom_data.xml',
         'views/account_invoice_view.xml',

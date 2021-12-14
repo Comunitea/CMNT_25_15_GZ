@@ -29,33 +29,33 @@
             <td t-if="not for_customs" class="text-right"><span t-field="o.amount_discounted"></span></td>
         </xpath>
         <xpath expr="//span[@t-field='move_line.sale_price_unit']" position="attributes">
-            <attribute name="t-if">o.picking_type_code != 'internal'</attribute>
+            <attribute name="t-if">o.sale_id</attribute>
         </xpath>
         <xpath expr="//span[@t-field='move_line.sale_price_unit']" position="after">
-            <span t-field="move_line.product_id.standard_price" t-if="for_customs and o.picking_type_code == 'internal'"/>
+            <span t-field="move_line.product_id.standard_price" t-if="for_customs and o.picking_type_code == 'outgoing' and not o.sale_id"/>
         </xpath>
         <xpath expr="//span[@t-field='move_line.sale_price_subtotal']" position="attributes">
-            <attribute name="t-if">o.picking_type_code != 'internal'</attribute>
+            <attribute name="t-if">o.sale_id</attribute>
         </xpath>
         <xpath expr="//span[@t-field='move_line.sale_price_subtotal']" position="after">
-            <span t-esc="move_line.product_id.standard_price * move_line.product_uom_qty" t-if="for_customs and o.picking_type_code == 'internal' and o.state != 'done'"/>
-            <span t-esc="move_line.product_id.standard_price * move_line.qty_done" t-if="for_customs and o.picking_type_code == 'internal' and o.state == 'done'"/>
+            <span t-esc="move_line.product_id.standard_price * move_line.product_uom_qty" t-if="for_customs and o.picking_type_code == 'outgoing' and not o.sale_id and o.state != 'done'"/>
+            <span t-esc="move_line.product_id.standard_price * move_line.qty_done" t-if="for_customs and o.picking_type_code == 'outgoing' and not o.sale_id and o.state == 'done'"/>
         </xpath>
         <xpath expr="//span[@t-field='o.amount_untaxed']" position="attributes">
-            <attribute name="t-if">o.picking_type_code != 'internal'</attribute>
+            <attribute name="t-if">o.sale_id</attribute>
         </xpath>
         <xpath expr="//span[@t-field='o.amount_untaxed']" position="after">
-            <span t-esc="sum([move_line.product_id.standard_price * move_line.product_uom_qty for move_line in o.move_line_ids])" t-if="for_customs and o.picking_type_code == 'internal' and o.state != 'done'"/>
-            <span t-esc="sum([move_line.product_id.standard_price * move_line.qty_done for move_line in o.move_line_ids])" t-if="for_customs and o.picking_type_code == 'internal' and o.state == 'done'"/>
+            <span t-esc="sum([move_line.product_id.standard_price * move_line.product_uom_qty for move_line in o.move_line_ids])" t-if="for_customs and o.picking_type_code == 'outgoing' and not o.sale_id and o.state != 'done'"/>
+            <span t-esc="sum([move_line.product_id.standard_price * move_line.qty_done for move_line in o.move_line_ids])" t-if="for_customs and o.picking_type_code == 'outgoing' and not o.sale_id and o.state == 'done'"/>
         </xpath>
         <xpath expr="//t[@t-if='o.valued and o.sale_id and o.move_line_ids'][1]" position="attributes">
-            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'internal') and o.move_line_ids</attribute>
+            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'outgoing') and o.move_line_ids</attribute>
         </xpath>
         <xpath expr="//t[@t-if='o.valued and o.sale_id and o.move_line_ids'][1]" position="attributes">
-            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'internal') and o.move_line_ids</attribute>
+            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'outgoing') and o.move_line_ids</attribute>
         </xpath>
         <xpath expr="//t[@t-if='o.valued and o.sale_id and o.move_line_ids'][1]" position="attributes">
-            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'internal') and o.move_line_ids</attribute>
+            <attribute name="t-if">o.valued and (o.sale_id or o.picking_type_code == 'outgoing') and o.move_line_ids</attribute>
         </xpath>
     </template>
 
