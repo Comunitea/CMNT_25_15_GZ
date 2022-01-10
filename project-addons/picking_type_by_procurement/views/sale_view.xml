@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+         <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_delivery']" position="before">
+                    <field name="procurement_group_id" invisible="1"/>
+                    <button name="open_type_id" class="oe_stat_button" 
+                            icon="fa-server"
+                            type="object" help="List view of types"
+                            string="Dashboard"
+                            attrs="{'invisible': [('procurement_group_id', '=', False)]}">
+                    </button>
+                </xpath>  
+                <!--field name='partner_id' position="before">
+                    <field name="procurement_group_id" context="{'default_partner_id': partner_id}" domain = "[('partner_id', '=', partner_id)]"/>
+                </field-->
+           </field>
+        </record>
+        
+    </data>
+</odoo>
