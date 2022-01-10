@@ -21,28 +21,25 @@
 ##############################################################################
 
 from odoo import models, fields, api, exceptions, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 import logging
 _logger = logging.getLogger(__name__)
 
+class ProcurementRule(models.Model):
+    _inherit = 'procurement.rule'
 
-class StockPicking(models.Model):
-
-    _inherit = "stock.picking"
-    
-    @api.multi
-    def unchain_move(self, assign=True):
-        self.ensure_one()
-        for pick in self:
-            if pick.state not in ['assigned', 'waiting']:
-                raise ValidationError(_("Picking %s not in 'waiting'/'assigned' state" % pick.name))
-            pick.move_ids.filtered(lambda x: x.state in ['assigned', 'waiting']).unchain_move(assign=False, message=False)
-            message = _('Pick %s has been unchained'% pick.name)
-            pick.picking_id.message_post(message)
-            if assign:
-                pick.action_assign()
-
-
-
-
+    @api.constrains('action', 'mts_rule_id', 'mto_rule_id')
+    def _check_mts_mto_rule(self):
+        for rule in self:
+            if rule.action == 'split_procurement':
+                if not rule.mts_rule_id or not rule.mto_rule_id:
+                    msg = _('No MTS or MTO rule configured on procurement '
+                            'rule: %s!') % (rule.name, )
+                    raise UserError(msg)
+                if False and (rule.mts_rule_id.location_src_id.id !=
+                        rule.mto_rule_id.location_src_id.id):
+                    msg = _('Inconsistency between the source locations of '
+                            'the mts and mto rules linked to the procurement '
+                            'rule: %s! It should be the same.') % (rule.name,)
+                    raise UserError(msg)

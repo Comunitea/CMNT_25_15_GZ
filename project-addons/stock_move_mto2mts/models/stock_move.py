@@ -31,18 +31,28 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
     
+    
+    @api.multi
+    def compute_orig_move_ids_count(self):
+        for move in self:
+            move.orig_move_ids_count = len(move.move_orig_ids)
+            
+    orig_move_ids_count = fields.Integer("# Move Orig", compute="compute_orig_move_ids_count")
+                     
+                     
     @api.multi
     def unchain_move(self):
-        return True
+        return self._unchain_move()
 
     @api.multi
     def _unchain_move(self, move_orig_ids=False, procure_method='make_to_stock', assign=True, message=True):
+        import pdb; pdb.set_trace()
         if not move_orig_ids:
             move_orig_ids = self.env['stock.move']
         else:
             self.ensure_one()
         for move in self:
-            if move.state != 'waiting':
+            if move.state not in ['waiting', 'partially_available']:
                 raise ValidationError (_("Move %s not in 'waiting' state" % move.name))
             move.move_orig_ids = move_orig_ids
             if procure_method:
