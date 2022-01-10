@@ -30,7 +30,7 @@
             <field name="picking_type_id" position="after">
                 <field name="rule_id" invisible="1"/>
             </field>
-            <field name="state" position="before">
+            <!--field name="state" position="before">
               <button name="change_moves_to_stockage"
                         attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['assigned', 'partially_available', 'waiting'])]}"
                         string="Change to Stock Procurement"
@@ -47,10 +47,8 @@
             <field name="reserved_availability" position="after">
                 <field name="procure_method" invisible="1"/>
                 <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
-                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
-                <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento" 
-                    attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
-            </field>
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-chain-broken" />
+            </field-->
       </field>
     </record>
 

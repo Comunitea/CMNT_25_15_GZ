@@ -44,6 +44,7 @@ class StockPicking(models.Model):
 
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
     show_moves_to_stock = fields.Boolean(compute="show_moves_to_stock")
+
     """
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -55,9 +56,13 @@ class StockPicking(models.Model):
         return super(StockPicking, self).search(
             args, offset=offset, limit=limit, order=order, count=count)
     """
+    """
     def change_incoming_moves_to_storage(self):
-        self.move_lines.change_incoming_moves_to_storage()
+        self.ensure_one()
+        if self.picking_type_id.excess_picking_type_id:
+            for move in self.move_lines:
+                move.change_incoming_moves_to_storage()
 
     def change_moves_to_stockage(self):
         self.move_lines.change_moves_to_stockage()
-
+    """

@@ -46,9 +46,9 @@
                     <field name="reserved_availability" string="Reserved"/>
                     
                     <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
-                        attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
+                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
                     <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento" 
-                        attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
+                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
                     
                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
@@ -85,10 +85,9 @@
             </field>
             <field name="reserved_availability" position="after">
                 <field name="procure_method" invisible="1"/>
-                <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
-                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
-                <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento"
-                    attrs="{'invisible': [('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
+                <!--button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                    attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" 
+                    type="object" icon="fa-chain-broken" /-->
             </field>
         </field>
     </record>
