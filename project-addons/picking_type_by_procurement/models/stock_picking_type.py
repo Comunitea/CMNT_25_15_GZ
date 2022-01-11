@@ -37,7 +37,7 @@ class StockPickingType(models.Model):
     def _compute_picking_done(self):
         # TDE TODO count picking can be done using previous two
         if not self._context.get('procurement_group_id', False):
-            self.write({'count_picking_done': 0})
+            self.count_picking_done = 0
             return
         domains = {
             'count_picking_done': [('state', '=', 'done')],
@@ -50,15 +50,15 @@ class StockPickingType(models.Model):
             }
             for record in self:
                 record[field] = count.get(record.id, 0)
-    
+
     def get_action_picking_tree_done(self):
         return self._get_action('stock.action_picking_tree_done')
-    
+
     def _get_procurement_domain(self, procurement_group_id):
         picking_ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)])
         ids = picking_ids.mapped('picking_type_id').ids
-        return [('id', 'in', ids)] 
-        
+        return [('id', 'in', ids)]
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if self._context.get('procurement_group_id', False):
