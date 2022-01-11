@@ -37,7 +37,8 @@ class StockPickingType(models.Model):
     def _compute_picking_done(self):
         # TDE TODO count picking can be done using previous two
         if not self._context.get('procurement_group_id', False):
-            self.count_picking_done = 0
+            for record in self:
+                record.count_picking_done = 0
             return
         domains = {
             'count_picking_done': [('state', '=', 'done')],
