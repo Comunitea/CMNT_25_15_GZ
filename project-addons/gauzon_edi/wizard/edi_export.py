@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY
@@ -20,12 +19,15 @@
 #
 ##############################################################################
 
-from odoo import _, tools, models, fields, exceptions
-from .edi_logging import logger
-from mako.template import Template
-from mako.lookup import TemplateLookup
 import os
 import time
+
+from mako.lookup import TemplateLookup
+from mako.template import Template
+from odoo import _, api, exceptions, fields, models, tools
+
+from .edi_logging import logger
+
 log = logger("export_edi")
 
 
@@ -33,122 +35,163 @@ class EdiExport(models.TransientModel):
 
     _name = "edi.export"
 
-    configuration = fields.Many2one('edi.configuration', 'Configuración',
-                                    required=True)
+    configuration = fields.Many2one("edi.configuration", "Configuración", required=True)
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(EdiExport, self).default_get(cr, uid, fields, context=context)
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
 
-        conf_ids = self.pool.get('edi.configuration').search(cr,uid,[])
-        if not conf_ids:
-            raise exceptions.UserError(_('No existen configuraciones EDI.'))
+        conf = self.env["edi.configuration"].search([], limit=1)
+        if not conf:
+            raise exceptions.UserError(_("No existen configuraciones EDI."))
 
-        res.update({'configuration': conf_ids[0]})
+        res.update({"configuration": conf.id})
         return res
 
-    def create_doc(self,cr,uid,ids,obj,file_name, context=None):
-        if context is None:
-            context = {}
+    def create_doc(self, obj, file_name):
         if obj:
-            name=gln_e=gln_v=gln_c=gln_r=doc_type=sale_order_id=picking_id=invoice_id=False
-            if context['active_model'] == u'sale.order':
-                name = obj.name.replace(' ','').replace('.','')
+            name = (
+                gln_e
+            ) = (
+                gln_v
+            ) = (
+                gln_c
+            ) = gln_r = doc_type = sale_order_id = picking_id = invoice_id = False
+            if self.env.context["active_model"] == u"sale.order":
+                name = obj.name.replace(" ", "").replace(".", "")
                 # gln_e = obj.partner_order_id.gln
                 gln_e = obj.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
                 gln_c = obj.partner_invoice_id.gln
                 gln_r = obj.partner_shipping_id.gln
-                doc_type = 'ordrsp'
+                doc_type = "ordrsp"
                 sale_order_id = obj.id
                 mode = obj.order_type
-            elif context['active_model'] == u'stock.picking':
-                name = obj.name.replace('/','')
+            elif self.env.context["active_model"] == u"stock.picking":
+                name = obj.name.replace("/", "")
                 gln_e = obj.company_id.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
                 gln_c = obj.partner_id.gln
                 gln_r = obj.partner_id.gln
-                doc_type = 'desadv'
+                doc_type = "desadv"
                 picking_id = obj.id
-                mode = '3'
-            elif context['active_model'] == u'account.invoice':
-                name = obj.number.replace('/','')
+                mode = "3"
+            elif self.env.context["active_model"] == u"account.invoice":
+                name = obj.number.replace("/", "")
                 gln_e = obj.company_id.partner_id.gln
                 gln_v = obj.company_id.partner_id.gln
                 gln_c = obj.partner_id.commercial_partner_id.gln
                 gln_r = obj.partner_id.commercial_partner_id.gln
-                doc_type = 'invoic'
+                doc_type = "invoic"
                 invoice_id = obj.id
                 mode = obj.gi_cab_funcion
             else:
-                raise exceptions.UserError(_('El modelo no es ni un pedido ni un albarán ni una factura.'))
+                raise exceptions.UserError(
+                    _("El modelo no es ni un pedido ni un albarán ni una factura.")
+                )
 
-            if not self.pool.get('edi.doc').search(cr,uid,[('name','=',name)]) or context['active_model'] == u'account.invoice':
+            if (
+                not self.env["edi.doc"].search([("name", "=", name)])
+                or self.env.context["active_model"] == u"account.invoice"
+            ):
                 f = open(file_name)
                 values = {
-                    'name' : name,
-                    'file_name' : file_name.split('/')[-1],
-                    'status': 'export',
-                    'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'date_process': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'mode' : mode,
-                    'type': doc_type,
-                    'sale_order_id': sale_order_id,
-                    'picking_id' : picking_id,
-                    'invoice_id' : invoice_id,
-                    'gln_e':gln_e,
-                    'gln_v':gln_v,
-                    'gln_c':gln_c,
-                    'gln_r':gln_r,
-                    'message':f.read(),
+                    "name": name,
+                    "file_name": file_name.split("/")[-1],
+                    "status": "export",
+                    "date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "date_process": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "mode": mode,
+                    "type": doc_type,
+                    "sale_order_id": sale_order_id,
+                    "picking_id": picking_id,
+                    "invoice_id": invoice_id,
+                    "gln_e": gln_e,
+                    "gln_v": gln_v,
+                    "gln_c": gln_c,
+                    "gln_r": gln_r,
+                    "message": f.read(),
                 }
                 f.close()
-                file_id = self.pool.get('edi.doc').create(cr,uid,values)
+                file_id = self.env["edi.doc"].create(values)
                 log.info(u"Exportado %s " % file_name)
             else:
                 log.info(u"Ignorado %s, ya existe en el sistema." % file_name)
-                raise exceptions.UserError(_('El documento ya ha sido exportado con anterioridad.'))
+                raise exceptions.UserError(
+                    _("El documento ya ha sido exportado con anterioridad.")
+                )
         return file_id
 
-    def addons_path(self,cr,uid,ids, path=False):
+    def addons_path(self, path=False):
         if path:
             report_module = path.split(os.path.sep)[0]
-            for addons_path in tools.config['addons_path'].split(','):
-                if os.path.lexists(addons_path+os.path.sep+report_module):
-                    return os.path.normpath( addons_path+os.path.sep+path )
-        return os.path.dirname( self.path() )
+            for addons_path in tools.config["addons_path"].split(","):
+                if os.path.lexists(addons_path + os.path.sep + report_module):
+                    return os.path.normpath(addons_path + os.path.sep + path)
+        return os.path.dirname(self.path())
 
-    def export_files(self,cr,uid,ids,context=None):
-        if context is None:
-            context = {}
-        wizard = self.browse(cr,uid,ids[0])
-        path = wizard.configuration.ftpbox_path + "/out"
-        templates_path = wizard.addons_path('gauzon_edi') + os.sep + 'wizard' + os.sep + 'templates' + os.sep
-        tmp_name = ''
+    def export_files(self):
+        path = self.configuration.ftpbox_path + "/out"
+        templates_path = (
+            self.addons_path("gauzon_edi")
+            + os.sep
+            + "wizard"
+            + os.sep
+            + "templates"
+            + os.sep
+        )
+        tmp_name = ""
 
-        for obj in self.pool.get(context['active_model']).browse(cr,uid,context['active_ids']):
-            if context['active_model'] == u'sale.order':
-                tmp_name = '/order_template.xml'
-                file_name = '%s%sORDRSP_%s.xml' % (path,os.sep,obj.name.replace(' ','').replace('.',''))
-            elif context['active_model'] == u'stock.picking':
-                tmp_name = '/picking_template.xml'
-                file_name = '%s%sDESADV_%s.xml' % (path,os.sep,obj.name.replace('/',''))
-            elif context['active_model'] == u'account.invoice':
-                if obj.state in ('draft'):
-                    raise exceptions.UserError(_('No se pueden exportar facturas en estado borrador'))
-                tmp_name = '/invoice_template.xml'
-                file_name = '%s%sINVOIC_%s.xml' % (path,os.sep,obj.number.replace('/',''))
+        for obj in self.env[self.env.context["active_model"]].browse(
+            self.env.context["active_ids"]
+        ):
+            if self.env.context["active_model"] == u"sale.order":
+                tmp_name = "/order_template.xml"
+                file_name = "%s%sORDRSP_%s.xml" % (
+                    path,
+                    os.sep,
+                    obj.name.replace(" ", "").replace(".", ""),
+                )
+            elif self.env.context["active_model"] == u"stock.picking":
+                tmp_name = "/picking_template.xml"
+                file_name = "%s%sDESADV_%s.xml" % (
+                    path,
+                    os.sep,
+                    obj.name.replace("/", ""),
+                )
+            elif self.env.context["active_model"] == u"account.invoice":
+                if obj.state in ("draft"):
+                    raise exceptions.UserError(
+                        _("No se pueden exportar facturas en estado borrador")
+                    )
+                tmp_name = "/invoice_template.xml"
+                file_name = "%s%sINVOIC_%s.xml" % (
+                    path,
+                    os.sep,
+                    obj.number.replace("/", ""),
+                )
 
-            mylookup = TemplateLookup( input_encoding='utf-8', output_encoding='utf-8', encoding_errors='replace')
-            tmp = Template(filename=templates_path+tmp_name, lookup=mylookup, default_filters=['decode.utf8'])
-            doc = tmp.render_unicode(o=obj).encode('utf-8','replace')
+            mylookup = TemplateLookup(
+                input_encoding="utf-8",
+                output_encoding="utf-8",
+                encoding_errors="replace",
+            )
+            tmp = Template(
+                filename=templates_path + tmp_name,
+                lookup=mylookup,
+                default_filters=["decode.utf8"],
+            )
+            doc = tmp.render_unicode(o=obj).encode("utf-8", "replace")
             try:
-                f = file(file_name,'w'); f.write(doc);f.close()
+                f = open(file_name, "w")
+                f.write(doc.decode())
+                f.close()
             except:
-                raise exceptions.UserError(_('No se puedo abrir el archivo %s' % file_name))
-            # wizard.create_doc(obj,file_name,context=context)
-            self.create_doc(cr, uid, [wizard.id], obj,file_name,context=context)
-            data_pool = self.pool.get('ir.model.data')
-            action_model,action_id = data_pool.get_object_reference(cr, uid, 'gauzon_edi', "act_edi_doc")
-            action = self.pool.get(action_model).read(cr,uid,action_id,context=context)
+                raise exceptions.UserError(
+                    _("No se puedo abrir el archivo %s" % file_name)
+                )
+            self.create_doc(obj, file_name)
+            action = self.env.ref("gauzon_edi.act_edi_doc")
+            action_data = action.read()[0]
 
-        return action
+        return action_data

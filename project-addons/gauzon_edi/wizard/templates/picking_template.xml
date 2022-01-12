@@ -2,7 +2,7 @@
 <%
     def get_operation(obj):
         packages = {}
-        for op in obj.pack_operation_ids:
+        for op in obj.move_line_ids:
             if op.result_package_id and not packages.get(op.result_package_id, False):
                 packages[op.result_package_id] = [op]
             elif op.result_package_id and  packages.get(op.result_package_id, False):
@@ -17,16 +17,16 @@
         vals = []
         values = {}
         for y in ops:
-            for l in y.linked_move_operation_ids:
-                num_ped =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.order_id.client_order_ref or 'num_ped'
+            for l in y:
+                num_ped =  l.move_id.sale_line_id and l.move_id.sale_line_id.order_id.client_order_ref or 'num_ped'
                 ean13v = y.product_id.ean13v and y.product_id.ean13v or 'ean13v'
-                refcli =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refcli or ''
-                refprov =  ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.refprov or ''
+                refcli =  l.move_id.sale_line_id and l.move_id.sale_line_id.refcli or ''
+                refprov =  l.move_id.sale_line_id and l.move_id.sale_line_id.refprov or ''
                 numserie = y.lot_id and y.lot_id.name or ''
-                descmer = ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.name or ''
+                descmer = l.move_id.sale_line_id and l.move_id.sale_line_id.name or ''
                 edi_code = y.product_uom_id and y.product_uom_id.edi_code or ''
-                oqty = ((l.move_id.procurement_id) and (l.move_id.procurement_id.sale_line_id)) and l.move_id.procurement_id.sale_line_id.product_uom_qty or 0.0
-                qty =  l.qty or 0.0
+                oqty = l.move_id.sale_line_id and l.move_id.sale_line_id.product_uom_qty or 0.0
+                qty =  l.qty_done or 0.0
                 nuevo = True
                 if vals:
                     for val in vals:
@@ -54,7 +54,7 @@
     <gi_cab_numcontr>${ o.num_contract or '' }</gi_cab_numcontr>
     <gi_cab_numalb>${ o.name or '' }</gi_cab_numalb>
     <gi_cab_fecha>${ o.date.split(' ')[0] or '' }</gi_cab_fecha>
-    <gi_cab_estimada_entrega>${ o.min_date.split(' ')[0] or ''  }</gi_cab_estimada_entrega>
+    <gi_cab_estimada_entrega>${ o.scheduled_date.split(' ')[0] or ''  }</gi_cab_estimada_entrega>
     <gi_cab_emisor>${ o.company_id.partner_id.gln or '' }</gi_cab_emisor>
     <gi_cab_vendedor>${ o.company_id.partner_id.gln or '' }</gi_cab_vendedor>
     <gi_cab_comprador>${ o.partner_id.gln or '' }</gi_cab_comprador>

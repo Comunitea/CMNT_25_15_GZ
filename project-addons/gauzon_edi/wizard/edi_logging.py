@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2004-TODAY Pexego Sistemas Informáticos. All Rights Reserved
@@ -23,38 +22,41 @@ import logging
 import logging.handlers
 import sys
 
-DEBUG_LOG_FILENAME = '/var/log/openerp/openerp-edi.log'
+DEBUG_LOG_FILENAME = "/var/log/openerp/openerp-edi.log"
+
 
 class logger(object):
-    
     def __init__(self, module):
         # set up formatting
-        formatter = logging.Formatter(u'[%(asctime)s] %(levelname)s ' + module + u': %(message)s')
+        formatter = logging.Formatter(
+            u"[%(asctime)s] %(levelname)s " + module + u": %(message)s"
+        )
         self.module = module
         # set up logging to a file for all levels DEBUG and higher
-        fh = logging.handlers.RotatingFileHandler(DEBUG_LOG_FILENAME, maxBytes=100000000)
+        fh = logging.handlers.RotatingFileHandler(
+            DEBUG_LOG_FILENAME, maxBytes=100000000
+        )
         fh.setFormatter(formatter)
         self.mylogger = logging.getLogger(self.module)
         self.mylogger.addHandler(fh)
-                
+
     # create shortcut functions
-    def debug(self,message):
+    def debug(self, message):
         self.mylogger.setLevel(logging.DEBUG)
         self.mylogger.debug(message)
-        
-    def info(self,message):
+
+    def info(self, message):
         self.mylogger.setLevel(logging.INFO)
-        self.mylogger.info(message)    
-    
-    def warning(self,message):
+        self.mylogger.info(message)
+
+    def warning(self, message):
         self.mylogger.setLevel(logging.WARNING)
-        self.mylogger.warning(message)   
-    
-    def error(self,message):
+        self.mylogger.warning(message)
+
+    def error(self, message):
         self.mylogger.setLevel(logging.ERROR)
-        self.mylogger.error(message) 
-        
-    def critical(self,message):
+        self.mylogger.error(message)
+
+    def critical(self, message):
         self.mylogger.setLevel(logging.CRITICAL)
-        self.mylogger.critical(message) 
-    
+        self.mylogger.critical(message)

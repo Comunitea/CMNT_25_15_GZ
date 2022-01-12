@@ -20,10 +20,10 @@
 #
 ##############################################################################
 {
-    'name': 'EDI',
-    'version': '11.0.0.0.1',
-    'category': 'Tools',
-    'description': """
+    "name": "EDI",
+    "version": "11.0.1.0.0",
+    "category": "Tools",
+    "description": """
         Importar/Exportar archivos EDI (Ventas, Albaranes y facturas)
 
         Este módulo modifica los objetos:
@@ -35,17 +35,23 @@
         Es necesario que asigne los valores correctos a los campos GLN para que el modulo funcione correctamente.
 
     """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['account', 'sale', 'account_payment_mode',
-                'account_payment_sale', 'sale_order_revision',
-                'gauzon_custom', 'stock_picking_show_return',
-                'sale_order_invoicing_grouping_criteria'],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/gauzon_edi_view.xml',
-        'wizard/edi_import_view.xml',
-        'wizard/edi_export_view.xml',
+    "author": "Comunitea",
+    "website": "https://www.comunitea.com",
+    "depends": [
+        "account",
+        "sale",
+        "account_payment_mode",
+        "account_payment_sale",
+        "sale_order_revision",
+        "gauzon_custom",
+        "stock_picking_show_return",
+        "sale_order_invoicing_grouping_criteria",
     ],
-    'installable': True,
+    "data": [
+        "security/ir.model.access.csv",
+        "views/gauzon_edi_view.xml",
+        "wizard/edi_import_view.xml",
+        "wizard/edi_export_view.xml",
+    ],
+    "installable": True,
 }

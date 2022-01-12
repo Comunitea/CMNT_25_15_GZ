@@ -32,7 +32,7 @@
       <gi_lin_descmer>${ line.name or '' }</gi_lin_descmer>
       <gi_lin_cantped gi_lin_umedida="${ line.product_uom.edi_code}">${ line.product_uom_qty}</gi_lin_cantped>
       <gi_lin_precion gi_lin_monprec="${ o.pricelist_id.currency_id.name }">${ line.price_unit }</gi_lin_precion>
-      <gi_lin_cantfac gi_lin_umedfac="${ line.product_uos.edi_code}">${ line.product_uos_qty}</gi_lin_cantfac>
+      <gi_lin_cantfac gi_lin_umedfac="${ line.product_uom.edi_code}">${ line.product_uom_qty}</gi_lin_cantfac>
       <gi_lin_tax>${ line.tax_id and int(line.tax_id[0].amount * 100) or ''}</gi_lin_tax>
       <gi_lin_taxamount>${ line.tax_id and round(line.price_unit * line.tax_id[0].amount,2) or ''}</gi_lin_taxamount>
       <gi_lin_obs>
@@ -50,4 +50,3 @@
     %endfor
   </gi_lines>
 </doc>
-
