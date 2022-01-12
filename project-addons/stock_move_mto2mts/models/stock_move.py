@@ -46,7 +46,6 @@ class StockMove(models.Model):
 
     @api.multi
     def _unchain_move(self, move_orig_ids=False, procure_method='make_to_stock', assign=True, message=True):
-        import pdb; pdb.set_trace()
         if not move_orig_ids:
             move_orig_ids = self.env['stock.move']
         else:
@@ -60,6 +59,7 @@ class StockMove(models.Model):
             if message:
                 message = _('Move %s has been unchained'%move.name)
                 move.picking_id.message_post(message)
+            move._recompute_state()
             if assign:
                 move._action_assign()
 

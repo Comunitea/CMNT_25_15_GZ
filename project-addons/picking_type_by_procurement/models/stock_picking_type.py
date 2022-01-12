@@ -31,11 +31,16 @@ class StockPickingType(models.Model):
 
     _inherit = "stock.picking.type"
 
-    procurement_group_id = fields.Many2one('procurement.group', store=False, string="Procurement group")
+    def _compute_group_id(self):
+        procurement_group_id = self._context.get('procurement_group_id', False)
+        for type_id in self:
+            type_id.procurement_group_id = procurement_group_id
+    
+    procurement_group_id = fields.Many2one('procurement.group', compute = _compute_group_id, string="Procurement group")
     count_picking_done = fields.Integer(compute='_compute_picking_done')
 
     def _compute_picking_done(self):
-        # TDE TODO count picking can be done using previous two
+
         if not self._context.get('procurement_group_id', False):
             for record in self:
                 record.count_picking_done = 0
@@ -64,10 +69,12 @@ class StockPickingType(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if self._context.get('procurement_group_id', False):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+        print(domain)
         return super(StockPickingType, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain, fields, offset=0, limit=None, order=None):
         if self._context.get('procurement_group_id', False):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+        print(domain)
         return super(StockPickingType, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)

@@ -31,8 +31,9 @@ class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
-    procurement_group_id = fields.Many2one('procurement.group', store=False, string="Procurement group")
     
+    ## procurement_group_id = fields.Many2one('procurement.group', store=False, string="Procurement group")
+    group_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
     
     def _get_procurement_domain(self, procurement_group_id):
         return [('group_id', '=', procurement_group_id)] 

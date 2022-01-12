@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <delete id="picking_Type_by_procurement" model="ir.ui.view"/>
     <record id="picking_Type_by_procurement" model="ir.ui.view">
         <field name="name">stock.picking.type.kanban</field>
         <field name="model">stock.picking.type</field>
@@ -16,6 +17,10 @@
                         <field name="count_picking_done"/>
                     </div>
                 </div>
+            </xpath>
+         
+            <xpath expr="//a[@name='%(stock.action_picking_form)d']" position="attributes">
+                <attribute name="context"> {'planned_picking': True, 'default_group_id': procurement_group_id}</attribute>
             </xpath>
         </field>
     </record>
