@@ -19,20 +19,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move MTO 2 MTS',
-    'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Desenlanza los movientos MTO
-    """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-        'data/data.xml',
-    ],
-    'installable': True,
-}
+
+from odoo import models, fields, api, exceptions, _
+from odoo.exceptions import ValidationError
+
+import logging
+_logger = logging.getLogger(__name__)
+
+
+class SaleOrder(models.Model):
+
+    _inherit = "sale.order"
+
+    def open_type_id(self):
+
+        ctx = self._context.copy() 
+        ctx.update(procurement_group_id = self.procurement_group_id)
+        action = self.env.ref("stock.stock_picking_type_action").read()[0]
+        procurement_group_id = self.procurement_group_id.id
+        picking_ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)])
+        ids = picking_ids.mapped('picking_type_id').ids
+        if self:
+            action['context'] = {'procurement_group_id': procurement_group_id}
+            action['domain'] = [('id', 'in', ids)]
+            action['display_name'] = _("Dashboard: {}".format(self.display_name))
+        return action
+   

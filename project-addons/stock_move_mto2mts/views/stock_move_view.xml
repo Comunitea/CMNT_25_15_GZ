@@ -11,7 +11,7 @@
                     name="unchain_move"
                     string="Unchain Move"
                     attrs= "{'invisible': [('state', '!=', 'waiting')]}"
-                    groups="stock.group_stock_manager"/>
+                    groups="stock.group_allow_change_procurement"/>
             </xpath>
 
         </field>

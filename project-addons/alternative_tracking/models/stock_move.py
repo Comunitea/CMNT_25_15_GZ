@@ -27,11 +27,6 @@ class StockPickingType(models.Model):
 
     bypass_tracking = fields.Boolean("By pass tracking")
 
-
-class StockLocation(models.Model):
-    _inherit = "stock.location"
-
-
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 

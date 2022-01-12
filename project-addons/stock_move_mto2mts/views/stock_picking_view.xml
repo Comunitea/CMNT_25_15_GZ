@@ -5,15 +5,19 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
+            <field name="state" position="before">
                 <button
                     type="object"
                     name="unchain_move"
                     string="Unchain Move"
-                    attrs= "{'invisible': [('state', '!=', 'waiting')]}"
-                    groups="stock.group_stock_manager"/>
-            </xpath>
-
+                    attrs= "{'invisible': [('state', 'not in', ['assigned', 'waiting'])]}"
+                    groups="stock.group_allow_change_procurement"/>
+            </field>
+            <field name="reserved_availability" position="after">
+                <field name="orig_move_ids_count" invisible="1"/>
+                <button name="unchain_move" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                    attrs="{'invisible': [('orig_move_ids_count', '=', 0)]}" type="object" icon="fa-chain-broken" />
+            </field>
         </field>
     </record>
 

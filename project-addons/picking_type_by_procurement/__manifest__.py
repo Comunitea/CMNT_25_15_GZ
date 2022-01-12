@@ -20,19 +20,21 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move MTO 2 MTS',
+    'name': 'Picking types from sale order',
     'version': '11.0.0.0.1',
-    'category': 'general',
+    'category': 'warehouse',
     'description': """
-        Desenlanza los movientos MTO
+        Personalizaciones para almacén
+        
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
+    'depends': [
+        'sale_stock', 
+        ],
     'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-        'data/data.xml',
+        'views/sale_view.xml',
+        'views/stock_picking_type.xml',
     ],
     'installable': True,
 }

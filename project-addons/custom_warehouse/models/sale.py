@@ -28,20 +28,37 @@ class SaleOrder(models.Model):
 
     def _get_stock_move_ids(self):
         for sale in self:
-            stock_moves = self.picking_ids.mapped('move_lines')
-            #Tengo que sumar las recepciones si las hubiere
-            move_orig_ids = stock_moves.mapped('move_orig_ids')
-            while move_orig_ids:
-                stock_moves |= move_orig_ids
-                move_orig_ids = move_orig_ids.mapped('move_orig_ids')
-            stock_move_ids = stock_moves.filtered(lambda x: x.state != 'cancel')
+            pickings = self.procurement_group_id.picking_ids
+            stock_move_ids = pickings.mapped('move_lines')
             sale.stock_move_ids = stock_move_ids
             sale.stock_move_ids_count = len(stock_move_ids)
 
     stock_move_ids = fields.One2many('stock.move', compute="_get_stock_move_ids")
     stock_move_ids_count = fields.Integer(compute="_get_stock_move_ids")
 
+    @api.depends('picking_ids')
+    def _compute_picking_ids(self):
+        for order in self:
+            order.delivery_count = len(order.procurement_group_id.picking_ids)
 
+    @api.multi
+    def action_view_delivery(self):
+        '''
+        This function returns an action that display existing delivery orders
+        of given sales order ids. It can either be a in a list or in a form
+        view, if there is only one delivery order to show.
+        '''
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+
+        # pickings = self.mapped('picking_ids')
+        pickings = self.procurement_group_id.picking_ids
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
+    
     def action_picking_move_tree(self):
         ctx = self.env.context.copy()
         ctx.update({
@@ -52,9 +69,7 @@ class SaleOrder(models.Model):
         action['views'] = [
             (self.env.ref('custom_warehouse.view_picking_move_tree_cw').id, 'tree'),
         ]
-        
         action['context'] = ctx
-
         action['domain'] = [('id', 'in', self.stock_move_ids.sorted(key=lambda l: l.id).ids)]
 
         return action

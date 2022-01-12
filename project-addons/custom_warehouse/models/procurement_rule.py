@@ -20,11 +20,13 @@
 #
 ##############################################################################
 
-from odoo import models, fields, api, exceptions, _
+from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
 from odoo.tools.float_utils import float_is_zero, float_compare
 from datetime import date, timedelta
+from odoo.osv import expression
 import logging
+from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
@@ -34,11 +36,15 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _search_rule(self, product_id, values, domain):
-
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
+        Pull = self.env['procurement.rule']
+        res = self.env['procurement.rule']
+        route_ids = values.get('route_ids', False)
+        warehouse_id = values.get('warehouse_id', False)
+        if warehouse_id and route_ids and route_ids.warehouse_ids and warehouse_id not in route_ids.warehouse_ids :
+            raise ValidationError ("Warehouse %s not in %s route warehouses"%(warehouse_id.name, route_ids.mapped('name')))
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
-
 
 class ProcurementRule(models.Model):
 
@@ -50,7 +56,7 @@ class ProcurementRule(models.Model):
         if supplier.min_qty > 0:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_compare(product_qty, supplier.min_qty, precision_digits=precision) == -1:
-                _logger.info("Update product qty (%s) because supplier min qty (%s)".format(product_qty, supplier.min_qty))
+                _logger.info("Update product qty (%s) because supplier min qty (%s)"%(product_qty, supplier.min_qty))
                 product_qty = supplier.min_qty
                 overprocess_by_supplier = True
         res = super()._prepare_purchase_order_line(product_id=product_id,

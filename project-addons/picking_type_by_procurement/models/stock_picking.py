@@ -30,19 +30,22 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
 
     _inherit = "stock.picking"
+
     
-    @api.multi
-    def unchain_move(self, assign=True):
-        self.ensure_one()
-        for pick in self:
-            if pick.state not in ['assigned', 'waiting']:
-                raise ValidationError(_("Picking %s not in 'waiting'/'assigned' state" % pick.name))
-            pick.move_ids.filtered(lambda x: x.state in ['assigned', 'waiting']).unchain_move(assign=False, message=False)
-            message = _('Pick %s has been unchained'% pick.name)
-            pick.picking_id.message_post(message)
-            if assign:
-                pick.action_assign()
+    ## procurement_group_id = fields.Many2one('procurement.group', store=False, string="Procurement group")
+    group_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
+    
+    def _get_procurement_domain(self, procurement_group_id):
+        return [('group_id', '=', procurement_group_id)] 
+        
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if self._context.get('procurement_group_id', False):
+            domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+        return super(StockPicking, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-
-
-
+    @api.model
+    def search_read(self, domain, fields, offset=0, limit=None, order=None):
+        if self._context.get('procurement_group_id', False):
+            domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+        return super(StockPicking, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)

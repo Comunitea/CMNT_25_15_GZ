@@ -27,7 +27,7 @@
         "views/product_views.xml",
         "views/stock_inventory.xml",
         "views/move_line_grouped.xml",
-        # "views/stock_location.xml",
+        "views/stock_location.xml",
         # 'views/at_tracking_assets.xml'
         # 'wizard/stock_move_change_reserve_wzd.xml'
     ],

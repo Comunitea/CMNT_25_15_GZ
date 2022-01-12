@@ -19,20 +19,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move MTO 2 MTS',
-    'version': '11.0.0.0.1',
-    'category': 'general',
-    'description': """
-        Desenlanza los movientos MTO
-    """,
-    'author': 'Comunitea',
-    'website': 'https://www.comunitea.com',
-    'depends': ['sale_stock', 'purchase'],
-    'data': [
-        'views/stock_move_view.xml',
-        'views/stock_picking_view.xml',
-        'data/data.xml',
-    ],
-    'installable': True,
-}
+
+from odoo import models, fields, api, exceptions, _
+from odoo.exceptions import ValidationError
+
+import logging  
+_logger = logging.getLogger(__name__)
+
+class StockMove(models.Model):
+    _inherit = "stock.move"
+        
+    def create(self, vals):
+        if self._context.get("procurement_group_id"):
+            vals['group_id'] = self._context['procurement_group_id']
+        return super().create(vals)
