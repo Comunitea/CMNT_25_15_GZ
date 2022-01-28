@@ -44,7 +44,11 @@ class SaleOrder(models.Model):
 
     purchase_ids_count = fields.Integer(compute=_get_open_puchase_ids)
     requisition_id = fields.Many2one(related='procurement_group_id.requisition_id')
-    
+    purchase_requisition = fields.Selection(
+        [('rfq', 'Create a draft purchase order'),
+         ('tenders', 'Propose a call for tenders')],
+        string='Procurement', default='rfq')
+
     @api.multi
     def open_puchase_ids(self):
         action = self.env.ref('purchase.purchase_form_action').read()[0]
