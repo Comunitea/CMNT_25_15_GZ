@@ -77,7 +77,6 @@ class StockMove(models.Model):
     def _action_confirm(self, merge=True, merge_into=False):
         moves = super()._action_confirm(merge=merge, merge_into=merge_into)
         ## Filtro todos los componenetes de producciones que NO está asignados y son make_to_stock
-        import pdb; pdb.set_trace()
         for move in self.filtered(lambda x: x.raw_material_production_id and x.state in ['confirmed', 'partially_available'] and x.procure_method =='make_to_stock'):
             needed_qty = move.get_needed_qty(move.product_id, move.product_uom_qty, move.product_uom)
             if needed_qty > 0:

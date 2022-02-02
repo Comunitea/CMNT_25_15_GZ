@@ -39,7 +39,7 @@
                     </field>
                 </field>
                 <field name="origin" position="after">
-                    <field name="group_id"/>
+                    <field name="group_id" invisible="0"/>
                     <field name="sale_id"/>
                 </field>
                 <xpath expr="//tree/field[@name='price_unit']" position="after">

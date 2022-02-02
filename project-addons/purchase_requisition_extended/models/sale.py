@@ -49,6 +49,22 @@ class SaleOrder(models.Model):
          ('tenders', 'Propose a call for tenders')],
         string='Procurement', default='rfq')
 
+
+    @api.multi
+    def open_requisition_ids(self):
+        
+
+        action = self.env.ref("purchase_requisition.action_purchase_requisition").read()[0]
+        form_view = self.env.ref("purchase_requisition.view_purchase_requisition_form").id
+        action.update({
+            "view_mode": "form",
+            "views": [(form_view, "form")],
+            "res_id": self.requisition_id.id,
+        })
+        return action
+
+
+        return action
     @api.multi
     def open_puchase_ids(self):
         action = self.env.ref('purchase.purchase_form_action').read()[0]

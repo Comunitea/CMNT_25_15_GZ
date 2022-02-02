@@ -38,7 +38,6 @@ class ProcurementRule(models.Model):
     def _run_product_default(self, product_id, product_qty, product_uom,
                                location_id, name, origin, values):
 
-        import pdb; pdb.set_trace()
         ### Esto es una mezcla de MTS + MTO pero con diferencia para fabricar/comprar
         print ("Run product default")
         needed_qty = self.get_mto_qty_to_order(product_id, product_qty,

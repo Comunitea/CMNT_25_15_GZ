@@ -17,14 +17,26 @@
             <field name="arch" type="xml">
  
                  <xpath expr="//div[@name='button_box']" position="inside">
-                    <field name="purchase_ids_count" invisible="1"/>
-                     <button type="object" name="open_puchase_ids" string="Purchases" 
-                     class="oe_stat_button" icon="fa-download" groups="purchase.group_purchase_user"
-                     attrs="{'invisible': [('purchase_ids_count', '=', 0)]}"/>
+                     <button type="object" 
+                     name="open_puchase_ids"
+                     class="oe_stat_button" 
+                     icon="fa-download" 
+                     groups="purchase.group_purchase_user"
+                     attrs="{'invisible': [('purchase_ids_count', '=', 0)]}">
+                     <field name="purchase_ids_count" widget="statinfo" string="Purchases"/>
+                     </button>
+                    <button type="object" 
+                     name="open_requisition_ids"
+                     class="oe_stat_button" 
+                     icon="fa-download" 
+                     groups="purchase.group_purchase_user"
+                     attrs="{'invisible': [('requisition_id', '=', False)]}">
+                     <field name="requisition_id" widget="statinfo" string="Requisitions"/>
+                     </button>
                  </xpath>
-                 <field name="client_order_ref" position="after">
+                 <!--field name="client_order_ref" position="after">
                     <field name="requisition_id" attrs="{'invisible': [('requisition_id', '=', False)]}"/>
-                </field>
+                </field-->
              </field>
          </record>
         <!-- Añado colores a las líneas --> 
