@@ -61,6 +61,7 @@ class ProcurementGroup(models.Model):
     merge_moves = fields.Boolean("Merge moves", help="If true, merge diferent move lines in same move", default=True)
     show_confirm_sale = fields.Boolean('show_cofirm_sale', compute=compute_show_confirm_sale)
     notes = fields.Text(string='Notes')
+    production_ids = fields.One2many('mrp.production', 'procurement_group_id', string="Producciones")
 
 
     @api.model
@@ -134,5 +135,11 @@ class ProcurementRule(models.Model):
                                   values = values)
 
 
-
-         
+    def _prepare_mo_vals(self, product_id, product_qty, product_uom,
+                         location_id, name, origin, values, bom):
+        result = super(ProcurementRule, self)._prepare_mo_vals(
+            product_id, product_qty, product_uom, location_id,
+            name, origin, values, bom
+        )
+        result['procure_method'] = self.procure_method
+        return result

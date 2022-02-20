@@ -40,7 +40,6 @@ class StockPickingType(models.Model):
     count_picking_done = fields.Integer(compute='_compute_picking_done')
 
     def _compute_picking_done(self):
-
         if not self._context.get('procurement_group_id', False):
             for record in self:
                 record.count_picking_done = 0
@@ -61,9 +60,9 @@ class StockPickingType(models.Model):
         return self._get_action('stock.action_picking_tree_done')
 
     def _get_procurement_domain(self, procurement_group_id):
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)])
-        ids = picking_ids.mapped('picking_type_id').ids
-        return [('id', 'in', ids)]
+        ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)]).mapped('picking_type_id')
+        ids |= self.env['mrp.production'].search([('procurement_group_id', '=', procurement_group_id)]).mapped('picking_type_id')
+        return [('id', 'in', ids.ids)]
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -78,3 +77,4 @@ class StockPickingType(models.Model):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
         print(domain)
         return super(StockPickingType, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+
