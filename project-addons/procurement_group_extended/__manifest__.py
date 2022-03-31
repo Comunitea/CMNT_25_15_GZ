@@ -32,7 +32,9 @@
     'depends': [
         'stock', 
         'purchase', 
-        'sale_stock', 
+        'sale_stock',
+        'mrp',
+        'sale_mrp_link',
         'purchase_requisition_extended'],
     'data': [
         'views/procurement_views.xml',

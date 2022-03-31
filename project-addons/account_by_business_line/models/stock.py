@@ -13,6 +13,9 @@ class StockMove(models.Model):
 
     def _account_entry_move(self):
         super()._account_entry_move()
+        if self.product_id.type != 'product':
+            # no stock valuation for consumable products
+            return False
         move = self.sudo()
         if move.sale_line_id and move.sale_line_id.order_id.\
                 analytic_account_id:

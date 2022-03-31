@@ -37,11 +37,10 @@ class SaleOrder(models.Model):
         ctx.update(procurement_group_id = self.procurement_group_id)
         action = self.env.ref("stock.stock_picking_type_action").read()[0]
         procurement_group_id = self.procurement_group_id.id
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)])
-        ids = picking_ids.mapped('picking_type_id').ids
+        domain = self.env['stock.picking.type']._get_procurement_domain(procurement_group_id)
         if self:
             action['context'] = {'procurement_group_id': procurement_group_id}
-            action['domain'] = [('id', 'in', ids)]
+            action['domain'] = domain
             action['display_name'] = _("Dashboard: {}".format(self.display_name))
         return action
    

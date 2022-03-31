@@ -63,6 +63,14 @@ class PurchaseOrder(models.Model):
                 po.button_cancel()
                 po.order_line.write({'line_state': 'cancel'})
 
+    @api.multi
+    def action_cw_confirm_purchase(self):
+        requisition_id = self.mapped('requisition_id')
+        product_ids = requistion_id.line_ids.product_id
+        for po in self.filtered(lambda x: x.state in ['draft', 'sent']):
+            po.button_approve()
+
+            
     """
     @api.multi
     def _get_destination_location(self):
@@ -116,6 +124,8 @@ class PurchaseOrderLine(models.Model):
                 self.order_id.button_cancel()
                 self.order_id.order_line.write({'line_state': 'cancel'})
 
+
+
     @api.multi
     def action_reconfirm_self(self):
         for line in self:
@@ -127,7 +137,7 @@ class PurchaseOrderLine(models.Model):
         res = self.env.ref('purchase.purchase_order_form', False)
         action['views'] = [(res and res.id or False, 'form')]
         action['context'] = {'search_default_todo': 0, 'product_id': self.product_id.id}
-        action['target'] = 'new'
+        action['target'] = 'current'
         action['flags'] =  {'action_buttons': True,
                             'mode': 'readonly',
                             'options': {'mode': 'readonly'}}
@@ -146,8 +156,12 @@ class PurchaseOrderLine(models.Model):
             'view_mode': 'form',
             'res_model': 'product.supplierinfo',
             'views': view,
-            'target': 'new',
-            'res_id': self.seller_id.id}
+            'target': 'current',
+            'res_id': self.seller_id.id,
+            }
+        action['flags'] =  {'action_buttons': True,
+                            'mode': 'readonly',
+                            'options': {'mode': 'readonly'}}
         return action
 
     @api.model

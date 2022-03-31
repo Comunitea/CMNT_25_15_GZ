@@ -26,10 +26,8 @@ class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
     
     requisition_id = fields.Many2one('purchase.requisition', string='Purchase Req')
-    purchase_requisition = fields.Selection(
-        [('rfq', 'Create a draft purchase order'),
-         ('tenders', 'Propose a call for tenders')],
-        string='Procurement', default='rfq')
+    purchase_requisition = fields.Selection(related="sale_id.purchase_requisition")
+        
 
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
@@ -37,7 +35,7 @@ class ProcurementRule(models.Model):
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         group_id = values.get('group_id', False)
-        if group_id.purchase_requisition == 'rfq' or product_id.purchase_requisition == 'rfq':
+        if group_id.purchase_requisition != 'tenders':
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         
         if group_id:
