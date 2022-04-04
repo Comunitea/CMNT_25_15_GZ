@@ -22,9 +22,13 @@ class ProductProduct(models.Model):
         info_type = values.get('info_type', 0)
         id = values.get('id')
         location_id= values.get('location_id')
+
         stock_domain = values.get('stock_domain', [('location_id', 'child_of', location_id)])
         res = {}
-        product_id = self.browse(id)
+        ctx = self._context.copy()
+        if location_id:
+            ctx.update(location=location_id)
+        product_id = self.with_context(ctx).browse(id)
         res['product'] = product_id.get_info(info_type)
         if info_type > 2:
             res['stock'] = product_id.get_stock(stock_domain)
@@ -55,6 +59,7 @@ class ProductProduct(models.Model):
                 'reserved_quantity': quant.reserved_quantity,
                 }
             res.append(q_vals)
+        print(res)
         return res
 
     def get_info(self, type=0):
