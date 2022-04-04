@@ -38,5 +38,5 @@ class MrpProduction(models.Model):
     @api.model
     def search_read(self, domain, fields, offset=0, limit=None, order=None):
         if self._context.get('procurement_group_id', False):
-            domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+            domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain 
         return super(MrpProduction, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)

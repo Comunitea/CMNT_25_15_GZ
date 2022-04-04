@@ -41,7 +41,7 @@ class StockPicking(models.Model):
                                 "sale_id", 
                                 "pick_id", string="Sale(s)")
 
-    sale_id = fields.Many2one('sale.order', related='' ,string="Sale Order")
+    ## sale_id = fields.Many2one('sale.order', related='' ,string="Sale Order")
     sale_ids_count = fields.Integer(compute=compute_sale_ids_count)
 
     @api.multi

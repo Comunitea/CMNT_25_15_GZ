@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_warehouse_show_lot_stock_id" model="ir.ui.view">
+        <field name="name">stock.warehouse.show_lot_stock_id</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <field name="wh_input_stock_loc_id" position="before">
+                <field name="lot_stock_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

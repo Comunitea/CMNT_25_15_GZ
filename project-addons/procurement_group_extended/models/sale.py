@@ -37,15 +37,44 @@ class SaleOrder(models.Model):
     ## purchase_requisition_id = fields.Many2one(related='group_id.requisition_id')
     ## pasa a ser un grupo calculado
     merge_moves = fields.Boolean(related='procurement_group_id.merge_moves')
-
     purchase_ids = fields.One2many(related="procurement_group_id.purchase_ids")
 
     @api.multi
     def action_cancel(self):
+        super().action_cancel()
+        ### ????
         ##AL CAMBIAR PICKING_IDS, debemos cancelar por movimientos, no por picking_ids
-        moves = self.mapped('picking_ids.move_lines')
-        moves = moves.filtered(lambda x: x.sale_line_id in self.mapped('order_line'))
+        moves = self.mapped('picking_ids.move_lines').filtered(lambda x: 
+            x.state != 'cancel' and 
+            x.sale_line_id in self.mapped('order_line'))
         moves._action_cancel()
+
+        ## Intento cancelar las compras asociadas
+        
+        for sale in self:
+            for purchase in sale.mapped('purchase_ids'):
+                try:
+                    purchase.button_cancel()
+                    purchase.unlink()
+                except:
+                    msg = "Purchase order {} can't be canceled".format(purchase.name)
+                    sale.message_post(body=msg)
+            mrp_domain = [('procurement_group_id', '=', sale.procurement_group_id.id), ('state', 'not in',['done', 'cancel'])]
+            for mrp in self.env['mrp.production'].search(mrp_domain):
+                try:
+                    mrp.action_cancel()
+                    mrp.unlink()
+                except:
+                    msg = "Mrp order order {} can't be canceled".format(mrp.name)
+                    sale.message_post(body=msg)
+        
+            try:
+                sale.requisition_id.action_cancel()
+                sale.requisition_id.unlink()
+            except:
+                msg = "Requistion order {} can't be canceled".format(sale.requistion_id.name)
+                sale.message_post(body=msg)
+        
         return self.write({'state': 'cancel'})
         ## SI ESTA INSTALADO BATCH PICKING
         ## moves_to_cancel.mapped('picking_id.batch_picking_id').verify_state()

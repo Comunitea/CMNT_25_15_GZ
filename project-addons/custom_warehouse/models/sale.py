@@ -27,9 +27,17 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def _get_stock_move_ids(self):
+        
         for sale in self:
-            pickings = self.procurement_group_id.picking_ids
-            stock_move_ids = pickings.mapped('move_lines')
+            procurement_group_id = self.procurement_group_id
+            if procurement_group_id:
+                stock_move_ids = procurement_group_id.mapped("picking_ids.move_lines")
+                stock_move_ids |= procurement_group_id.mapped("production_ids.move_raw_ids")
+                stock_move_ids |= procurement_group_id.mapped("production_ids.move_finished_ids")
+                ## Faltan las compras
+                stock_move_ids |= self.env['purchase.order'].search(['|', ('group_id', '=', procurement_group_id.id), ('origin', 'ilike', procurement_group_id.name)]).mapped('picking_ids.move_lines')
+            else:
+                stock_move_ids = self.env['stock.move']
             sale.stock_move_ids = stock_move_ids
             sale.stock_move_ids_count = len(stock_move_ids)
 
@@ -48,6 +56,7 @@ class SaleOrder(models.Model):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
+        
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
 
         # pickings = self.mapped('picking_ids')
@@ -61,16 +70,17 @@ class SaleOrder(models.Model):
     
     def action_picking_move_tree(self):
         ctx = self.env.context.copy()
+        if ctx.get('orderedBy'): ctx.pop('orderedBy')
         ctx.update({
+                    'search_default_groupby_origin': True,
                     'search_default_by_product': True,
-                    'search_default_groupby_picking_type': True,
                     })
         action = self.env.ref('stock.stock_move_action').read()[0]
         action['views'] = [
             (self.env.ref('custom_warehouse.view_picking_move_tree_cw').id, 'tree'),
         ]
         action['context'] = ctx
-        action['domain'] = [('id', 'in', self.stock_move_ids.sorted(key=lambda l: l.id).ids)]
+        action['domain'] = [('id', 'in', self.stock_move_ids.ids)]
 
         return action
 

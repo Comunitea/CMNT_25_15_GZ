@@ -1,1 +1,9 @@
-from . import stock_move, sale, stock_picking, procurement_rule, purchase, res_partner, stock_location, purchase, stock_picking_type
+from . import stock_move
+from . import stock_warehouse
+from . import sale
+from . import stock_picking
+from . import procurement_rule
+from . import purchase
+from . import res_partner
+from . import stock_location
+from . import purchase

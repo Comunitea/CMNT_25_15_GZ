@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="mrp_production_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                 <!--field name="procurement_group_id" position="replace"></field-->
+                 <xpath expr="//field[@name='reserved_availability']" position="after">
+                    <field name="procure_method" groups="base_technical_features.group_technical_features"/>
+                    <button class="btn btn-primary" name="action_open_stock_move_workflow" string="↳Open Workflow" type="object"
+                            attrs="{'invisible': [('state', 'in', ('draft', 'cancel', 'done'))]}"
+                            options="{&quot;warn&quot;: true}"/>
+                            
+                   <!--button name="change_to_mto" string="↳Mts to Mto" type="object" icon="fa-hand-lizard-o" 
+                            attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_order')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="change_to_mts" string="↳Mto to Mts" type="object" icon="fa-question-circle" 
+                            attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_stock')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="do_unreserve" string="↳Anular reserva" type="object" icon="fa-times" 
+                            attrs="{'invisible': [('state', '!=', 'assigned')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="generate_procurement_order" string="↳Generate procurement" type="object" icon="fa-magic" 
+                            attrs="{'invisible': ['|', ('procure_method', '=', 'make_to_stock'), ('state', 'not in', ['waiting', 'confirmed', 'partially_available'])]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="do_action_assign" string="↳Check Availability" type="object" icon="fa-magic" 
+                            attrs="{'invisible': [('state', 'not in', ['waiting', 'confirmed', 'partially_available'])]}" 
+                            /-->
+                 
+                </xpath>
+             </field>
+         </record>
+</odoo>

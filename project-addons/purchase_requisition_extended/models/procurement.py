@@ -35,7 +35,7 @@ class ProcurementRule(models.Model):
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         group_id = values.get('group_id', False)
-        if group_id.purchase_requisition != 'tenders':
+        if not group_id or group_id.purchase_requisition != 'tenders':
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         
         if group_id:

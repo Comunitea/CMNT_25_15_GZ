@@ -12,6 +12,7 @@
                             icon="fa-server"
                             type="object" help="List view of types"
                             string="Dashboard"
+                            context="{'procurement_group_id': procurement_group_id}"
                             attrs="{'invisible': [('procurement_group_id', '=', False)]}">
                     </button>
                 </xpath>  

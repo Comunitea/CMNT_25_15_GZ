@@ -61,20 +61,22 @@ class StockPickingType(models.Model):
 
     def _get_procurement_domain(self, procurement_group_id):
         ids = self.env['stock.picking'].search([('group_id', '=', procurement_group_id)]).mapped('picking_type_id')
+        if procurement_group_id:
+            group_id_name = self.env['procurement.group'].browse(procurement_group_id).name
+            ids |= self.env['purchase.order'].search([('origin', 'ilike', group_id_name)]).mapped('picking_ids.picking_type_id')
         ids |= self.env['mrp.production'].search([('procurement_group_id', '=', procurement_group_id)]).mapped('picking_type_id')
+
         return [('id', 'in', ids.ids)]
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if self._context.get('procurement_group_id', False):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
-        print(domain)
         return super(StockPickingType, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain, fields, offset=0, limit=None, order=None):
         if self._context.get('procurement_group_id', False):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
-        print(domain)
         return super(StockPickingType, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
 

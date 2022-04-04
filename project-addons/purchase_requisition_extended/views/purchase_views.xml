@@ -166,6 +166,14 @@
         </record>
     
         <!-- Execute action from "More" menu -->
+        <record id="menu_action_cw_confirm_purchase" model="ir.actions.server">
+            <field name="name">RFQ: Confirmar</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_purchase_order" />
+            <field name="binding_model_id" ref="model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">records.action_cw_confirm_purchase()</field>
+        </record>
         <record id="menu_action_cw_back_to_draft" model="ir.actions.server">
             <field name="name">RFQ: Volver a borrador</field>
             <field name="type">ir.actions.server</field>
@@ -182,7 +190,7 @@
             <field name="state">code</field>
             <field name="code">records.action_cw_cancel_purchase()</field>
         </record>
-    
+
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition_list">
             <field name="name">Request for Quotations</field>
             <field name="type">ir.actions.act_window</field>

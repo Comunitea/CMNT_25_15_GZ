@@ -15,8 +15,11 @@
             </field>
             <field name="reserved_availability" position="after">
                 <field name="orig_move_ids_count" invisible="1"/>
-                <button name="unchain_move" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
-                    attrs="{'invisible': [('orig_move_ids_count', '=', 0)]}" type="object" icon="fa-chain-broken" />
+                <button name="unchain_move" 
+                    string="Contra Stock. Click: cambiar metodo de abastecimiento" 
+                    groups="stock.group_allow_change_procurement"
+                    attrs="{'invisible': [('orig_move_ids_count', '=', 0)]}" 
+                    type="object" icon="fa-chain-broken" />
             </field>
         </field>
     </record>

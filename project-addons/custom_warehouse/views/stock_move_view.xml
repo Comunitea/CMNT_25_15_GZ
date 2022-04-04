@@ -23,7 +23,11 @@
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-danger="state != 'done' and quantity_done > reserved_availability and show_reserved_availability"
-                      decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves">
+                      decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" 
+                      string="Stock Moves">
+                    <button class="btn btn-primary" name="action_open_stock_move_workflow" string="↳Workflow" type="object"
+                            attrs="{'invisible': [('state', 'in', ('draft', 'cancel', 'done'))]}"
+                            />
                     <field name="name" invisible="1"/>
                     <field name="picking_id"/>
                     <field name="date_expected" invisible="1"/>                    
@@ -44,21 +48,27 @@
                     <field name="is_quantity_done_editable" invisible="1"/>
                     <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                     <field name="reserved_availability" string="Reserved"/>
-                    
+                    <!--button name="change_to_mto" string="↳Mts to Mto" type="object" icon="fa-hand-lizard-o" 
+                        attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_order')]}" 
+                        />
+                    <button name="change_to_mts" string="↳Mto to Mts" type="object" icon="fa-question-circle" 
+                        attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_stock')]}" 
+                       />
                     <button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
-                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_order')]}" type="object" icon="fa-indent" />
+                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_order')]}" 
+                        type="object" icon="fa-indent" />
                     <button name="apply_change_procurement" string="Contra Regla. Click: cambiar metodo de abastecimiento" 
-                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_stock')]}" type="object" icon="fa-link" />
+                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('procure_method', '=', 'make_to_stock')]}" 
+                        type="object" icon="fa-link" /-->
                     
                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="procure_method" groups="base.group_no_one"/>
+                    <!--field name="procure_method" groups="base.group_no_one"/>
                     <field name="rule_id" groups="base.group_no_one"/>
-                    
                     <field name="procurement_route_id" groups="base.group_no_one"/>
-                    <!--field name="move_dest_ids" widget="many2many_tags" />
+                    <field name="move_dest_ids" widget="many2many_tags"/>
                     <field name="move_orig_ids" widget="many2many_tags"/-->
-                        <field name="state" readonly="1"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -79,16 +89,32 @@
         <field name="inherit_id" ref="stock.view_picking_move_tree"/>
         <field name="arch" type="xml">
             <field name="date_expected" position="replace">
-                
                 <field name="date_expected"
                        attrs="{'readonly': [('state', '=', ['done', 'cancel', 'draft'])]}"/>
             </field>
             <field name="reserved_availability" position="after">
-                <field name="procure_method" invisible="1"/>
+                <field name="procure_method" invisible="0"/>
                 <!--button name="apply_change_procurement" string="Contra Stock. Click: cambiar metodo de abastecimiento" 
                     attrs="{'invisible': [('procure_method', '=', 'make_to_order')]}" 
                     type="object" icon="fa-chain-broken" /-->
             </field>
         </field>
     </record>
+
+        <record id="view_move_search_group" model="ir.ui.view">
+            <field name="name">stock.move.search.group</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_search"/>
+            <field name="arch" type="xml">
+                <!-- Group by sale origin -->
+                <xpath expr="//filter[@name='by_product']" position="after">
+                     <separator/>
+                    <filter string="Origin" name="groupby_origin"  context="{'group_by':'origin'}"/>
+                    
+                     <separator/>
+                </xpath>
+
+            </field>
+        </record>
+
 </odoo>

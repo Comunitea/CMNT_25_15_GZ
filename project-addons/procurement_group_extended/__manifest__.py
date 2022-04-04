@@ -40,7 +40,9 @@
         'views/procurement_views.xml',
         'views/stock_picking_type.xml',
         'views/stock_picking.xml',
+        'views/stock_move.xml',
         'views/sale_view.xml',
+        'views/mrp_view.xml',
         'wizard/generate_copy_sale.xml',
 
 

@@ -36,6 +36,8 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _search_rule(self, product_id, values, domain):
+        return super()._search_rule(product_id=product_id, values=values, domain=domain)
+
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
         Pull = self.env['procurement.rule']
@@ -44,26 +46,4 @@ class ProcurementGroup(models.Model):
         warehouse_id = values.get('warehouse_id', False)
         if warehouse_id and route_ids and route_ids.warehouse_ids and warehouse_id not in route_ids.warehouse_ids :
             raise ValidationError ("Warehouse %s not in %s route warehouses"%(warehouse_id.name, route_ids.mapped('name')))
-        return super()._search_rule(product_id=product_id, values=values, domain=domain)
 
-class ProcurementRule(models.Model):
-
-    _inherit = "procurement.rule"
-
-    @api.multi
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):
-        overprocess_by_supplier = False
-        if supplier.min_qty > 0:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_compare(product_qty, supplier.min_qty, precision_digits=precision) == -1:
-                _logger.info("Update product qty (%s) because supplier min qty (%s)"%(product_qty, supplier.min_qty))
-                product_qty = supplier.min_qty
-                overprocess_by_supplier = True
-        res = super()._prepare_purchase_order_line(product_id=product_id,
-                                                   product_qty=product_qty,
-                                                   product_uom=product_uom,
-                                                   values=values,
-                                                   po=po,
-                                                   supplier=supplier)
-        res['overprocess_by_supplier'] = overprocess_by_supplier
-        return res
