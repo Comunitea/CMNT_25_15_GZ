@@ -56,8 +56,7 @@ class SaleOrder(models.Model):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
-        
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = super().action_view_delivery()
 
         # pickings = self.mapped('picking_ids')
         pickings = self.procurement_group_id.picking_ids

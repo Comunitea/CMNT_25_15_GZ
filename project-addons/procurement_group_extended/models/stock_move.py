@@ -60,7 +60,7 @@ class StockMove(models.Model):
     
     def _action_cancel(self):
         ## tengo que cancelar tosdos los movimientos anteriores
-        orig_ids_to_cancel= self.mapped('move_orig_ids')
+        orig_ids_to_cancel= self.mapped('move_orig_ids').filtered(lambda x: x.state != 'done')
         res = super()._action_cancel()
         if orig_ids_to_cancel:
             orig_ids_to_cancel.filtered(lambda x: not x.move_dest_ids)._action_cancel()
@@ -84,9 +84,10 @@ class StockMove(models.Model):
     def _action_confirm(self, merge=True, merge_into=False):
         moves = super()._action_confirm(merge=merge, merge_into=merge_into)
         ## Filtro todos los componenetes de producciones que NO está asignados y son make_to_stock
-        #self.raw_ids_action_assign()
+        if self:
+            self.raw_ids_action_assign()
         return moves
-    """
+    
     def raw_ids_action_assign(self):
         for move in self.filtered(lambda x: x.raw_material_production_id and x.state in ['confirmed', 'partially_available'] and x.procure_method =='make_to_stock'):
             needed_qty = move.get_needed_qty(move.product_id, move.product_uom_qty, move.product_uom)
@@ -112,7 +113,7 @@ class StockMove(models.Model):
                         origin = '{} -> {}'.format(move.group_id.name, move.raw_material_production_id.name)
                         getattr(rule_id, '_run_%s' % rule_id.action)(move.product_id, needed_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)       
         return moves
-    """
+    
     @api.multi
     def change_to_mto(self):
         if len(self) == 1:
