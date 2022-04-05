@@ -31,6 +31,11 @@ class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
+    @api.multi
+    def update_to_new_warehouse(self)
+        for pick in self:
+            return pick.picking_type_id.update_to_new_warehouse(pick_domain = [('id', '=', pick.id)])
+
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
@@ -45,15 +50,16 @@ class StockPickingType(models.Model):
     def reconfirm_sale_orders(self):
         domain = [('state', 'in', ['done', 'locked'])]
         
+
     @api.multi
-    def update_to_new_warehouse(self, id=False, count=0):
-        import pdb; pdb.set_trace()
+    def update_to_new_warehouse(self, id=False, count=0, pick_domain = []):
         domain = [('code', 'in', ['incoming', 'outgoing'])]
         if id:
             domain +=[('id', '=', id)]
         for type_id in self.search(domain):
-            domain =[('picking_type_id', '=', type_id.id), ('state', 'in', ['draft', 'assigned', 'waiting'])]
-            picking_ids = self.env['stock.picking'].search(domain)
+            if not pick_domain:
+                pick_domain =[('picking_type_id', '=', type_id.id), ('state', 'in', ['draft', 'assigned', 'waiting'])]
+            picking_ids = self.env['stock.picking'].search(pick_domain)
             new_wh_id = type_id.warehouse_id.parent_warehouse_id
             type_domain = [('warehouse_id', '=', new_wh_id.id), ('code', '=', type_id.code )]
             new_type_id = self.env['stock.picking.type'].search(type_domain, limit=1)

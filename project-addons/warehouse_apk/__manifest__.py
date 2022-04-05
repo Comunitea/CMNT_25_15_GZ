@@ -30,6 +30,7 @@
     'website': 'https://www.comunitea.com',
     'depends': [
         'sale_stock', 
+        'stock_removal_location_by_priority',
         'stock_available_unreserved'],
     'data': [
         'views/stock_picking_view.xml',

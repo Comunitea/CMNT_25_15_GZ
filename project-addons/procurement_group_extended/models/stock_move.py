@@ -85,7 +85,7 @@ class StockMove(models.Model):
         moves = super()._action_confirm(merge=merge, merge_into=merge_into)
         ## Filtro todos los componenetes de producciones que NO está asignados y son make_to_stock
         if self:
-            self.raw_ids_action_assign()
+            moves.raw_ids_action_assign()
         return moves
     
     def raw_ids_action_assign(self):
@@ -112,7 +112,7 @@ class StockMove(models.Model):
                     if rule_id:
                         origin = '{} -> {}'.format(move.group_id.name, move.raw_material_production_id.name)
                         getattr(rule_id, '_run_%s' % rule_id.action)(move.product_id, needed_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)       
-        return moves
+        return True
     
     @api.multi
     def change_to_mto(self):
