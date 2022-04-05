@@ -52,7 +52,7 @@ class StockMove(models.Model):
     
     def _action_cancel(self):
         ## tengo que cancelar tosdos los movimientos anteriores
-        orig_ids_to_cancel= self.mapped('move_orig_ids')
+        orig_ids_to_cancel= self.mapped('move_orig_ids').filtered(lambda x: x.state != 'done')
         res = super()._action_cancel()
         if orig_ids_to_cancel:
             orig_ids_to_cancel.filtered(lambda x: not x.move_dest_ids)._action_cancel()
@@ -76,6 +76,9 @@ class StockMove(models.Model):
 
     def _action_confirm(self, merge=True, merge_into=False):
         moves = super()._action_confirm(merge=merge, merge_into=merge_into)
+        ## NO SE PORQUE PERO A VECES ENTRA VACIO Y FALLA EN EL BUCLE
+        if not self:
+            return moves
         ## Filtro todos los componenetes de producciones que NO está asignados y son make_to_stock
         for move in self.filtered(lambda x: x.raw_material_production_id and x.state in ['confirmed', 'partially_available'] and x.procure_method =='make_to_stock'):
             needed_qty = move.get_needed_qty(move.product_id, move.product_uom_qty, move.product_uom)
