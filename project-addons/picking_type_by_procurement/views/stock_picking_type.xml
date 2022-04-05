@@ -22,8 +22,7 @@
                 <field name="procurement_group_id" invisible="1"/>
              </xpath>
             <xpath expr="//a[@name='%(stock.action_picking_form)d']" position="attributes">
-
-                <attribute name="context"> {'planned_picking': True, 'default_group_id': procurement_group_id}</attribute>
+                <attribute name="context"> {'default_group_id': procurement_group_id}</attribute>
             </xpath>
         </field>
     </record>

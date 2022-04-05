@@ -81,4 +81,5 @@ class SaleOrder(models.Model):
         ctx.update({'search_default_picking_type': True})
         action = super().action_view_delivery()
         action['context'] = ctx
+        print ("CTX en action_view_delivery%s"%ctx)
         return action
