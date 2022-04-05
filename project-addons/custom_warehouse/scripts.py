@@ -46,10 +46,12 @@ class StockPickingType(models.Model):
         domain = [('state', 'in', ['done', 'locked'])]
         
     @api.multi
-    def update_to_new_warehouse(self):
-        domain = [('id', '=', 1), ('code', 'in', ['incoming', 'outgoing'])]
-        
-        for type_id in self.search(domain)[0:10]:
+    def update_to_new_warehouse(self, id=False, count=0):
+        import pdb; pdb.set_trace()
+        domain = [('code', 'in', ['incoming', 'outgoing'])]
+        if id:
+            domain +=[('id', '=', id)]
+        for type_id in self.search(domain):
             domain =[('picking_type_id', '=', type_id.id), ('state', 'in', ['draft', 'assigned', 'waiting'])]
             picking_ids = self.env['stock.picking'].search(domain)
             new_wh_id = type_id.warehouse_id.parent_warehouse_id
@@ -59,8 +61,11 @@ class StockPickingType(models.Model):
                 location_dest_id = new_wh_id.lot_stock_id
             if self.code == 'outgoing':
                 location_id = new_wh_id.lot_stock_id
-
-            for pick_id in picking_ids[0:3]:
+            if count>0:
+                pick_ids = picking_ids[0:count]
+            else:
+                pick_ids = picking_ids
+            for pick_id in pick_ids:
                 _logger.info("MIGRANDO: %s"%pick_id.name)
                 pick_id.move_line_ids.unlink()
                 _logger.info(">>>: Estado: %s"%pick_id.state)

@@ -64,8 +64,8 @@ class StockMove(models.Model):
         for move in self.filtered(lambda x:
             x.state == 'done' and 
             x.move_dest_ids and 
-            x.product_id.type == 'product' and 
-            x.product_id.picking_type_id.excess_picking_type_id):
+            x.product_id.type == 'product' :
+            ## and x.product_id.picking_type_id.excess_picking_type_id):
             
 
             move_dest_id = move.move_dest_ids.filtered(lambda x: x.state not in ['cancel', 'draft', 'done'])

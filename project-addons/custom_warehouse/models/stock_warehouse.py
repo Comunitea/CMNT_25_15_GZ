@@ -28,3 +28,6 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 class StockWarehouse(models.Model):
 
     _inherit = "stock.warehouse"
+
+    parent_warehouse_id = fields.Many2one('stock.warehouse', string="Converir a ....")
+    

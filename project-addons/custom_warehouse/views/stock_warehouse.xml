@@ -9,6 +9,9 @@
             <field name="wh_input_stock_loc_id" position="before">
                 <field name="lot_stock_id"/>
             </field>
+            <field name="code" position="after">
+                <field name="parent_warehouse_id"/>
+            </field>
         </field>
     </record>
 </odoo>
