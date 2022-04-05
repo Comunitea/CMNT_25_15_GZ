@@ -306,6 +306,13 @@ class StockInventory(models.Model):
         ### inv_id.action_start()
 
         for line in line_data:
+            if not line['prod_lot_id'] and line['prod_lot_name']:
+                lot_domain = [('name', '=', line['prod_lot_name']), ('product_id', '=', line['product_id'])]
+                lot_id = self.env['stock.production.lot'].search(lot_domain, limit=1)
+                if not lot_id:
+                    lot_id = self.env['stock.production.lot'].create({'name': line['prod_lot_name'], 'ref': line['prod_lot_name']})
+                line['prod_lot_id'] = lot_id.id
+
             line['inventory_id'] = inv_id.id
             self.env['stock.inventory.line'].create(line)
         _logger.info("Se ha creado el inventario %s"%inv_id.name)

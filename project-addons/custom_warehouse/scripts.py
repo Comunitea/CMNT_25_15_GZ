@@ -32,7 +32,7 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     @api.multi
-    def update_to_new_warehouse(self)
+    def update_to_new_warehouse(self):
         for pick in self:
             return pick.picking_type_id.update_to_new_warehouse(pick_domain = [('id', '=', pick.id)])
 
