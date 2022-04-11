@@ -10,8 +10,8 @@ class StockQuant(models.Model):
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         ## Si a esta función le llega lot_ids:
-        if not lot_id and self._context.get('force_lot_ids', False):
-            lot_ids = self._context['force_lot_ids']
+        if not lot_id and self._context.get('lot_ids', False):
+            lot_ids = self._context['lot_ids']
             lot_domain = [('lot_id', 'in', lot_ids.ids)]
             removal_strategy = self._get_removal_strategy(product_id, location_id)
             removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
@@ -45,31 +45,3 @@ class StockQuant(models.Model):
             return self.browse([x[0] for x in res])
 
         return super()._gather(product_id=product_id, location_id=location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-
-
-class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
-
-    @api.model
-    def get_warehouse_info(self):
-        return [self.env.user.actual_warehouse_id.get_info()]
-
-    def get_info(self, type=0):
-        if not self:
-            return {}
-        val = {
-            'id': self.id,
-            'name': self.name,
-            'code': self.code,
-            'lot_stock_id': self.lot_stock_id.get_info()
-            }
-        if type > 1:
-            val.update({
-                
-            })
-        if type > 2:
-            val.update ({
-            
-            })
-        _logger.info(val)
-        return val

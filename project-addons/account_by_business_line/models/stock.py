@@ -114,18 +114,15 @@ class StockMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'qty_done' in vals:
+        if self and 'qty_done' in vals:
             if vals.get('move_id'):
                 move = self.env['stock.move'].browse(vals['move_id'])
             else:
-                move = self[0].move_id
-            warehouse_id = move._get_warehouse_id()
-            if warehouse_id:
-                res = super(StockMoveLine, self.
-                            with_context(valuation_wh_id=warehouse_id.id)).\
-                    write(vals)
-            else:
-                res = super().write(vals)
-        else:
-            res = super().write(vals)
-        return res
+                move = self and self[0].move_id
+            if move:
+                warehouse_id = move._get_warehouse_id()
+                if warehouse_id:
+                    return super(StockMoveLine, self.with_context(valuation_wh_id=warehouse_id.id)).write(vals)
+                
+        return super().write(vals)
+        

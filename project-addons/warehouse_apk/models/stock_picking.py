@@ -52,3 +52,21 @@ class StockPicking(models.Model):
             })
         _logger.info("Devuelvo {}".format(vals) )
         return vals
+
+    @api.model
+    def validate_apk(self, values):
+        pick = self.browse(values['id'])
+        _logger.info("Validando el albarán %s"%pick.name)
+        res = pick.button_validate()
+        if not res:
+            return True
+        elif res['res_model'] == "stock.immediate.transfer":
+            self.env['stock.immediate.transfer'].browse(res['res_id']).process()
+            _logger.info(">>> Cantidades a 0")
+            
+        elif res['res_model'] == 'stock.backorder.confirmation':
+            self.env['stock.backorder.confirmation'].browse(res['res_id']).process()
+            _logger.info(">>> Genrando backorder")
+            return True
+        
+        return True

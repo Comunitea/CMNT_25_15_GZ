@@ -26,10 +26,14 @@ class StockProductionLot(models.Model):
             })
         return val
     
-    def create_if_not_exits(self, name, product_id):
-        domain = [('product_id', '=', product_id), '|', ('name', '=', name), ('ref', '=', name)]
-        lot_id = self.env['stock.production.lot'].search(domain, limit=1)
-        if lot_id:
-            return lot_id
-        lot_vals = {'name': name, 'ref': name, 'product_id': product_id}
-        return self.create(lot_vals)
+    def create_if_not_exits(self, names, product_id):
+        lot_ids = self.env['stock.production.lot']
+        for name in names:
+            domain = [('product_id', '=', product_id), '|', ('name', '=', name), ('ref', '=', name)]
+            lot_id = self.env['stock.production.lot'].search(domain, limit=1)
+            if not lot_id:
+                lot_vals = {'name': name, 'product_id': product_id}
+                lot_id = self.create(lot_vals) 
+            lot_ids |= lot_id
+            
+        return lot_ids

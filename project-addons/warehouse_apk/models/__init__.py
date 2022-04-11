@@ -14,3 +14,4 @@ from . import stock_inventory
 from . import res_partner
 from . import sale_order
 from . import purchase_order
+## from . import stock_quant
