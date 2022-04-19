@@ -189,7 +189,7 @@ class StockPickingType(models.Model):
                         pick_id.action_cancel()
                         pick_id.unlink()
                     _logger.info(">>>>> Estado: %s\n\n"%pick_id.state)
-                catch:
+                except:
                     _logger.info("\n\n >>>>> ERROR: %s\n\n"%pick_id.name)
 
 
