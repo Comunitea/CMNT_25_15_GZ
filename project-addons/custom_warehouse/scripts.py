@@ -146,52 +146,48 @@ class StockPickingType(models.Model):
             new_type_id = self.env['stock.picking.type'].search(type_domain, limit=1)
            
             for pick_id in picking_ids:
-                try:
-                    _logger.info("\n\n>>>>> MIGRANDO EL ALBARAN: %s (%s)"%(pick_id.name, pick_id.state))
-                    
-                    _logger.info(">>>>> Cambiamos ubicaciones almacén y tipo al albaran: %s"%new_type_id.display_name)
-                    pick_id.picking_type_id = new_type_id
-                    tag_ids = pick_id.move_lines.mapped('sale_line_id.order_id.analytic_tag_id')
-                    if not tag_ids:
-                        tag_ids = pick_id.move_lines.mapped('product_id.analytic_tag_id')
-                    if tag_ids:
-                        tag_id = tag_ids[0]
-                    else:
-                        tag_id = False    
-                    vals = {}
-                    if type_id.code == 'incoming':
-                        pick_id.location_dest_id = new_wh_id.lot_stock_id
-                        vals = {'location_dest_id': new_wh_id.lot_stock_id.id}
-                    elif type_id.code == 'outgoing':
-                        pick_id.location_id = new_wh_id.lot_stock_id
-                        vals = {'location_id': new_wh_id.lot_stock_id.id}
-                    ### ESTOS DOS NO SE MIGRAN                    
-                    elif type_id.code == 'mrp_operation':
-                        vals = {'location_dest_id': new_wh_id.lot_stock_id.id,
-                                'location_id': new_wh_id.lot_stock_id.id}
-                    elif type_id.code == 'internal':
-                        pick_id.location_dest_id = new_wh_id.lot_stock_id
-                        pick_id.location_id = new_wh_id.lot_stock_id
-                        vals = {'location_dest_id': new_wh_id.lot_stock_id.id,
-                                'location_id': new_wh_id.lot_stock_id.id}
+                _logger.info("\n\n>>>>> MIGRANDO EL ALBARAN: %s (%s)"%(pick_id.name, pick_id.state))
+                
+                _logger.info(">>>>> Cambiamos ubicaciones almacén y tipo al albaran: %s"%new_type_id.display_name)
+                pick_id.picking_type_id = new_type_id
+                tag_ids = pick_id.move_lines.mapped('sale_line_id.order_id.analytic_tag_id')
+                if not tag_ids:
+                    tag_ids = pick_id.move_lines.mapped('product_id.analytic_tag_id')
+                if tag_ids:
+                    tag_id = tag_ids[0]
+                else:
+                    tag_id = False    
+                vals = {}
+                if type_id.code == 'incoming':
+                    pick_id.location_dest_id = new_wh_id.lot_stock_id
+                    vals = {'location_dest_id': new_wh_id.lot_stock_id.id}
+                elif type_id.code == 'outgoing':
+                    pick_id.location_id = new_wh_id.lot_stock_id
+                    vals = {'location_id': new_wh_id.lot_stock_id.id}
+                ### ESTOS DOS NO SE MIGRAN                    
+                elif type_id.code == 'mrp_operation':
+                    vals = {'location_dest_id': new_wh_id.lot_stock_id.id,
+                            'location_id': new_wh_id.lot_stock_id.id}
+                elif type_id.code == 'internal':
+                    pick_id.location_dest_id = new_wh_id.lot_stock_id
+                    pick_id.location_id = new_wh_id.lot_stock_id
+                    vals = {'location_dest_id': new_wh_id.lot_stock_id.id,
+                            'location_id': new_wh_id.lot_stock_id.id}
 
-                    vals['picking_type_id'] = new_type_id.id
-                    vals['warehouse_id'] = new_wh_id.id
-                    _logger.info(">>>>> Unreserve ...")
-                    pick_id.move_line_ids.unlink()
-                    _logger.info(">>>>> Cambiamos ubicaciones, almacén y tipo a los movimientos: %s"%new_type_id.display_name)
-                    pick_id.move_lines.write(vals)
-                    _logger.info(">>>>> Action assign ...")
-                    if pick_id.move_lines:
-                        pick_id.action_confirm()
-                        pick_id.action_assign()
-                    else:
-                        pick_id.action_cancel()
-                        pick_id.unlink()
+                vals['picking_type_id'] = new_type_id.id
+                vals['warehouse_id'] = new_wh_id.id
+                _logger.info(">>>>> Unreserve ...")
+                pick_id.move_line_ids.unlink()
+                _logger.info(">>>>> Cambiamos ubicaciones, almacén y tipo a los movimientos: %s"%new_type_id.display_name)
+                pick_id.move_lines.write(vals)
+                _logger.info(">>>>> Action assign ...")
+                if pick_id.move_lines:
+                    pick_id.action_confirm()
+                    pick_id.action_assign()
                     _logger.info(">>>>> Estado: %s\n\n"%pick_id.state)
-                except:
-                    _logger.info("\n\n >>>>> ERROR: %s\n\n"%pick_id.name)
-
-
+                else:
+                    pick_id.action_cancel()
+                    pick_id.unlink()
+            
             self._cr.commit()
 
