@@ -27,7 +27,7 @@ class StockMove(models.Model):
                 'need_confirm_lot_id': picking_type_id.need_confirm_lot_id})
         res.update({'removal_priority': removal_priority})
     
-        _logger.info("StockMove VALS -------------------------\n{}".format(res))
+        ## _logger.info("StockMove VALS -------------------------\n{}".format(res))
         return res
 
     def _action_assign_apk_missing_qties(self):
