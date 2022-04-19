@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
                 sale.analytic_tag_id = analytic_tag_id
                 _logger.info("\n\nACTUALIZANDO LINEA DE NEGOCIO LA VENTA: {}\n\n>>>> CAMBIA DE {} A {}\n\n".format(sale.name, old_analytic_tag_id.name, analytic_tag_id.name))
 
-        ## self._cr.commit()
+        self._cr.commit()
 
 
 
@@ -112,7 +112,7 @@ class StockWarehouse(models.Model):
                 ## Lo desactivo
                 type_id.active = False
             old_wh_id.active = False
-            old_wh_id._Cr.commit()
+            old_wh_id._cr.commit()
 
             
 
