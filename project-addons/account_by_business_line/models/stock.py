@@ -20,8 +20,7 @@ class StockMove(models.Model):
                 location_ids |= location_id.location_id
                 location_id = location_id.location_id
             return location_ids
-
-        warehouse_id = self.picking_type_id and self.picking_type_id.warehouse_id or False
+        warehouse_id = self.picking_type_id and self.picking_type_id.warehouse_id or self.sale_line_id.order_id.warehouse_id or False
         if not warehouse_id:
             if self._is_in():
                 location_id = self.location_dest_id

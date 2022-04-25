@@ -178,7 +178,6 @@ class StockMoveLine(models.Model):
         move_id = sml_id.move_id
 
         ctx = self._context.copy()
-        import pdb; pdb.set_trace()
         if use_create_lots:
             ## Los lotes que ya están no los toco, solo los marcomo leidos y pongo qty_done a 1
             sml_ids_intocables = move_id.move_line_ids.filtered(lambda x: (x.lot_name and x.ack) or x.lot_name in serial_names)

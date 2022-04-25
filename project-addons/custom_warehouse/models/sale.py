@@ -25,7 +25,8 @@ from odoo.addons import decimal_precision as dp
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-
+    _order ="id desc"
+    
     def _get_stock_move_ids(self):
         
         for sale in self:
@@ -57,7 +58,7 @@ class SaleOrder(models.Model):
         view, if there is only one delivery order to show.
         '''
         action = super().action_view_delivery()
-
+        print(self._context)
         # pickings = self.mapped('picking_ids')
         pickings = self.procurement_group_id.picking_ids
         if len(pickings) > 1:

@@ -146,8 +146,9 @@ class StockPickingType(models.Model):
             new_type_id = self.env['stock.picking.type'].search(type_domain, limit=1)
            
             for pick_id in picking_ids:
+                if sum(x.quantity_done for x in pick_id.move_lines) > 0.00:
+                    continue
                 _logger.info("\n\n>>>>> MIGRANDO EL ALBARAN: %s (%s)"%(pick_id.name, pick_id.state))
-                
                 _logger.info(">>>>> Cambiamos ubicaciones almacén y tipo al albaran: %s"%new_type_id.display_name)
                 pick_id.picking_type_id = new_type_id
                 tag_ids = pick_id.move_lines.mapped('sale_line_id.order_id.analytic_tag_id')

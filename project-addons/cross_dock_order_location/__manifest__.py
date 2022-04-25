@@ -20,33 +20,21 @@
 #
 ##############################################################################
 {
-    'name': 'Procurement Group Extended',
+    'name': 'Cross Dock Order Location',
     'version': '11.0.0.0.1',
-    'category': 'general',
+    'category': 'Warehouse',
     'description': """
-        Extensión de funcionalidad para Procurement Group
+        Asigna una ubicación específica para cada pedido/grupo de abasteciemitno en la ubicación de cross_dock
         
     """,
     'author': 'Comunitea',
     'website': 'https://www.comunitea.com',
     'depends': [
-        'stock', 
-        'purchase', 
-        'sale_stock',
-        'mrp',
-        'sale_mrp_link',
-        'purchase_requisition_extended'],
+        'stock',
+        'stock_removal_location_by_priority'
+        ],
     'data': [
-        'security/data.xml',
-        'views/procurement_views.xml',
-        'views/stock_picking_type.xml',
-        'views/stock_picking.xml',
-        'views/stock_move.xml',
-        'views/sale_view.xml',
-        'views/mrp_view.xml',
-        'wizard/generate_copy_sale.xml',
-
-
+        'views/stock_location.xml'
     ],
     'installable': True,
 }

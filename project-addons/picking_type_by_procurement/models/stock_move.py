@@ -26,6 +26,10 @@ from odoo.exceptions import ValidationError
 import logging  
 _logger = logging.getLogger(__name__)
 
+class StockPicking(models.Model):
+    _inherit ="stock.picking"
+    _order = "priority desc, date asc, id desc"
+
 class StockMove(models.Model):
     _inherit = "stock.move"
         

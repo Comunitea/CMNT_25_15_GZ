@@ -40,6 +40,7 @@ class StockPickingType(models.Model):
     count_picking_done = fields.Integer(compute='_compute_picking_done')
 
     def _compute_picking_done(self):
+
         if not self._context.get('procurement_group_id', False):
             for record in self:
                 record.count_picking_done = 0
