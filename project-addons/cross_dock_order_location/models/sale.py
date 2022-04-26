@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
             if rule_id.location_src_id.cross_dock:
                 loc_name = group_id.name or self.order_id.name
                 domain = [('quant_ids', '=', False), ('cross_dock', '=', True), '|', ('name', '=', loc_name), ('active', '=', False)]
-                cross_dock_loc = self.env['stock.location'].search(domain,  limit=1, order="active desc")
+                cross_dock_loc = self.env['stock.location'].sudo().search(domain,  limit=1, order="active desc")
                 if cross_dock_loc:
                     if cross_dock_loc.name != loc_name:
                         cross_dock_loc.loc_name = loc_name
@@ -54,7 +54,7 @@ class SaleOrderLine(models.Model):
                         'name': loc_name, 
                         'removal_priority': 0,
                         'cross_dock': True}
-                    cross_dock_loc = self.env['stock.location'].create(vals)
+                    cross_dock_loc = self.env['stock.location'].sudo().create(vals)
                 return cross_dock_loc
         return False
                 
