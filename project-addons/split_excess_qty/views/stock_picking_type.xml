@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="default_location_dest_id" position="after">
                 <field name="excess_picking_type_id"/>
-                <field name="bypass_stock"/>
+
             </field>
             
         </field>

@@ -33,65 +33,61 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
+
+    excess_picking_type_id = fields.Many2one(related="picking_id.excess_picking_type_id")
+
     def _action_assign(self):
         return super()._action_assign()
 
     
     def _action_done(self):
+        
         res =  super()._action_done()
-        self.check_bypass_stock()
         self.check_split_excess()
-            
-        ## self.check_split_excess_qty_move()
         return res
-
-    def check_bypass_stock(self):
-        picking_type_id = self.mapped('picking_type_id')
-        if len(picking_type_id) != 1 or not picking_type_id.bypass_stock:
-            return False
-        
-        for move in self.filtered(lambda x: x.state == 'done'):
-            move_dest_id = move.move_dest_ids
-            if len(move_dest_id) != 1 or not move.move_dest_ids:
-                continue
-            
-        
-
-
+    
+    def _get_new_picking_values(self):
+        vals = super()._get_new_picking_values()
+        vals['excess_picking_type_id'] = self.picking_type_id.excess_picking_type_id and self.picking_type_id.excess_picking_type_id.id or False
+        return vals
+    
     def check_split_excess(self):
-        Push = self.env['stock.location.path']
-
-        for move in self.filtered(lambda x:
-            x.state == 'done' and 
-            x.move_dest_ids and 
-            x.product_id.type == 'product' :
+        Push = self.env['procurement.rule']
+        self = self.with_prefetch()
+        for move in self.filtered(lambda x: x.state == 'done' and x.picking_type_id.excess_picking_type_id and x.product_id.type == 'product'):
             ## and x.product_id.picking_type_id.excess_picking_type_id):
-            
-
-            move_dest_id = move.move_dest_ids.filtered(lambda x: x.state not in ['cancel', 'draft', 'done'])
-            if not move_dest_id or len(move_dest_id) > 1:
+            move_dest_id = move.move_dest_ids.filtered(lambda x: x.state  == 'assigned')
+            if len(move_dest_id) != 1:
                 continue
-            if move_dest_ids.location_id != move.location_dest_id:
+            if move_dest_id.location_id != move.location_dest_id:
                 continue
-            dest_qty = sum(x.product_uom_qty - x.reserved_availability)
-            
-
-
-
-            dest_qties = sum((x.product_uom_qty - x.quantity_done) for x in move.move_dest_ids)
-            
-            free_qty = move.quantity_done - dest_qties
+            free_qty = move.quantity_done - move_dest_id.reserved_availability
             if free_qty > 0:
-                domain = [('location_from_id', '=', move.location_dest_id.id)]
+                ## El destino viene del tipo de  albaran para excess_qty
+                excess_picking_type_id = move.picking_type_id.excess_picking_type_id
+                location_dest_id = excess_picking_type_id.default_location_dest_id
+                location_id = move.location_dest_id
+                domain = [('location_id', '=', location_dest_id.id), ('location_src_id', '=', location_id.id)]
+
                 routes = move.route_ids
                 rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
+                if not rules:
+                    rules = Push.search(domain, order='route_sequence, sequence', limit=1)
+                if not rules:
+                    raise ValidationError("No se encontrado una ragla de {} a {}".format(location_id.display_name, location_dest_id.dsiplay_name))
                 if rules:
-                    new_move_vals = rules._prepare_move_copy_values(move, move.date_expected)
-                    new_move_vals['product_uom_qty'] = free_qty
-                    new_move_vals['procure_method'] = 'make_to_stock'
-                    new_move_vals['rule_id'] = rules.id
-                    new_move = move.copy(new_move_vals)
-                    ## move.write({'move_dest_ids': [(4, new_move.id)]})
+                    defaults = move.with_context(force_split_uom_id=move.product_id.uom_id.id)._prepare_move_split_vals(free_qty)
+                    if defaults.get('move_dest_ids'):
+                        defaults.pop('move_dest_ids')
+                    defaults['move_orig_ids'] = [(4, move.id)]
+                    defaults['procure_method'] = 'make_to_stock'
+                    defaults['rule_id'] = rules.id
+                    defaults['location_dest_id'] = location_dest_id.id
+                    defaults['location_id'] = move.location_dest_id.id
+                    defaults['picking_type_id'] = excess_picking_type_id.id
+                    defaults['picking_id'] = False
+                    
+                    new_move = move.with_context(rounding_method='HALF-UP').copy(defaults)
                     new_move._action_confirm()
                     new_move._action_assign()
                     

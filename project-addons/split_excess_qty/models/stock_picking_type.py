@@ -21,16 +21,19 @@
 ##############################################################################
 
 from odoo import models, fields, api, exceptions, _
-from odoo.addons import decimal_precision as dp
-from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_is_zero, float_compare
 
 import logging
 _logger = logging.getLogger(__name__)
 
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Under conditions, replace int + pick moves by int move, Tipo de operación para el exceso de material")
+
+
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación para el exceso de material")
-    bypass_stock = fields.Boolean(string="By pass stock", help="Under conditions, replace int + pick moves by int move")
+    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Under conditions, replace int + pick moves by int move, Tipo de operación para el exceso de material")
+    
     
