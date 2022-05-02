@@ -67,7 +67,12 @@
                 <strong t-if="for_customs" style="font-size: 110%;">INVOICE FOR CUSTOMS PURPOSE ONLY</strong>
             </t>
             <t t-set="left_box">
-                Customer:<br/>
+                <t t-if="o.picking_type_id.code=='outgoing'">
+                    Customer:<br/>
+                </t>
+                <t t-if="o.picking_type_id.code=='incoming'">
+                    Supplier:<br/>
+                </t>
                 <div t-field="o.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                 <span t-if="o.partner_id.vat" t-field="o.partner_id.vat"></span>
@@ -119,6 +124,17 @@
                     </div>
                     <div class="col-xs-9">
                       <span t-field="o.name"/>
+                    </div>
+                </div>
+
+                
+                <div class="row mt2" t-if="o.purchase_id.dest_address_id">
+                    <div class="col-xs-3">
+                      Entregar en:
+                    </div>
+                    <div class="col-xs-9">
+                        <div t-field="o.purchase_id.dest_address_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                     </div>
                 </div>
             </t>

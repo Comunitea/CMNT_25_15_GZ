@@ -27,8 +27,8 @@
                 <div class="clearfix"/>
                 <t t-if="left_box or right_box">
                     <br/>
-                    <div style="border: 1px solid black; min-height: 130px;">
-                        <div class="col-xs-6" style="border-right: 1px solid black; padding: 4px; min-height: 130px;">
+                    <div style="border: 1px solid black; min-height: 140px;">
+                        <div class="col-xs-6" style="border-right: 1px solid black; padding: 4px; min-height: 140px;">
                             <t t-raw="left_box"/>
                         </div>
                         <div class="col-xs-6" style="padding: 4px;">
