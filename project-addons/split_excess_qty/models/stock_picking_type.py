@@ -28,12 +28,12 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Under conditions, replace int + pick moves by int move, Tipo de operación para el exceso de material")
+    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación para el exceso de material")
 
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Under conditions, replace int + pick moves by int move, Tipo de operación para el exceso de material")
+    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación para el exceso de material")
     
     
