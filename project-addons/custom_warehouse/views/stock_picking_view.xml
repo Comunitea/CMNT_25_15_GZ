@@ -27,8 +27,12 @@
       <field name="model">stock.picking</field>
       <field name="inherit_id" ref="stock.view_picking_form"/>
       <field name="arch" type="xml">
-            <field name="picking_type_id" position="after">
+            <field name="move_type" position="after">
                 <field name="rule_id" invisible="1"/>
+                <field name="move_dest_info" invisible="1"/>
+            </field>
+            <field name="quantity_done" position="after">
+                <field name="move_dest_info" attrs="{'column_invisible': [('parent.move_dest_info', '=', False)]}"/>
             </field>
             <!--field name="state" position="before">
               <button name="change_moves_to_stockage"

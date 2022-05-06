@@ -33,9 +33,20 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
-    procurement_route_id = fields.Many2one(related="rule_id.route_id")
-    overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
+    @api.multi
+    def _get_move_dest_info(self):
+        for move in self:
+            text = ''
+            if move.move_dest_ids:
+                total_qty = sum((x.product_uom_qty - x.reserved_availability) for x in move.move_dest_ids)
+                location_id = move.move_dest_ids.mapped('location_id')
+                text = "%d %s para %s (%d)"%(total_qty, move.product_uom.edi_code, location_id.name, len(move.move_dest_ids))
+            move.move_dest_info = text
 
+    procurement_route_id = fields.Many2one(related="rule_id.route_id")
+    move_dest_info = fields.Char("Move Dest Info", compute="_get_move_dest_info")
+
+    
     def _get_new_picking_domain(self):
         domain = super()._get_new_picking_domain()
         if self.picking_type_id.code == 'outgoing':
@@ -65,35 +76,6 @@ class StockMove(models.Model):
     def _action_assign(self):
         return super()._action_assign()
 
-    def _action_done(self):
-        res =  super()._action_done()
-        self.filtered(lambda x: x.overprocess_by_supplier).check_split_excess()
-        ## self.check_split_excess_qty_move()
-        return res
-    
-    def check_split_excess(self):
-        Push = self.env['stock.location.path']
-        for move in self.filtered(lambda x: x.state == 'done'):
-            if  move.move_dest_ids:
-                dest_qties = sum((x.product_uom_qty - x.quantity_done) for x in move.move_dest_ids)
-            else:
-                dest_qties = 0
-            free_qty = move.quantity_done - dest_qties
-            if free_qty > 0:
-                domain = [('location_from_id', '=', move.location_dest_id.id)]
-                routes = move.route_ids
-                rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
-                if rules:
-                    new_move_vals = rules._prepare_move_copy_values(move, move.date_expected)
-                    new_move_vals['product_uom_qty'] = free_qty
-                    new_move_vals['procure_method'] = 'make_to_stock'
-                    new_move_vals['rule_id'] = rules.id
-                    new_move = move.copy(new_move_vals)
-                    ## move.write({'move_dest_ids': [(4, new_move.id)]})
-                    new_move._action_confirm()
-                    new_move._action_assign()
-                    
-    
     """
     def check_split_excess_qty_move(self):
         ##Si reune las condiciones, generará un nuevo movimiento con la cantidad que no tenga destino
@@ -170,7 +152,6 @@ class StockMove(models.Model):
             if any(x.state in ['done', 'cancel'] for x in move.move_dest_ids):
                 raise ValidationError (_("Move in incorrect state"))
             move.move_dest_ids = self.env['stock.move']
-            move.overprocess_by_supplier = True
             move.move_dest_ids.write({'procure_method': 'make_to_stock'})
             
     """

@@ -30,12 +30,3 @@ _logger = logging.getLogger(__name__)
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
-
-    overprocess_by_supplier = fields.Boolean('Overprocess by supplier min qty. Exceed must go to stock', default=False)
-
-    @api.multi
-    def _prepare_stock_moves(self, picking):
-        res = super()._prepare_stock_moves(picking)
-        for val in res:
-            val['overprocess_by_supplier'] = self.overprocess_by_supplier
-        return res

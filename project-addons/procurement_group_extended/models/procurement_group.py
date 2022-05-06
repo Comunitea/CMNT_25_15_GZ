@@ -52,9 +52,15 @@ class ProcurementGroup(models.Model):
             else:
                 state = 'draft'
             group.picking_state = state
+    
+    @api.multi
+    def get_purchase_ids(self):
+        for group in self:
+            po_domain = [('origin', 'ilike', group.name)]
+            group.purchase_ids = self.env['purchase.order'].search(po_domain)
 
     sale_ids = fields.One2many('sale.order', 'procurement_group_id', string="Ventas", domain=[('state', '!=', 'cancel')])
-    purchase_ids = fields.One2many('purchase.order', 'group_id', string="Compras", domain=[('state', '!=', 'cancel')])
+    purchase_ids = fields.One2many('purchase.order', string="Compras",compute="get_purchase_ids")
     picking_ids = fields.One2many('stock.picking', 'group_id', string="Albaranes", domain=[('state', '!=', 'cancel')])
     #requisition_id = fields.Many2one('purchase.requisition', string="RQF")
     picking_state = fields.Selection(PICKING_STATES, string="Estado de albaranes", compute=compute_picking_state)
@@ -63,14 +69,17 @@ class ProcurementGroup(models.Model):
     notes = fields.Text(string='Notes')
     production_ids = fields.One2many('mrp.production', 'procurement_group_id', string="Producciones")
 
+    @api.model
+    def run(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+        ctx=self._context.copy()
+        ctx.pop('rule_domain', None)
+        return super(ProcurementGroup, self.with_context(ctx)).run(product_id, product_qty, product_uom, location_id, name, origin, values)
 
     @api.model
     def _search_rule(self, product_id, values, domain):
         if self._context.get('rule_domain', False):
             domain = self._context['rule_domain'] + domain
         return super()._search_rule(product_id=product_id, values=values, domain=domain)
-
-
 
     @api.multi
     def unlink(self):

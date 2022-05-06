@@ -2,6 +2,7 @@
 <odoo>
 
     <template id="report_purchaseorder_document_custom" inherit_id="purchase_order_line_sequence.report_purchaseorder_document_sequence">
+        <xpath expr="//div[@t-if='o.dest_address_id']/../.." position="replace"/>
         <xpath expr="//t[@t-set='o']" position="after">
             <t t-set="title">
                 <br/><strong>ORDER Nº: <span t-field="o.name"/></strong>
@@ -62,6 +63,16 @@
                       <span t-field="o.partner_ref"/>
                     </div>
                 </div>
+                <xpath expr="//div[@t-if='o.dest_address_id']/../.." position="replace"/>
+                 <div class="row mt2" t-if="o.dest_address_id">
+                    <div class="col-xs-3">
+                      Entregar en:
+                    </div>
+                    <div class="col-xs-9">
+                        <div t-field="o.dest_address_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
             </t>
             <t t-set="watermark">
                 <div class="watermark" style="width: 100%; position:fixed;opacity:0.25;top:500px;font-size:7em;text-align:center;z-index:1000;" t-if="o.state in ('draft', 'cancel', 'sent', 'to approve')">
@@ -69,7 +80,7 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//div[@t-if='o.dest_address_id']/../.." position="replace"/>
+        
         <xpath expr="//h2" position="replace"/>
         <xpath expr="//h2" position="replace"/>
         <xpath expr="//div[@t-if='o.name']/.." position="replace"/>

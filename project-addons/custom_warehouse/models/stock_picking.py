@@ -26,9 +26,9 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_is_zero, float_compare
 
 class StockPicking(models.Model):
-
     _inherit = "stock.picking"
 
+    """
     @api.multi
     def _show_moves_to_stock(self):
         picks = self.env['stock.picking']
@@ -41,28 +41,13 @@ class StockPicking(models.Model):
                 pick.show_moves_to_stock
                 continue
         picks.write({'show_moves_to_stock': True})
+    """
 
+    @api.multi
+    def _get_move_dest_info(self):
+        for pick in self:
+            pick.move_dest_info = any(move.move_dest_info != '' for move in pick.move_lines)
+
+    move_dest_info = fields.Boolean("Move Dest Info", compute="_get_move_dest_info") 
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
-    show_moves_to_stock = fields.Boolean(compute="show_moves_to_stock")
-
-    """
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self.env.context.get('assign_picking_domain'):
-            args += self.env.context.get('assign_picking_domain')
-        if self.env.context.get('new_picking'):
-            args = [('id', '=', 0)]
-        print (order)
-        return super(StockPicking, self).search(
-            args, offset=offset, limit=limit, order=order, count=count)
-    """
-    """
-    def change_incoming_moves_to_storage(self):
-        self.ensure_one()
-        if self.picking_type_id.excess_picking_type_id:
-            for move in self.move_lines:
-                move.change_incoming_moves_to_storage()
-
-    def change_moves_to_stockage(self):
-        self.move_lines.change_moves_to_stockage()
-    """
+    ### show_moves_to_stock = fields.Boolean(compute="show_moves_to_stock")

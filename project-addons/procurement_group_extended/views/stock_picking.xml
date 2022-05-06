@@ -15,6 +15,13 @@
                     attrs="{'invisible': [('sale_ids_count', '&lt;', 1)]}"/>
                 
             </field>
+            <xpath expr="//field[@name='move_lines']/tree/field[@name='name']" position="before">
+                <button name="action_open_stock_move_workflow" class="btn btn-primary" string="↳Open Workflow" type="object"
+                            attrs="{'invisible': [('state', 'in', ('draft', 'cancel', 'done'))]}"
+                            groups="stock.group_stock_adv_manager"
+                            options="{&quot;warn&quot;: true}"/>
+            </xpath>
+
         </field>
     </record>
 

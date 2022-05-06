@@ -32,14 +32,13 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def open_type_id(self):
-
-        ctx = self._context.copy() 
-        ctx.update(procurement_group_id = self.procurement_group_id)
+        ctx = self._context.copy()
+        if 'orderedBy' in ctx:
+            ctx.pop('orderedBy')
+        ctx.update({'procurement_group_id': self.procurement_group_id.id})
         action = self.env.ref("stock.stock_picking_type_action").read()[0]
-        procurement_group_id = self.procurement_group_id.id
-        domain = self.env['stock.picking.type']._get_procurement_domain(procurement_group_id)
+        domain = self.env['stock.picking.type']._get_procurement_domain(self.procurement_group_id.id)
         if self:
-            action['context'] = {'procurement_group_id': procurement_group_id}
             action['domain'] = domain
             action['display_name'] = _("Dashboard: {}".format(self.display_name))
         return action

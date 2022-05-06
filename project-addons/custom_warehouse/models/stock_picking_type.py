@@ -31,6 +31,4 @@ _logger = logging.getLogger(__name__)
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    excess_location_id = fields.Many2one('stock.location', string="Excess Location", 
-    help="Si el tipo de albarán tiene esta ubicación, el exceso de stock se envía a esta ubicación")
-    excess_picking_type_id = fields.Many2one('stock.picking.type', string="Tipo de operación para el exceso de material")
+    

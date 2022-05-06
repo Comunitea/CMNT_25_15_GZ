@@ -36,7 +36,9 @@ class StockPicking(models.Model):
     group_id = fields.Many2one(readonly=True, states={'draft': [('readonly', False)]})
     
     def _get_procurement_domain(self, procurement_group_id):
-        return [('group_id', '=', procurement_group_id)] 
+        group_id = self.env['procurement.group'].browse(procurement_group_id)
+        domain = ['|', ('group_id', '=', procurement_group_id), ('purchase_id.origin', 'ilike', group_id.name)]
+        return domain
         
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -48,4 +50,5 @@ class StockPicking(models.Model):
     def search_read(self, domain, fields, offset=0, limit=None, order=None):
         if self._context.get('procurement_group_id', False):
             domain = self._get_procurement_domain(self._context['procurement_group_id']) + domain
+        
         return super(StockPicking, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)

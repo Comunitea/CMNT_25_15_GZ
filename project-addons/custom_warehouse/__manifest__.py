@@ -42,8 +42,8 @@
         'views/stock_move_view.xml',
         'views/stock_picking_view.xml',
         'views/sale_view.xml',
-        'views/stock_picking_type.xml',
         'views/res_partner.xml',
+        'views/stock_warehouse.xml',
 
     ],
     'installable': True,

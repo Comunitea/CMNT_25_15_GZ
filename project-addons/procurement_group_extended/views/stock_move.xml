@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_stock_move_workflow" model="ir.ui.view">
+        <field name="name">stock.move.workflow</field>
+        <field name="model">stock.move</field>
+        <field name="priority">2000</field>
+        <field name="arch" type="xml">
+            <form string="Move">
+                <header>
+                    <button name="action_toggle_workflow_locked" attrs="{'invisible': ['|', ('state', 'in', ('done', 'draft','cancel')), ('locked_workflow', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>
+                    <button name="action_toggle_workflow_locked" attrs="{'invisible': ['|', ('state', 'in', ('done', 'draft','cancel')), ('locked_workflow', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" 
+                        attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('locked_workflow', '=', True)]}" >
+                        <button name="change_to_mto" string="↳Mts to Mto" type="object" icon="fa-hand-lizard-o" 
+                            attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_order')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="change_to_mts" string="↳Mto to Mts" type="object" icon="fa-question-circle" 
+                            attrs="{'invisible': ['|', ('state', 'in', ('assigned', 'done')), ('procure_method', '=', 'make_to_stock')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="do_unreserve" string="↳Anular reserva" type="object" icon="fa-times" 
+                            attrs="{'invisible': [('state', '!=', 'assigned')]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="generate_procurement_order" string="↳Generate procurement" type="object" icon="fa-magic" 
+                            attrs="{'invisible': ['|', ('procure_method', '=', 'make_to_stock'), ('state', 'not in', ['waiting', 'confirmed', 'partially_available'])]}" 
+                            options="{&quot;warn&quot;: true}"/>
+                        <button name="do_action_assign" string="↳Check Availability" type="object" icon="fa-magic" 
+                            attrs="{'invisible': [('state', 'not in', ['waiting', 'confirmed', 'partially_available'])]}" 
+                            />
+                    </div>
+                     <!--h1 class="hidden-xs">
+                        <field name="name" readonly="1"/>
+                    </h1-->
+                    <h1 class="hidden-xs">
+                        <field name="product_id" readonly="1"/>
+                    </h1>
+                    <group>
+
+                        <group string="Qties">
+                            <label for="product_uom_qty" string="Ordered Qty"/>
+                            <div class="o_row">
+                                <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
+                                <span><field name="product_uom" readonly="1" force_save="1" nolabel="1"/></span>
+                            </div>
+                            <label for="quantity_done" string="Done / Reserved"/>
+                            <div class="o_row">
+                                <span><field name="quantity_done" 
+                                        attrs="{'readonly': ['|', ('locked_workflow', '=', True), '|', ('finished_lots_exist', '=', True), ('has_tracking', '!=', 'none')]}" nolabel="1"/></span>
+                                <span> / </span>
+                                <span><field name="reserved_availability" nolabel="1"/></span>
+                                <!-- <span><field name="product_uom" readonly="1" nolabel="1"/></span>-->
+                            </div>
+                            <field name="order_finished_lot_ids" attrs="{'readonly': [('locked_workflow', '=', True)], 'invisible': [('has_tracking', '=', 'none')]}" widget="many2many_tags" />
+                            <field name="finished_lots_exist"  attrs="{'readonly': [('locked_workflow', '=', True)], 'invisible': [('has_tracking', '=', 'none')]}"/>
+                        </group>
+                        <group string="Locations">
+                            <field name="move_orig_ids" attrs="{'readonly': [('locked_workflow', '=', True)]}" widget="many2many_tags"/>
+                            <field name="location_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="location_dest_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="move_dest_ids" widget="many2many_tags" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                    
+                        <group string="Origin">
+                            <field name="group_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="picking_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="production_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="raw_material_production_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+
+                        </group>
+                        <group string="Advanced">
+                            <field name="procure_method" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
+                            <field name="rule_id" groups="base.group_no_one"/>
+                            <!--field name="procurement_route_id" groups="base.group_no_one"/-->
+
+                            <field name="is_done" invisible="1"/>
+                            <field name="locked_workflow" invisible="1"/>
+                            <field name="is_locked" invisible="1"/>
+                            <field name="has_tracking" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="move_line_ids" attrs="{'invisible': [('move_line_ids', '=', [])], 'readonly': [('locked_workflow', '=', True)]}" >
+                        <tree editable="bottom" decoration-success="product_qty==qty_done" decoration-danger="(product_qty &gt; 0) and (qty_done&gt;product_qty)">
+                            <field name="picking_id" invisible="0"/>
+                            <field name="location_id" invisible="0"/>
+                            <field name="location_dest_id" invisible="0"/>
+                            <field name="lot_id" attrs="{'column_invisible': [('parent.has_tracking', '=', 'none')]}" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}"/>
+                            <field name="lot_produced_id" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.order_finished_lot_ids)]" invisible="not context.get('final_lots')"/>
+                            <field name="product_qty" string="Reserved" readonly="1"/>
+                            <field name="qty_done"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -12,7 +12,6 @@ class StockMove(models.Model):
         res = super(StockMove, self)._prepare_move_line_vals(
             quantity, reserved_quant,
         )
-        removal_priority = self.location_id.removal_priority
         picking_type_id = self.picking_type_id
         location = picking_type_id and picking_type_id.default_location or 'location_id'
         stock_location = self.env['stock.location'].browse(res[location])
@@ -27,7 +26,7 @@ class StockMove(models.Model):
                 'need_confirm_lot_id': picking_type_id.need_confirm_lot_id})
         res.update({'removal_priority': removal_priority})
     
-        _logger.info("StockMove VALS -------------------------\n{}".format(res))
+        ## _logger.info("StockMove VALS -------------------------\n{}".format(res))
         return res
 
     def _action_assign_apk_missing_qties(self):
@@ -66,5 +65,5 @@ class StockMove(models.Model):
                 
     def _action_assign(self):
         res = super()._action_assign()
-        self.filtered(lambda m: m.picking_type_id and m.picking_type_id.app_integrated and m.state in ['confirmed', 'waiting', 'partially_available'])._action_assign_apk_missing_qties()
+        ## self.filtered(lambda m: m.picking_type_id and m.picking_type_id.app_integrated and m.state in ['confirmed', 'waiting', 'partially_available'])._action_assign_apk_missing_qties()
         return res

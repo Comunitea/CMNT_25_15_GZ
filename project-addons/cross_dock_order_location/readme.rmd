@@ -1,0 +1,7 @@
+
+* Crear una ubiación de cross docking bajo la view location id del almacen. Prioridad media. Sustitur por el input en la ruta de cross drocking
+* OJO NAME = Cross Docking
+* Asignar prioridad muy alta a esta ubicación cross_docking
+* Cuando se confirma el pedido, el sistema buscará una ubicación de cross docking, hija de la anterior, con nobre del procurement_id del pedido de venta que origina todo
+* Hay una funcion para "liberar" y archivar las utilizadas y poder volver a asignarlas si se crean demaiadas: _check_free_cross_dock_location
+

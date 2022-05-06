@@ -20,8 +20,9 @@ class StockPicking(models.Model):
     def get_picking_info(self, values):
         ## ['id', 'name', 'sale_id', 'scheduled_date', 'origin', 'state', 'partner_id', 'move_line_ids']
         picking_id = self.browse(values.get('id', False))
+        _logger.info("Devuelvo info para {}".format(picking_id.name) )
         info_type = values.get('info_type', 0)       
-        return self.get_info(info_type)
+        return picking_id.get_info(info_type)
     
     def get_info(self, info_type = 0):
         if not self:
@@ -35,15 +36,15 @@ class StockPicking(models.Model):
             'origin': self.origin,
             'scheduled_date': self.scheduled_date,
             ##'user_id':  {'id': p_id.user_id.id, 'name': p_id.user_id.name},
-            'state': p_id.state,
-            'picking_type_id': p_id.picking_type_id.get_info()
+            'state': self.state,
+            'picking_type_id': self.picking_type_id.get_info()
         }
         if info_type > 0:
             vals.update({
                 'destination_code_id': self.destination_code_id.get_info(),
                 'move_type': self.move_type,
                 'priority': self.priority,
-                'all_asigned': self.all_asigned,
+                'all_assigned': self.all_assigned,
                 'forced': self.forced,
                 'product_uomo_qty': self.product_uom_qty,
                 'reserved_availability': self.reserved_availability,
@@ -51,3 +52,21 @@ class StockPicking(models.Model):
             })
         _logger.info("Devuelvo {}".format(vals) )
         return vals
+
+    @api.model
+    def validate_apk(self, values):
+        pick = self.browse(values['id'])
+        _logger.info("Validando el albarán %s"%pick.name)
+        res = pick.button_validate()
+        if not res:
+            return True
+        elif res['res_model'] == "stock.immediate.transfer":
+            self.env['stock.immediate.transfer'].browse(res['res_id']).process()
+            _logger.info(">>> Cantidades a 0")
+            
+        elif res['res_model'] == 'stock.backorder.confirmation':
+            self.env['stock.backorder.confirmation'].browse(res['res_id']).process()
+            _logger.info(">>> Genrando backorder")
+            return True
+        
+        return True

@@ -35,9 +35,10 @@
     'data': ['views/account_view.xml',
              'views/account_invoice_view.xml',
              'views/assets_backend.xml',
-             'data/account_by_business_line_data.xml',
+             'views/product.xml',
              'views/stock_view.xml',
-             'views/sale_view.xml'],
+             'views/sale_view.xml',
+             'data/account_by_business_line_data.xml'],
     'qweb': ['static/src/xml/account_reconciliation.xml'],
     'installable': True,
 }

@@ -4,12 +4,31 @@ from odoo import api, models, fields
 class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
+    ## Ya no es necesario pero se mantiene por si acaso.
     analytic_tag_id = fields.Many2one("account.analytic.tag", "Business line",
                                       domain=[('is_business_line', '=', True)])
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
+
+    def _get_warehouse_id(self):
+        ## al tener ubicaciones y sububicaciones tiene que se arí ...
+        def get_parents(location_id):
+            location_ids = location_id
+            while location_id.location_id:
+                location_ids |= location_id.location_id
+                location_id = location_id.location_id
+            return location_ids
+        warehouse_id = self.picking_type_id and self.picking_type_id.warehouse_id or self.sale_line_id.order_id.warehouse_id or False
+        if not warehouse_id:
+            if self._is_in():
+                location_id = self.location_dest_id
+            elif self._is_out():
+                location_id = self.location_id
+            warehouse_id = self.env['stock.warehouse'].\
+                    search([('lot_stock_id', 'in', get_parents(location_id).ids)], limit=1)
+        return warehouse_id
 
     def _account_entry_move(self):
         super()._account_entry_move()
@@ -67,15 +86,7 @@ class StockMove(models.Model):
             for line in res:
                 line[2]['warehouse_id'] = self._context['valuation_wh_id']
         else:
-            warehouse_id = False
-            if self._is_in():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', self.location_dest_id.id)],
-                           limit=1)
-            elif self._is_out():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', self.location_id.id)],
-                           limit=1)
+            warehouse_id = self._get_warehouse_id()
             if warehouse_id:
                 for line in res:
                     line[2]['warehouse_id'] = warehouse_id.id
@@ -89,15 +100,7 @@ class StockMoveLine(models.Model):
     def create(self, vals):
         if vals.get('state', False) == 'done' and vals.get('move_id'):
             move = self.env['stock.move'].browse(vals['move_id'])
-            warehouse_id = False
-            if move._is_in():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', vals['location_dest_id'])],
-                           limit=1)
-            elif move._is_out():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', vals['location_id'])],
-                           limit=1)
+            warehouse_id = move._get_warehouse_id()
             if warehouse_id:
                 res = super(StockMoveLine, self.
                             with_context(valuation_wh_id=warehouse_id.id)).\
@@ -110,30 +113,15 @@ class StockMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'qty_done' in vals:
+        if self and 'qty_done' in vals:
             if vals.get('move_id'):
                 move = self.env['stock.move'].browse(vals['move_id'])
             else:
-                move = self[0].move_id
-            warehouse_id = False
-            if move._is_in():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', vals.
-                             get('location_dest_id',
-                                 self.location_dest_id.id))],
-                           limit=1)
-            elif move._is_out():
-                warehouse_id = self.env['stock.warehouse'].\
-                    search([('lot_stock_id', '=', vals.
-                             get('location_id',
-                                 self.location_id.id))],
-                           limit=1)
-            if warehouse_id:
-                res = super(StockMoveLine, self.
-                            with_context(valuation_wh_id=warehouse_id.id)).\
-                    write(vals)
-            else:
-                res = super().write(vals)
-        else:
-            res = super().write(vals)
-        return res
+                move = self and self[0].move_id
+            if move:
+                warehouse_id = move._get_warehouse_id()
+                if warehouse_id:
+                    return super(StockMoveLine, self.with_context(valuation_wh_id=warehouse_id.id)).write(vals)
+                
+        return super().write(vals)
+        

@@ -62,14 +62,8 @@ class StockMove(models.Model):
             move._recompute_state()
             if assign:
                 move._action_assign()
-
-            # tengo que desenlazar todo lo que pueda deembocar en este movimiento, si no al confirmarlo puede que se reescriba
-            # si está instlado purchase.requisition
-            # busco todos los pedidos de compra que tengan por movimiento de destino este movimiento
-            # En compras
-            # move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
-            # domain = [('mo')]
-
+            _logger.info("Se ha desenlazado el mov. {}: {}".format(move.id, move.display_name))
+            
 
 
 
