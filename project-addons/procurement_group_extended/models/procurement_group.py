@@ -152,3 +152,16 @@ class ProcurementRule(models.Model):
         )
         result['procure_method'] = self.procure_method
         return result
+
+
+
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+    
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super()._prepare_move_copy_values(move_to_copy, new_date)
+        if self.propagate and move_to_copy.group_id:
+            new_move_vals['group_id'] = move_to_copy.group_id.id
+        return new_move_vals
