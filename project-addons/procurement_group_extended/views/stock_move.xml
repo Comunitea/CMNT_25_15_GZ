@@ -2,6 +2,18 @@
 <!-- Copyright 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
+
+        <record id="view_stock_move_line_operation_tree" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.tree</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_done" position="attributes">
+                     <attribute name="attrs">{'readonly': ['|','&amp;', ('state', '=', 'done'), ('is_locked', '=', True), ('in_entire_package', '=', True)]}</attribute>
+                </field>
+             </field>
+         </record>
+   
     <record id="view_stock_move_workflow" model="ir.ui.view">
         <field name="name">stock.move.workflow</field>
         <field name="model">stock.move</field>
@@ -66,13 +78,11 @@
                         </group>
                     </group>
                     <group>
-                    
                         <group string="Origin">
                             <field name="group_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
                             <field name="picking_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
                             <field name="production_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
                             <field name="raw_material_production_id" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
-
                         </group>
                         <group string="Advanced">
                             <field name="procure_method" invisible="0" attrs="{'readonly': [('locked_workflow', '=', True)]}"/>
