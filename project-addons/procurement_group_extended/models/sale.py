@@ -52,7 +52,10 @@ class SaleOrder(models.Model):
         ## Intento cancelar las compras asociadas
         
         for sale in self:
-            for purchase in sale.mapped('purchase_ids'):
+            ## Solo cancelo las compras automaticas
+            domain = [('group_id', '=', sale.procurement_group_id.id)]
+            purchase_ids = self.env['purchase.order'].search(domain)
+            for purchase in purchase_ids:
                 try:
                     purchase.button_cancel()
                     purchase.unlink()
