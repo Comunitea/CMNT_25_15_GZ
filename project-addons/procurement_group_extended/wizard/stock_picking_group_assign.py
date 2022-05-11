@@ -21,7 +21,6 @@ class StockPickingGroupAsign(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        import pdb; pdb.set_trace()
         result = super().default_get(fields)
         active_model = self.env.context.get('active_model')
         model = self.env[active_model]
