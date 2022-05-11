@@ -46,6 +46,7 @@
         'views/purchase_view.xml',
         'views/mrp_view.xml',
         'wizard/generate_copy_sale.xml',
+        'wizard/stock_picking_group_assign_view.xml',
 
 
     ],

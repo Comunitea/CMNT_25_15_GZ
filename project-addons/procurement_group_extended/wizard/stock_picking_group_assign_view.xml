@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="assign_stock_picking_group" model="ir.ui.view">
+        <field name="name">stock.picking.group.assign</field>
+        <field name="model">stock.picking.group.assign</field>
+        <field name="arch" type="xml">
+            <form string="Asignar grupo de abastecimiento">
+                <sheet>
+                    <group>
+                        <field name="picking_ids" widget="many2many_tags"/>
+                        <field name="group_id"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <group>
+                        <span>
+                            <button string="Aplicar" type="object" class="oe_highlight" name="action_apply_group"/>
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                        </span>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--record id="assign_stock_picking_group_action" model="ir.actions.act_window">
+        <field name="name">Abastecimiento</field>
+        <field name="res_model">stock.picking.group.assign</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record-->
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window id="assign_stock_picking_group_action_view"
+        name="Abastecimiento"
+        src_model="stock.picking"
+        res_model="stock.picking.group.assign"
+        view_type="form"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"/>
+
+</odoo>
