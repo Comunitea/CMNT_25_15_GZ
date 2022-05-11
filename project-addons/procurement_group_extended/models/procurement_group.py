@@ -56,7 +56,7 @@ class ProcurementGroup(models.Model):
     @api.multi
     def get_purchase_ids(self):
         for group in self:
-            po_domain = [('origin', 'ilike', group.name)]
+            po_domain = ['|', ('group_id', '=', group.id), ('origin', 'ilike', group.name)]
             group.purchase_ids = self.env['purchase.order'].search(po_domain)
 
     sale_ids = fields.One2many('sale.order', 'procurement_group_id', string="Ventas", domain=[('state', '!=', 'cancel')])
