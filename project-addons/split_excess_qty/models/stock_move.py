@@ -55,7 +55,6 @@ class StockMove(models.Model):
         Push = self.env['procurement.rule']
         self = self.with_prefetch()
         for move in self.filtered(lambda x: x.state == 'done' and x.picking_type_id.excess_picking_type_id and x.product_id.type == 'product'):
-            ## and x.product_id.picking_type_id.excess_picking_type_id):
             move_dest_id = move.move_dest_ids.filtered(lambda x: x.state  == 'assigned')
             if len(move_dest_id) != 1:
                 continue

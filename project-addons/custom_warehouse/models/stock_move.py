@@ -76,73 +76,7 @@ class StockMove(models.Model):
     def _action_assign(self):
         return super()._action_assign()
 
-    """
-    def check_split_excess_qty_move(self):
-        ##Si reune las condiciones, generará un nuevo movimiento con la cantidad que no tenga destino
-        ## La idea es coger la mercancía que haya y "Ubicarla"
-        STATES = ['waiting', 'assigned', 'partially_available', 'confirmed']
-        for move in self.filtered(lambda x:
-            x.product_id.type == 'product' and 
-            x.picking_type_id.excess_picking_type_id and 
-            x.move_dest_ids):
-            
-            precision = move.product_uom.rounding
-            ## Todos los movimientos que llegan a los mov de destino que no estén hechos
-            move_dest_ids = move.move_dest_ids.filtered(lambda x: x.state in STATES)
-            ## CAntidad que necesito: Cantidad en product_uom_qty en moves destino
-            need_qty = sum(x.product_uom_qty for x in  move.move_dest_ids) 
-            ## No se porque en el move origids tengo que quitar asi
-            move_orig_ids = move.move_dest_ids.mapped('move_orig_ids')
-            ## cantidad a abastecer los move_dest_ids
-            supplied_qty = sum(x.product_uom_qty for x in move_orig_ids)
-            qty_to_split = supplied_qty - need_qty
-            
-            if float_compare(qty_to_split, 0, precision_rounding=precision) > 0:
-                type_id = move.picking_type_id.excess_picking_type_id
-                copy_vals = {
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': type_id.default_location_dest_id.id,
-                    'picking_type_id': type_id.id,
-                    'product_uom_qty': qty_to_split,
-                    'picking_id': False,
-                    'rule_id': False,
-                    'procure_method': 'make_to_stock'}
-                stock_move = move.copy(copy_vals)
-                stock_move._action_confirm()
-                stock_move._action_assign()
-                stock_move._assign_picking()
-        return True
 
-
-    def _push_apply(self):
-        Push = self.env['stock.location.path']
-        ##  Hacemos un push apply para las cantidades que faltam
-        res = super()._push_apply()
-        ctx = self._context.copy()
-        for move in self.filtered(lambda x: x.state == 'done' and x.move_dest_ids):
-            dest_qties = sum((x.product_uom_qty - x.quantity_done) for x in move.move_dest_ids)
-            free_qty = move.quantity_done > dest_qties
-            if free_qty > 0:
-                
-                # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
-                # to receive goods without triggering the push rules again (which would duplicate chained operations)
-                domain = [('location_from_id', '=', move.location_dest_id.id)]
-                # priority goes to the route defined on the product and product category
-                routes = move.product_id.route_ids | move.product_id.categ_id.total_route_ids
-                rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
-                if not rules:
-                    # TDE FIXME/ should those really be in a if / elif ??
-                    # then we search on the warehouse if a rule can apply
-                    if move.warehouse_id:
-                        rules = Push.search(domain + [('route_id', 'in', move.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
-                    elif move.picking_id.picking_type_id.warehouse_id:
-                        rules = Push.search(domain + [('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
-                # Make sure it is not returning the return
-                if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
-                    ctx.update (default_product_uom_qty=free_qty)
-                    rules.with_context(ctx)._apply(move)
-        return res
-    """
     def change_incoming_moves_to_storage(self):
         for move in self:
             if move.filtered(lambda x:x.picking_code != 'incoming'):
