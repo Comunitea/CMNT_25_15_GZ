@@ -44,6 +44,7 @@
         'views/sale_view.xml',
         'views/res_partner.xml',
         'views/stock_warehouse.xml',
+        'wizard/product_import_wzd_view.xml'
 
     ],
     'installable': True,
