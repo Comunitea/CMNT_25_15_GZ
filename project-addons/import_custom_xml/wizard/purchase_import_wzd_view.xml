@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_import_wzd_form" model="ir.ui.view">
+        <field name="name">view.purchase.import.wzd.form</field>
+        <field name="model">purchase.import.wzd</field>
+        <field name="arch" type="xml">
+            <form string="Import Purchases">
+                <div name="help">
+                    <h2>Select file to import</h2>
+                </div>
+                <group>
+                    <field name="name"/>
+                    <field name="file" filename="filename"/>
+                </group>
+                <footer>
+                    <button name="import_purchases" type="object" class="btn-primary" string="Import Purchases"/>
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer> 
+            </form>
+        </field>
+    </record>
+
+   
+    <record id="action_import_purchase" model="ir.actions.act_window">
+        <field name="name">Import Purchases</field>
+        <field name="res_model">purchase.import.wzd</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_import_product" name="Import Compras" action="action_import_purchase" parent="purchase.menu_purchase_config" sequence="99"/>
+    
+     <record id="view_purchase_order_search" model="ir.ui.view">
+        <field name="name">report.purchase.order.search</field>
+        <field name="model">purchase.report</field> 
+        <field name="inherit_id" ref="purchase.view_purchase_order_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='orders']" position='after'>
+                <separator/>
+                <filter string="This Year" name="this_year" domain="[('date_order', '&gt;=', context_today().strftime('%%Y-01-01'))]"/>
+                <filter string="Last Year" name="last_year" domain="['&amp;', ('date_order', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%%Y-01-01')), ('date_order', '&lt;', context_today().strftime('%%Y-01-01'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date_order', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
+                <filter string="Last Month" name="last_month" domain="['&amp;', ('date_order', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date_order', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase.action_purchase_order_report_all" model="ir.actions.act_window">
+        <field name="name">Purchase Analysis</field>
+        <field name="res_model">purchase.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{'search_default_orders': 1, 'search_default_this_month':1 }</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your vendors, etc.</field>
+    </record>
+</odoo>
