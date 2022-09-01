@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
             orders = invoice.invoice_line_ids.mapped("sale_line_ids.order_id")
             if orders:
                 invoice.note = ", ".join([x.note for x in orders.filtered("note")])
-            num_contract = invoice.num_contract
+            num_contract = invoice.num_contract or ''
             for sale in orders:
                 if sale.num_contract and sale.num_contract not in num_contract:
                     if not num_contract:
