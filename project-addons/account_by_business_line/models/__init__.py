@@ -3,3 +3,4 @@ from . import invoice
 from . import stock
 from . import sale
 from . import product
+from . import mrp
